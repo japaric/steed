@@ -1,0 +1,28 @@
+[package]
+# This is NOT an official Rust project but since most code will come from
+# the rust-lang/rust repo it makes sense to use this author.
+authors = ["The Rust Project Developers"]
+name = "steed"
+version = "0.1.0"
+
+[dependencies.ralloc]
+branch = "sc"
+default-features = false
+features = ["allocator"]
+git = "https://github.com/japaric/ralloc"
+
+[dependencies.compiler_builtins]
+features = ["mem"]
+git = "https://github.com/rust-lang-nursery/compiler-builtins"
+
+[dependencies.sc]
+git = "https://github.com/japaric/syscall.rs"
+
+[profile]
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+lto = true
+panic = "abort"
