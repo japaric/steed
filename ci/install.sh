@@ -4,7 +4,9 @@ main() {
     curl https://sh.rustup.rs -sSf | \
         sh -s -- -y --default-toolchain $TRAVIS_RUST_VERSION
 
+    pushd ..
     cargo install -f --git https://github.com/japaric/cross
+    popd
 
     # curl -LSfs https://japaric.github.io/trust/install.sh | \
     #     sh -s -- \
