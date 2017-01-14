@@ -1,4 +1,5 @@
 #![feature(alloc)]
+#![feature(allow_internal_unstable)]
 #![feature(asm)]
 #![feature(collections)]
 #![feature(collections_bound)]
@@ -112,9 +113,11 @@ pub use core_collections::vec;
 #[stable(feature = "rust1", since = "1.0.0")]
 pub use std_unicode::char;
 
+// Rust 1.14.0
 #[macro_use]
 mod macros;
 
+pub mod entry;
 pub mod fs;
 pub mod io;
 pub mod process;
@@ -128,7 +131,9 @@ pub mod num;
 // Rust 1.14.0
 pub mod time;
 
-#[doc(hidden)]
+// Rust 1.14.0
+// The runtime entry point and a few unstable public functions used by the
+// compiler
 pub mod rt;
 
 mod ctypes;
