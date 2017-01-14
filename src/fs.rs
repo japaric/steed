@@ -1,17 +1,17 @@
-#![unstable(feature = "steed", issue = "0")]
+#![stable(feature = "steed", since = "1.0.0")]
 
 use ctypes::{c_int, c_uint};
 use io::{Error, Read, Write};
 use linux::types::umode_t;
 use {linux, io};
 
-#[unstable(feature = "steed", issue = "0")]
+#[stable(feature = "steed", since = "1.0.0")]
 pub struct File {
     fd: c_uint,
 }
 
 impl File {
-    #[unstable(feature = "steed", issue = "0")]
+    #[stable(feature = "steed", since = "1.0.0")]
     /// NOTE `path` must be null terminated
     pub fn create(path: &[u8]) -> io::Result<File> {
         OpenOptions::new()
@@ -22,20 +22,20 @@ impl File {
     }
 
     /// NOTE `path` must be null terminated
-    #[unstable(feature = "steed", issue = "0")]
+    #[stable(feature = "steed", since = "1.0.0")]
     pub fn open(path: &[u8]) -> io::Result<File> {
         OpenOptions::new().read(true).open(path)
     }
 }
 
-#[unstable(feature = "steed", issue = "0")]
+#[stable(feature = "steed", since = "1.0.0")]
 impl Drop for File {
     fn drop(&mut self) {
         unsafe { linux::close(self.fd) };
     }
 }
 
-#[unstable(feature = "steed", issue = "0")]
+#[stable(feature = "steed", since = "1.0.0")]
 impl Read for File {
     fn read(&mut self, buffer: &mut [u8]) -> io::Result<usize> {
         match unsafe {
@@ -47,7 +47,7 @@ impl Read for File {
     }
 }
 
-#[unstable(feature = "steed", issue = "0")]
+#[stable(feature = "steed", since = "1.0.0")]
 impl Write for File {
     fn write(&mut self, buffer: &[u8]) -> io::Result<usize> {
         match unsafe {
@@ -59,7 +59,7 @@ impl Write for File {
     }
 }
 
-#[unstable(feature = "steed", issue = "0")]
+#[stable(feature = "steed", since = "1.0.0")]
 pub struct OpenOptions {
     read: bool,
     write: bool,
@@ -72,7 +72,7 @@ pub struct OpenOptions {
 }
 
 impl OpenOptions {
-    #[unstable(feature = "steed", issue = "0")]
+    #[stable(feature = "steed", since = "1.0.0")]
     pub fn new() -> Self {
         OpenOptions {
             read: false,
@@ -86,37 +86,37 @@ impl OpenOptions {
         }
     }
 
-    #[unstable(feature = "steed", issue = "0")]
+    #[stable(feature = "steed", since = "1.0.0")]
     pub fn read(&mut self, read: bool) -> &mut Self {
         self.read = read;
         self
     }
 
-    #[unstable(feature = "steed", issue = "0")]
+    #[stable(feature = "steed", since = "1.0.0")]
     pub fn write(&mut self, write: bool) -> &mut Self {
         self.write = write;
         self
     }
 
-    #[unstable(feature = "steed", issue = "0")]
+    #[stable(feature = "steed", since = "1.0.0")]
     pub fn append(&mut self, append: bool) -> &mut Self {
         self.append = append;
         self
     }
 
-    #[unstable(feature = "steed", issue = "0")]
+    #[stable(feature = "steed", since = "1.0.0")]
     pub fn truncate(&mut self, truncate: bool) -> &mut Self {
         self.truncate = truncate;
         self
     }
 
-    #[unstable(feature = "steed", issue = "0")]
+    #[stable(feature = "steed", since = "1.0.0")]
     pub fn create(&mut self, create: bool) -> &mut Self {
         self.create = create;
         self
     }
 
-    #[unstable(feature = "steed", issue = "0")]
+    #[stable(feature = "steed", since = "1.0.0")]
     pub fn open(&self, path: &[u8]) -> io::Result<File> {
         let flags = linux::O_CLOEXEC | self.get_access_mode()? |
                     self.get_creation_mode()? |
