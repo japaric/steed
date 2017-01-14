@@ -125,6 +125,8 @@ pub mod collections;
 pub mod error;
 // Rust 1.14.0
 pub mod num;
+// Rust 1.14.0
+pub mod time;
 
 #[doc(hidden)]
 pub mod rt;
