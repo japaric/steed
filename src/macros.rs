@@ -1,8 +1,10 @@
+#[unstable(feature = "steed", issue = "0")]
 #[macro_export]
 macro_rules! print {
    ($($arg:tt)*) => ($crate::io::_print(format_args!($($arg)*)));
 }
 
+#[unstable(feature = "steed", issue = "0")]
 #[macro_export]
 macro_rules! println {
     () => (print!("\n"));

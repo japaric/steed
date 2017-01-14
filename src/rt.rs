@@ -1,8 +1,11 @@
 //! Entry point
 
+#![unstable(feature = "steed", issue = "0")]
+
 use ctypes::c_int;
 use linux;
 
+#[unstable(feature = "steed", issue = "0")]
 #[cfg_attr(any(target_arch = "mips",
                target_arch = "mips64"), export_name = "__start")]
 #[cfg_attr(any(target_arch = "aarch64",
@@ -20,6 +23,7 @@ pub extern "C" fn start() -> ! {
     unsafe { linux::exit(main()) }
 }
 
+#[unstable(feature = "steed", issue = "0")]
 // NOTE needed to get a 16 byte aligned stack. Without this, programs segfault
 // when executing SSE instructions like `movaps` or `movdqa`
 #[cfg(any(target_arch = "x86",
