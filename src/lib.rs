@@ -9,12 +9,20 @@
 #![feature(lang_items)]
 #![feature(macro_reexport)]
 #![feature(naked_functions)]
+#![feature(prelude_import)]
 #![feature(raw)]
+#![feature(slice_concat_ext)]
 #![feature(staged_api)]
 #![feature(unicode)]
 #![no_std]
 
 #![stable(feature = "rust1", since = "1.0.0")]
+
+// Explicitly import the prelude. The compiler uses this same unstable attribute
+// to import the prelude implicitly when building crates that depend on std.
+#[prelude_import]
+#[allow(unused)]
+use prelude::v1::*;
 
 extern crate alloc;
 #[macro_reexport(vec)]
@@ -24,6 +32,10 @@ extern crate ralloc;
 #[macro_use]
 extern crate sc;
 extern crate std_unicode;
+
+// Rust 1.14.0
+// The Rust prelude
+pub mod prelude;
 
 // Public module declarations and reexports
 #[stable(feature = "rust1", since = "1.0.0")]
