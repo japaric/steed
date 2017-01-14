@@ -430,32 +430,36 @@ pub use core_collections::{binary_heap, btree_map, btree_set};
 #[stable(feature = "rust1", since = "1.0.0")]
 pub use core_collections::{linked_list, vec_deque};
 
-// TODO(#5) uncomment - see src/collections/hash/mod
-// #[stable(feature = "rust1", since = "1.0.0")]
-// pub use self::hash_map::HashMap;
-// TODO(#5) uncomment - see src/collections/hash/mod
-// #[stable(feature = "rust1", since = "1.0.0")]
-// pub use self::hash_set::HashSet;
+// TODO see src/collections/hash/mod
+#[cfg(issue = "5")]
+#[stable(feature = "rust1", since = "1.0.0")]
+pub use self::hash_map::HashMap;
+// TODO see src/collections/hash/mod
+#[cfg(issue = "5")]
+#[stable(feature = "rust1", since = "1.0.0")]
+pub use self::hash_set::HashSet;
 
 #[stable(feature = "rust1", since = "1.0.0")]
 pub use core_collections::range;
 
 mod hash;
 
-// TODO(#5) uncomment - see src/collections/hash/mod
-// #[stable(feature = "rust1", since = "1.0.0")]
-// pub mod hash_map {
-//     //! A hash map implementation which uses linear probing with Robin
-//     //! Hood bucket stealing.
-//     #[stable(feature = "rust1", since = "1.0.0")]
-//     pub use super::hash::map::*;
-// }
+// TODO see src/collections/hash/mod
+#[cfg(issue = "5")]
+#[stable(feature = "rust1", since = "1.0.0")]
+pub mod hash_map {
+    //! A hash map implementation which uses linear probing with Robin
+    //! Hood bucket stealing.
+    #[stable(feature = "rust1", since = "1.0.0")]
+    pub use super::hash::map::*;
+}
 
-// TODO(#5) uncomment - see src/collections/hash/mod
-// #[stable(feature = "rust1", since = "1.0.0")]
-// pub mod hash_set {
-//     //! An implementation of a hash set using the underlying representation of a
-//     //! HashMap where the value is ().
-//     #[stable(feature = "rust1", since = "1.0.0")]
-//     pub use super::hash::set::*;
-// }
+// TODO see src/collections/hash/mod
+#[cfg(issue = "5")]
+#[stable(feature = "rust1", since = "1.0.0")]
+pub mod hash_set {
+    //! An implementation of a hash set using the underlying representation of a
+    //! HashMap where the value is ().
+    #[stable(feature = "rust1", since = "1.0.0")]
+    pub use super::hash::set::*;
+}

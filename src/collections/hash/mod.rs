@@ -11,12 +11,15 @@
 //! Unordered containers, implemented as hash-tables
 
 mod bench;
-// TODO(#5) uncomment - dead code until the other two modules are uncommented
-// mod table;
-// TODO(#5) uncomment - HashMap depends on thread_local!
-// pub mod map;
-// TODO(#5) uncomment - the HashSet implementation depends on HashMap
-// pub mod set;
+// TODO this dead code until the other two modules are uncommented
+#[cfg(issue = "5")]
+mod table;
+// TODO HashMap depends on thread_local!
+#[cfg(issue = "5")]
+pub mod map;
+// TODO HashSet implementation depends on HashMap
+#[cfg(issue = "5")]
+pub mod set;
 
 trait Recover<Q: ?Sized> {
     type Key;
