@@ -100,10 +100,12 @@ pub use std_unicode::char;
 #[macro_use]
 mod macros;
 
-pub mod collections;
 pub mod fs;
 pub mod io;
 pub mod process;
+
+// Rust 1.14.0
+pub mod collections;
 
 #[doc(hidden)]
 pub mod rt;
