@@ -34,7 +34,7 @@ install:
 script:
   - bash ci/script.sh
 
-script:
+after_success:
   - bash ci/after_success.sh
 
 after_script: set +e
