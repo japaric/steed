@@ -7,7 +7,7 @@ main() {
     source ~/.cargo/env
 
     pushd ..
-    cargo install -f --git https://github.com/japaric/cross
+    which cross || cargo install --git https://github.com/japaric/cross
     popd
 
     # curl -LSfs https://japaric.github.io/trust/install.sh | \
