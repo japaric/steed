@@ -6,6 +6,7 @@
 #![feature(compiler_builtins_lib)]
 #![feature(core_intrinsics)]
 #![feature(dropck_parametricity)]
+#![feature(int_error_internals)]
 #![feature(lang_items)]
 #![feature(macro_reexport)]
 #![feature(naked_functions)]
@@ -120,6 +121,8 @@ pub mod process;
 
 // Rust 1.14.0
 pub mod collections;
+// Rust 1.14.0
+pub mod error;
 // Rust 1.14.0
 pub mod num;
 
