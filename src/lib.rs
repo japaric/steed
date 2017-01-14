@@ -13,7 +13,9 @@
 #![feature(raw)]
 #![feature(slice_concat_ext)]
 #![feature(staged_api)]
+#![feature(try_from)]
 #![feature(unicode)]
+#![feature(zero_one)]
 #![no_std]
 
 #![stable(feature = "rust1", since = "1.0.0")]
@@ -118,6 +120,8 @@ pub mod process;
 
 // Rust 1.14.0
 pub mod collections;
+// Rust 1.14.0
+pub mod num;
 
 #[doc(hidden)]
 pub mod rt;
