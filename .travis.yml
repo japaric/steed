@@ -29,10 +29,13 @@ before_install: set -e
 
 install:
   - bash ci/install.sh
-  - source ~/.cargo/env || true
+  - source ~/.cargo/env
 
 script:
   - bash ci/script.sh
+
+script:
+  - bash ci/after_success.sh
 
 after_script: set +e
 
@@ -43,6 +46,7 @@ before_cache:
 branches:
   only:
     - auto
+    - master
     - try
 
 notifications:
