@@ -11,7 +11,6 @@ tested.
 - [Goals](#goals)
 - [Non-goals](#non-goals)
 - [Features](#features)
-- [API docs](#api-docs)
 - [Supported architectures](#supported-architectures)
 - [Usage](#usage)
 - [Current functionality](#current-functionality)
@@ -106,8 +105,6 @@ $ ls -l hello
 
 [rt]: https://github.com/rust-lang/rust/blob/1.14.0/src/libstd/rt.rs#L42-L60
 
-## [API docs](https://japaric.github.io/steed/steed/index.html)
-
 ## Supported architectures
 
 `steed` is [continuously tested][ci] on these platforms (using QEMU):
@@ -167,6 +164,9 @@ panicked at 'explicit panic', examples/panic.rs:8
 ```
 
 ## Current functionality
+
+Check the [API docs](https://japaric.github.io/steed/steed/index.html), but to
+sum it up:
 
 - Standard I/O (stdin, stdout, stderr)
 
