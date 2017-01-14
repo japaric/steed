@@ -1,8 +1,11 @@
 #![feature(alloc)]
 #![feature(asm)]
 #![feature(collections)]
+#![feature(collections_bound)]
+#![feature(collections_range)]
 #![feature(compiler_builtins_lib)]
 #![feature(core_intrinsics)]
+#![feature(dropck_parametricity)]
 #![feature(lang_items)]
 #![feature(macro_reexport)]
 #![feature(naked_functions)]
@@ -97,6 +100,7 @@ pub use std_unicode::char;
 #[macro_use]
 mod macros;
 
+pub mod collections;
 pub mod fs;
 pub mod io;
 pub mod process;
