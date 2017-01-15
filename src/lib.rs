@@ -139,6 +139,7 @@ pub mod rt;
 mod ctypes;
 mod linux;
 mod panicking;
+mod sys;
 
 // NOTE These two are "undefined" symbols that LLVM emits but that, AFAIK, we
 // never use

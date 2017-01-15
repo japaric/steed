@@ -24,9 +24,7 @@
 
 use error::Error;
 use fmt;
-#[cfg(issue = "10")]
 use ops::{Add, Sub, AddAssign, SubAssign};
-#[cfg(issue = "10")]
 use sys::time;
 #[cfg(issue = "10")]
 use sys_common::FromInner;
@@ -69,7 +67,6 @@ mod duration;
 ///    println!("{}", now.elapsed().as_secs());
 /// }
 /// ```
-#[cfg(issue = "10")]
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 #[stable(feature = "time2", since = "1.8.0")]
 pub struct Instant(time::Instant);
@@ -117,7 +114,6 @@ pub struct Instant(time::Instant);
 ///    }
 /// }
 /// ```
-#[cfg(issue = "10")]
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 #[stable(feature = "time2", since = "1.8.0")]
 pub struct SystemTime(time::SystemTime);
@@ -128,7 +124,6 @@ pub struct SystemTime(time::SystemTime);
 #[stable(feature = "time2", since = "1.8.0")]
 pub struct SystemTimeError(Duration);
 
-#[cfg(issue = "10")]
 impl Instant {
     /// Returns an instant corresponding to "now".
     #[stable(feature = "time2", since = "1.8.0")]
@@ -174,7 +169,6 @@ impl Instant {
     }
 }
 
-#[cfg(issue = "10")]
 #[stable(feature = "time2", since = "1.8.0")]
 impl Add<Duration> for Instant {
     type Output = Instant;
@@ -184,7 +178,6 @@ impl Add<Duration> for Instant {
     }
 }
 
-#[cfg(issue = "10")]
 #[stable(feature = "time_augmented_assignment", since = "1.9.0")]
 impl AddAssign<Duration> for Instant {
     fn add_assign(&mut self, other: Duration) {
@@ -192,7 +185,6 @@ impl AddAssign<Duration> for Instant {
     }
 }
 
-#[cfg(issue = "10")]
 #[stable(feature = "time2", since = "1.8.0")]
 impl Sub<Duration> for Instant {
     type Output = Instant;
@@ -202,7 +194,6 @@ impl Sub<Duration> for Instant {
     }
 }
 
-#[cfg(issue = "10")]
 #[stable(feature = "time_augmented_assignment", since = "1.9.0")]
 impl SubAssign<Duration> for Instant {
     fn sub_assign(&mut self, other: Duration) {
@@ -210,7 +201,6 @@ impl SubAssign<Duration> for Instant {
     }
 }
 
-#[cfg(issue = "10")]
 #[stable(feature = "time2", since = "1.8.0")]
 impl Sub<Instant> for Instant {
     type Output = Duration;
@@ -220,7 +210,6 @@ impl Sub<Instant> for Instant {
     }
 }
 
-#[cfg(issue = "10")]
 #[stable(feature = "time2", since = "1.8.0")]
 impl fmt::Debug for Instant {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -228,7 +217,6 @@ impl fmt::Debug for Instant {
     }
 }
 
-#[cfg(issue = "10")]
 impl SystemTime {
     /// Returns the system time corresponding to "now".
     #[stable(feature = "time2", since = "1.8.0")]
@@ -269,7 +257,6 @@ impl SystemTime {
     }
 }
 
-#[cfg(issue = "10")]
 #[stable(feature = "time2", since = "1.8.0")]
 impl Add<Duration> for SystemTime {
     type Output = SystemTime;
@@ -279,7 +266,6 @@ impl Add<Duration> for SystemTime {
     }
 }
 
-#[cfg(issue = "10")]
 #[stable(feature = "time_augmented_assignment", since = "1.9.0")]
 impl AddAssign<Duration> for SystemTime {
     fn add_assign(&mut self, other: Duration) {
@@ -287,7 +273,6 @@ impl AddAssign<Duration> for SystemTime {
     }
 }
 
-#[cfg(issue = "10")]
 #[stable(feature = "time2", since = "1.8.0")]
 impl Sub<Duration> for SystemTime {
     type Output = SystemTime;
@@ -297,7 +282,6 @@ impl Sub<Duration> for SystemTime {
     }
 }
 
-#[cfg(issue = "10")]
 #[stable(feature = "time_augmented_assignment", since = "1.9.0")]
 impl SubAssign<Duration> for SystemTime {
     fn sub_assign(&mut self, other: Duration) {
@@ -305,7 +289,6 @@ impl SubAssign<Duration> for SystemTime {
     }
 }
 
-#[cfg(issue = "10")]
 #[stable(feature = "time2", since = "1.8.0")]
 impl fmt::Debug for SystemTime {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -321,7 +304,6 @@ impl fmt::Debug for SystemTime {
 /// `SystemTime` instance can tell how far away from this point in time a
 /// measurement lies, and using `UNIX_EPOCH + duration` can be used to create a
 /// `SystemTime` instance to represent another fixed point in time.
-#[cfg(issue = "10")]
 #[stable(feature = "time2", since = "1.8.0")]
 pub const UNIX_EPOCH: SystemTime = SystemTime(time::UNIX_EPOCH);
 

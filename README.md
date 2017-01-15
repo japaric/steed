@@ -166,13 +166,15 @@ panicked at 'explicit panic', examples/panic.rs:8
 ## Current functionality
 
 Check the [API docs](https://japaric.github.io/steed/steed/index.html), but to
-sum it up:
+summarize the functionality that interfaces with the Linux kernel:
 
 - Standard I/O (stdin, stdout, stderr)
 
 - File I/O
 
 - Dynamic memory allocation (thanks to [ralloc]!)
+
+- `time::Instant` and `time::SystemTime`
 
 [ralloc]: https://github.com/redox-os/ralloc
 
@@ -193,7 +195,8 @@ these general guidelines in mind:
 
 - We still don't support the `#[test]` attribute so, if you add new
   functionality, please add a smoke test in the form of an example that
-  exercises the new functionality.
+  exercises the new functionality to the `examples` directory and to the list in
+  `ci/script.sh`.
 
 - Some functionality, like `std::Path`, is *architecture* independent.
   Re-implementing that functionality in `steed` is as simple as copy pasting
@@ -250,6 +253,7 @@ fs/open.c
 Would become:
 
 ``` rust
+// fs/open.c
 #[inline(always)]
 pub unsafe fn open(filename: *const c_char, flags: c_int, mode: umode_t) { .. }
 ```

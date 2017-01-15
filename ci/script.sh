@@ -5,8 +5,10 @@ main() {
         create
         format
         hello
+        instant
         open
         stderr
+        system-time
         vec
         zero
     )
