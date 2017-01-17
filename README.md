@@ -194,6 +194,9 @@ these general guidelines in mind:
 
 [issue tracker]: https://github.com/japaric/steed/issues
 
+- We have an IRC channel on Mozilla network, #rust-steed, if you have any
+  question!
+
 - We can't depend on the `libc` crate because that will make all our programs
   link to `libc`, `libm`, etc.
 
