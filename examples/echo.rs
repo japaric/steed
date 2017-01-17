@@ -2,10 +2,10 @@
 #![no_main]
 
 #[macro_use]
-extern crate steed;
+extern crate std;
 
-use steed::io;
-use steed::io::{Read, Write};
+use std::io;
+use std::io::{Read, Write};
 
 #[no_mangle]
 pub fn main() -> i32 {

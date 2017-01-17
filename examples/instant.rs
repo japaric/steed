@@ -2,9 +2,9 @@
 #![no_main]
 
 #[macro_use]
-extern crate steed;
+extern crate std;
 
-use steed::time::Instant;
+use std::time::Instant;
 
 #[no_mangle]
 pub fn main() -> i32 {
