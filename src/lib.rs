@@ -7,6 +7,7 @@
 #![feature(compiler_builtins_lib)]
 #![feature(core_intrinsics)]
 #![feature(dropck_parametricity)]
+#![feature(fused)]
 #![feature(int_error_internals)]
 #![feature(lang_items)]
 #![feature(macro_reexport)]
@@ -123,11 +124,17 @@ pub mod io;
 pub mod process;
 
 // Rust 1.14.0
+pub mod ascii;
+// Rust 1.14.0
 pub mod collections;
 // Rust 1.14.0
 pub mod error;
 // Rust 1.14.0
+pub mod ffi;
+// Rust 1.14.0
 pub mod num;
+// Rust 1.14.0
+pub mod memchr;
 // Rust 1.14.0
 pub mod time;
 
