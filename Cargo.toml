@@ -2,7 +2,7 @@
 # This is NOT an official Rust project but since most code will come from
 # the rust-lang/rust repo it makes sense to use this author.
 authors = ["The Rust Project Developers"]
-name = "steed"
+name = "std"
 version = "0.1.0"
 
 [dependencies.ralloc]
