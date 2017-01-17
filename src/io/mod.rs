@@ -5,25 +5,15 @@ use core::fmt;
 use ctypes::c_uint;
 use {linux, io};
 
+// Rust 1.14.0
+mod error;
+
 const STDIN: c_uint = 0;
 const STDOUT: c_uint = 1;
 const STDERR: c_uint = 2;
 
-#[stable(feature = "steed", since = "1.0.0")]
-#[derive(Debug)]
-pub struct Error {
-    code: i32,
-}
-
-impl Error {
-    #[stable(feature = "steed", since = "1.0.0")]
-    pub fn from_raw_os_error(code: i32) -> Error {
-        Error { code: code }
-    }
-}
-
-#[stable(feature = "steed", since = "1.0.0")]
-pub type Result<T> = ::core::result::Result<T, Error>;
+#[stable(feature = "rust1", since = "1.0.0")]
+pub use self::error::{Result, Error, ErrorKind};
 
 #[stable(feature = "steed", since = "1.0.0")]
 pub trait Read {
@@ -66,7 +56,7 @@ impl Write for Stderr {
             linux::write(STDERR, buffer.as_ptr() as *const _, buffer.len())
         } {
             n if n >= 0 => Ok(n as usize),
-            n => Err(Error { code: -n as i32 }),
+            n => Err(Error::from_raw_os_error(-n as i32)),
         }
     }
 }
@@ -90,7 +80,7 @@ impl Read for Stdin {
             linux::read(STDIN, buffer.as_mut_ptr() as *mut _, buffer.len())
         } {
             n if n >= 0 => Ok(n as usize),
-            n => Err(Error { code: -n as i32 }),
+            n => Err(Error::from_raw_os_error(-n as i32)),
         }
     }
 }
@@ -107,7 +97,7 @@ impl Write for Stdout {
             linux::write(STDOUT, buffer.as_ptr() as *const _, buffer.len())
         } {
             n if n >= 0 => Ok(n as usize),
-            n => Err(Error { code: -n as i32 }),
+            n => Err(Error::from_raw_os_error(-n as i32)),
         }
     }
 }
