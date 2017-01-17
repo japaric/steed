@@ -127,6 +127,8 @@ pub mod collections;
 // Rust 1.14.0
 pub mod error;
 // Rust 1.14.0
+pub mod ffi;
+// Rust 1.14.0
 pub mod num;
 // Rust 1.14.0
 pub mod time;
