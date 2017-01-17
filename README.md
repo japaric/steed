@@ -154,8 +154,12 @@ Or in terms of existing Rust targets:
 Right now, you can only run the examples in this repository :-).
 
 ```
+# NOTE do not install `cross` from within the `steed` directory, change
+# directories first before calling `cargo install`
 $ cargo install cross
 
+# NOTE you must always pass `--target` to `cross`, do not omit it when compiling
+# for the host
 $ cross run --target aarch64-unknown-linux-gnu --example hello
 Hello, world!
 
