@@ -3,6 +3,7 @@
 use ctypes::{c_int, c_uint};
 use io::{Error, Read, Write};
 use linux::types::umode_t;
+use path::{Path, PathBuf};
 use {linux, io};
 
 #[stable(feature = "steed", since = "1.0.0")]
@@ -167,5 +168,43 @@ impl OpenOptions {
             (true, true, false) => linux::O_CREAT | linux::O_TRUNC,
             (_, _, true) => linux::O_CREAT | linux::O_EXCL,
         })
+    }
+}
+
+// Shim for module `path`
+pub enum Metadata { }
+pub enum ReadDir { }
+
+pub fn metadata<P: AsRef<Path>>(path: P) -> io::Result<Metadata> {
+    let _ = path;
+    unimplemented!();
+}
+
+pub fn symlink_metadata<P: AsRef<Path>>(path: P) -> io::Result<Metadata> {
+    let _ = path;
+    unimplemented!();
+}
+
+pub fn read_link<P: AsRef<Path>>(path: P) -> io::Result<PathBuf> {
+    let _ = path;
+    unimplemented!();
+}
+
+pub fn canonicalize<P: AsRef<Path>>(path: P) -> io::Result<PathBuf> {
+    let _ = path;
+    unimplemented!();
+}
+
+pub fn read_dir<P: AsRef<Path>>(path: P) -> io::Result<ReadDir> {
+    let _ = path;
+    unimplemented!();
+}
+
+impl Metadata {
+    pub fn is_dir(&self) -> bool {
+        match *self { }
+    }
+    pub fn is_file(&self) -> bool {
+        match *self { }
     }
 }

@@ -136,6 +136,8 @@ pub mod num;
 // Rust 1.14.0
 pub mod memchr;
 // Rust 1.14.0
+pub mod path;
+// Rust 1.14.0
 pub mod time;
 
 // Rust 1.14.0
@@ -147,6 +149,9 @@ mod ctypes;
 mod linux;
 mod panicking;
 mod sys;
+mod sys_common {
+    pub use sys::*;
+}
 
 // NOTE These two are "undefined" symbols that LLVM emits but that, AFAIK, we
 // never use

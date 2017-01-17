@@ -15,7 +15,7 @@ use borrow::Cow;
 use fmt::{self, Debug};
 use str;
 use mem;
-use sys::{AsInner, IntoInner};
+use sys_common::{AsInner, IntoInner};
 
 #[derive(Clone, Hash)]
 pub struct Buf {
@@ -49,6 +49,7 @@ impl AsInner<[u8]> for Buf {
         &self.inner
     }
 }
+
 
 impl Buf {
     pub fn from_string(s: String) -> Buf {
