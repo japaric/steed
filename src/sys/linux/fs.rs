@@ -57,11 +57,13 @@ pub struct FileType { mode: mode_t }
 pub struct DirBuilder { mode: mode_t }
 
 impl FileAttr {
+    /*
     pub fn size(&self) -> u64 { unimplemented!(); }
     pub fn perm(&self) -> FilePermissions { unimplemented!(); }
     pub fn file_type(&self) -> FileType { unimplemented!(); }
     pub fn modified(&self) -> io::Result<SystemTime> { unimplemented!(); }
     pub fn accessed(&self) -> io::Result<SystemTime> { unimplemented!(); }
+    */
     pub fn created(&self) -> io::Result<SystemTime> {
         Err(io::Error::new(io::ErrorKind::Other,
                            "creation time is not available on this platform \
@@ -73,6 +75,7 @@ impl AsInner<stat64> for FileAttr {
     fn as_inner(&self) -> &stat64 { &self.stat }
 }
 
+/*
 impl FilePermissions {
     pub fn readonly(&self) -> bool { unimplemented!(); }
     pub fn set_readonly(&mut self, readonly: bool) { unimplemented!(); }
@@ -103,6 +106,7 @@ impl Iterator for ReadDir {
 
     fn next(&mut self) -> Option<io::Result<DirEntry>> { unimplemented!(); }
 }
+*/
 
 impl Drop for Dir {
     fn drop(&mut self) {
@@ -111,6 +115,7 @@ impl Drop for Dir {
 }
 
 impl DirEntry {
+    /*
     pub fn path(&self) -> PathBuf {
         unimplemented!();
     }
@@ -134,6 +139,7 @@ impl DirEntry {
     fn name_bytes(&self) -> &[u8] {
         unimplemented!();
     }
+    */
 }
 
 impl OpenOptions {
@@ -160,7 +166,7 @@ impl OpenOptions {
     pub fn create_new(&mut self, create_new: bool) { self.create_new = create_new; }
 
     pub fn custom_flags(&mut self, flags: i32) { self.custom_flags = flags; }
-    pub fn mode(&mut self, mode: u32) { unimplemented!(); }
+    /*pub fn mode(&mut self, mode: u32) { unimplemented!(); }*/
 
     fn get_access_mode(&self) -> io::Result<c_int> {
         match (self.read, self.write, self.append) {
@@ -254,22 +260,27 @@ impl File {
         self.0.read_to_end(buf)
     }
 
+    /*
     pub fn read_at(&self, buf: &mut [u8], offset: u64) -> io::Result<usize> {
         self.0.read_at(buf, offset)
     }
+    */
 
     pub fn write(&self, buf: &[u8]) -> io::Result<usize> {
         self.0.write(buf)
     }
 
+    /*
     pub fn write_at(&self, buf: &[u8], offset: u64) -> io::Result<usize> {
         self.0.write_at(buf, offset)
     }
+    */
 
     pub fn flush(&self) -> io::Result<()> {
         Ok(())
     }
 
+    /*
     pub fn seek(&self, pos: SeekFrom) -> io::Result<u64> {
         unimplemented!();
     }
@@ -277,12 +288,14 @@ impl File {
     pub fn duplicate(&self) -> io::Result<File> {
         unimplemented!();
     }
+    */
 
     pub fn fd(&self) -> &FileDesc { &self.0 }
 
     pub fn into_fd(self) -> FileDesc { self.0 }
 }
 
+/*
 impl DirBuilder {
     pub fn new() -> DirBuilder {
         unimplemented!();
@@ -296,11 +309,13 @@ impl DirBuilder {
         unimplemented!();
     }
 }
+*/
 
 fn cstr(path: &Path) -> io::Result<CString> {
     Ok(CString::new(path.as_os_str().as_bytes())?)
 }
 
+/*
 impl FromInner<c_int> for File {
     fn from_inner(fd: c_int) -> File {
         unimplemented!();
@@ -368,3 +383,4 @@ pub fn canonicalize(p: &Path) -> io::Result<PathBuf> {
 pub fn copy(from: &Path, to: &Path) -> io::Result<u64> {
     unimplemented!();
 }
+*/

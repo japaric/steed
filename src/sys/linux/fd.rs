@@ -47,9 +47,11 @@ impl FileDesc {
         (&mut me).read_to_end(buf)
     }
 
+    /*
     pub fn read_at(&self, buf: &mut [u8], offset: u64) -> io::Result<usize> {
         unimplemented!();
     }
+    */
 
     pub fn write(&self, buf: &[u8]) -> io::Result<usize> {
         Ok(cvt(unsafe {
@@ -57,9 +59,11 @@ impl FileDesc {
         })?)
     }
 
+    /*
     pub fn write_at(&self, buf: &[u8], offset: u64) -> io::Result<usize> {
         unimplemented!();
     }
+    */
 
     pub fn set_cloexec(&self) -> io::Result<()> {
         unsafe {
@@ -68,6 +72,7 @@ impl FileDesc {
         Ok(())
     }
 
+    /*
     pub fn set_nonblocking(&self, nonblocking: bool) -> io::Result<()> {
         unimplemented!();
     }
@@ -75,6 +80,7 @@ impl FileDesc {
     pub fn duplicate(&self) -> io::Result<FileDesc> {
         unimplemented!();
     }
+    */
 }
 
 impl<'a> Read for &'a FileDesc {
