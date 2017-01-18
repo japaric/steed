@@ -1,9 +1,5 @@
-#![no_std]
-#![no_main]
+use std::process;
 
-extern crate std;
-
-#[no_mangle]
-pub fn main() -> i32 {
-    1
+fn main() {
+    process::exit(1)
 }

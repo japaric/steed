@@ -29,6 +29,14 @@
 #[allow(unused)]
 use prelude::v1::*;
 
+// We want to reexport a few macros from core but libcore has already been
+// imported by the compiler (via our #[no_std] attribute) In this case we just
+// add a new crate name so we can attach the reexports to it.
+#[macro_reexport(assert, assert_eq, assert_ne, debug_assert, debug_assert_eq,
+                 debug_assert_ne, panic, unreachable, unimplemented, write,
+                 writeln, try)]
+extern crate core as __core;
+
 extern crate alloc;
 #[macro_use]
 #[macro_reexport(vec)]
@@ -121,7 +129,6 @@ pub use std_unicode::char;
 #[macro_use]
 mod macros;
 
-pub mod entry;
 pub mod io;
 pub mod process;
 
