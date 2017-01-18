@@ -42,6 +42,7 @@ pub type c_ulong = u64;
 pub type c_int = i32;
 pub type c_uint = u32;
 pub type c_ushort = u16;
+pub type c_longlong = i64;
 
 pub type size_t = usize;
 pub type ssize_t = isize;
