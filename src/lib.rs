@@ -120,7 +120,6 @@ pub use std_unicode::char;
 mod macros;
 
 pub mod entry;
-pub mod fs;
 pub mod io;
 pub mod process;
 
@@ -132,6 +131,8 @@ pub mod collections;
 pub mod error;
 // Rust 1.14.0
 pub mod ffi;
+// Rust 1.14.0
+pub mod fs;
 // Rust 1.14.0
 pub mod num;
 // Rust 1.14.0
@@ -152,6 +153,23 @@ mod panicking;
 mod sys;
 mod sys_common {
     pub use sys::*;
+}
+mod libc {
+    pub use ctypes::*;
+    pub unsafe fn strlen(cs: *const c_char) -> size_t {
+        let mut cs = cs;
+        let mut count = 0;
+        while *cs != 0 {
+            cs = cs.offset(1);
+            count += 1;
+        }
+        count
+    }
+}
+mod os {
+    pub mod raw {
+        pub use ctypes::*;
+    }
 }
 
 // NOTE These two are "undefined" symbols that LLVM emits but that, AFAIK, we

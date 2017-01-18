@@ -1,7 +1,6 @@
-use core::fmt::Write as _0;
 use core::fmt;
+use io::Write;
 
-use io::Write as _1;
 use {io, process};
 
 #[lang = "panic_fmt"]

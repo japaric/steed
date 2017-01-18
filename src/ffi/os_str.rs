@@ -16,7 +16,7 @@ use cmp;
 use hash::{Hash, Hasher};
 
 use sys::os_str::{Buf, Slice};
-use sys::{AsInner, IntoInner, FromInner};
+use sys_common::{AsInner, IntoInner, FromInner};
 
 /// A type that can represent owned, mutable platform-native strings, but is
 /// cheaply inter-convertible with Rust strings.
@@ -509,7 +509,7 @@ impl AsInner<Slice> for OsStr {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use sys::{AsInner, IntoInner};
+    use sys_common::{AsInner, IntoInner};
 
     #[test]
     fn test_os_string_with_capacity() {

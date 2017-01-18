@@ -3,7 +3,7 @@
 use core::fmt;
 
 use ctypes::c_uint;
-use {linux, io};
+use {linux, io, str};
 
 // Rust 1.14.0
 mod error;
@@ -15,33 +15,170 @@ const STDERR: c_uint = 2;
 #[stable(feature = "rust1", since = "1.0.0")]
 pub use self::error::{Result, Error, ErrorKind};
 
+const DEFAULT_BUF_SIZE: usize = ::sys_common::io::DEFAULT_BUF_SIZE;
+
 #[stable(feature = "steed", since = "1.0.0")]
 pub trait Read {
     #[stable(feature = "steed", since = "1.0.0")]
-    fn read(&mut self, buffer: &mut [u8]) -> io::Result<usize>;
+    fn read(&mut self, buf: &mut [u8]) -> Result<usize>;
+    #[stable(feature = "steed", since = "1.0.0")]
+    fn read_to_end(&mut self, buf: &mut Vec<u8>) -> Result<usize> {
+        read_to_end(self, buf)
+    }
+    #[stable(feature = "steed", since = "1.0.0")]
+    fn read_to_string(&mut self, buf: &mut String) -> Result<usize> {
+        append_to_string(buf, |b| read_to_end(self, b))
+    }
+    #[stable(feature = "read_exact", since = "1.6.0")]
+    fn read_exact(&mut self, mut buf: &mut [u8]) -> Result<()> {
+        while !buf.is_empty() {
+            match self.read(buf) {
+                Ok(0) => break,
+                Ok(n) => { let tmp = buf; buf = &mut tmp[n..]; }
+                Err(ref e) if e.kind() == ErrorKind::Interrupted => {}
+                Err(e) => return Err(e),
+            }
+        }
+        if !buf.is_empty() {
+            Err(Error::new(ErrorKind::UnexpectedEof,
+                           "failed to fill whole buffer"))
+        } else {
+            Ok(())
+        }
+    }
+    #[stable(feature = "steed", since = "1.0.0")]
+    fn by_ref(&mut self) -> &mut Self where Self: Sized { self }
 }
+
+fn read_to_end<R: Read + ?Sized>(r: &mut R, buf: &mut Vec<u8>) -> Result<usize> {
+    let start_len = buf.len();
+    let mut len = start_len;
+    let mut new_write_size = 16;
+    let ret;
+    loop {
+        if len == buf.len() {
+            if new_write_size < DEFAULT_BUF_SIZE {
+                new_write_size *= 2;
+            }
+            buf.resize(len + new_write_size, 0);
+        }
+
+        match r.read(&mut buf[len..]) {
+            Ok(0) => {
+                ret = Ok(len - start_len);
+                break;
+            }
+            Ok(n) => len += n,
+            Err(ref e) if e.kind() == ErrorKind::Interrupted => {}
+            Err(e) => {
+                ret = Err(e);
+                break;
+            }
+        }
+    }
+
+    buf.truncate(len);
+    ret
+}
+
+fn append_to_string<F>(buf: &mut String, f: F) -> Result<usize>
+    where F: FnOnce(&mut Vec<u8>) -> Result<usize>
+{
+    struct Guard<'a> { s: &'a mut Vec<u8>, len: usize }
+        impl<'a> Drop for Guard<'a> {
+        fn drop(&mut self) {
+            unsafe { self.s.set_len(self.len); }
+        }
+    }
+
+    unsafe {
+        let mut g = Guard { len: buf.len(), s: buf.as_mut_vec() };
+        let ret = f(g.s);
+        if str::from_utf8(&g.s[g.len..]).is_err() {
+            ret.and_then(|_| {
+                Err(Error::new(ErrorKind::InvalidData,
+                               "stream did not contain valid UTF-8"))
+            })
+        } else {
+            g.len = g.s.len();
+            ret
+        }
+    }
+}
+
 
 #[stable(feature = "steed", since = "1.0.0")]
 pub trait Write {
     #[stable(feature = "steed", since = "1.0.0")]
-    fn write(&mut self, buffer: &[u8]) -> io::Result<usize>;
-
+    fn write(&mut self, buf: &[u8]) -> Result<usize>;
     #[stable(feature = "steed", since = "1.0.0")]
-    fn write_all(&mut self, mut buffer: &[u8]) -> io::Result<()> {
-        if buffer.len() == 0 {
-            return Ok(());
+    fn flush(&mut self) -> Result<()>;
+    #[stable(feature = "steed", since = "1.0.0")]
+    fn write_all(&mut self, mut buf: &[u8]) -> Result<()> {
+        while !buf.is_empty() {
+            match self.write(buf) {
+                Ok(0) => return Err(Error::new(ErrorKind::WriteZero,
+                                               "failed to write whole buffer")),
+                Ok(n) => buf = &buf[n..],
+                Err(ref e) if e.kind() == ErrorKind::Interrupted => {}
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(())
+    }
+    #[stable(feature = "steed", since = "1.0.0")]
+    fn write_fmt(&mut self, fmt: fmt::Arguments) -> Result<()> {
+        // Create a shim which translates a Write to a fmt::Write and saves
+        // off I/O errors. instead of discarding them
+        struct Adaptor<'a, T: ?Sized + 'a> {
+            inner: &'a mut T,
+            error: Result<()>,
         }
 
-        loop {
-            let n = self.write(buffer)?;
+        impl<'a, T: Write + ?Sized> fmt::Write for Adaptor<'a, T> {
+            fn write_str(&mut self, s: &str) -> fmt::Result {
+                match self.inner.write_all(s.as_bytes()) {
+                    Ok(()) => Ok(()),
+                    Err(e) => {
+                        self.error = Err(e);
+                        Err(fmt::Error)
+                    }
+                }
+            }
+        }
 
-            if n < buffer.len() {
-                buffer = &buffer[n..];
-            } else {
-                return Ok(());
+        let mut output = Adaptor { inner: self, error: Ok(()) };
+        match fmt::write(&mut output, fmt) {
+            Ok(()) => Ok(()),
+            Err(..) => {
+                // check if the error came from the underlying `Write` or not
+                if output.error.is_err() {
+                    output.error
+                } else {
+                    Err(Error::new(ErrorKind::Other, "formatter error"))
+                }
             }
         }
     }
+    #[stable(feature = "steed", since = "1.0.0")]
+    fn by_ref(&mut self) -> &mut Self where Self: Sized { self }
+}
+
+#[derive(Copy, PartialEq, Eq, Clone, Debug)]
+#[stable(feature = "steed", since = "1.0.0")]
+pub enum SeekFrom {
+    #[stable(feature = "steed", since = "1.0.0")]
+    Start(#[stable(feature = "steed", since = "1.0.0")] u64),
+    #[stable(feature = "steed", since = "1.0.0")]
+    End(#[stable(feature = "steed", since = "1.0.0")] i64),
+    #[stable(feature = "steed", since = "1.0.0")]
+    Current(#[stable(feature = "steed", since = "1.0.0")] i64),
+}
+
+#[stable(feature = "steed", since = "1.0.0")]
+pub trait Seek {
+    #[stable(feature = "steed", since = "1.0.0")]
+    fn seek(&mut self, pos: SeekFrom) -> Result<u64>;
 }
 
 #[stable(feature = "steed", since = "1.0.0")]
@@ -58,6 +195,9 @@ impl Write for Stderr {
             n if n >= 0 => Ok(n as usize),
             n => Err(Error::from_raw_os_error(-n as i32)),
         }
+    }
+    fn flush(&mut self) -> io::Result<()> {
+        Ok(())
     }
 }
 
@@ -100,6 +240,9 @@ impl Write for Stdout {
             n => Err(Error::from_raw_os_error(-n as i32)),
         }
     }
+    fn flush(&mut self) -> io::Result<()> {
+        Ok(())
+    }
 }
 
 #[stable(feature = "steed", since = "1.0.0")]
@@ -129,7 +272,7 @@ pub fn stdout() -> Stdout {
 pub fn _print(args: fmt::Arguments) {
     use core::fmt::Write;
 
-    if stdout().write_fmt(args).is_err() {
+    if io::Write::write_fmt(&mut stdout(), args).is_err() {
         panic!("failed printing to stdout")
     }
 }

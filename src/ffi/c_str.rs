@@ -13,12 +13,12 @@ use borrow::{Cow, Borrow};
 use cmp::Ordering;
 use error::Error;
 use fmt::{self, Write};
-#[cfg(issue = "6")]
 use io;
+use libc;
 use mem;
 use memchr;
 use ops;
-use ctypes::{c_char, size_t};
+use os::raw::c_char;
 use ptr;
 use slice;
 use str::{self, Utf8Error};
@@ -238,7 +238,7 @@ impl CString {
     /// to undefined behavior or allocator corruption.
     #[stable(feature = "cstr_memory", since = "1.4.0")]
     pub unsafe fn from_raw(ptr: *mut c_char) -> CString {
-        let len = strlen(ptr) + 1; // Including the NUL byte
+        let len = libc::strlen(ptr) + 1; // Including the NUL byte
         let slice = slice::from_raw_parts(ptr, len as usize);
         CString { inner: mem::transmute(slice) }
     }
@@ -425,7 +425,7 @@ impl fmt::Display for NulError {
     }
 }
 
-#[cfg(issue = "6")]
+#[stable(feature = "rust1", since = "1.0.0")]
 impl From<NulError> for io::Error {
     fn from(_: NulError) -> io::Error {
         io::Error::new(io::ErrorKind::InvalidInput,
@@ -502,7 +502,7 @@ impl CStr {
     /// ```
     #[stable(feature = "rust1", since = "1.0.0")]
     pub unsafe fn from_ptr<'a>(ptr: *const c_char) -> &'a CStr {
-        let len = strlen(ptr);
+        let len = libc::strlen(ptr);
         mem::transmute(slice::from_raw_parts(ptr, len as usize + 1))
     }
 
@@ -719,16 +719,6 @@ impl AsRef<CStr> for CString {
     fn as_ref(&self) -> &CStr {
         self
     }
-}
-
-unsafe fn strlen(cs: *const c_char) -> size_t {
-    let mut cs = cs;
-    let mut count = 0;
-    while *cs != 0 {
-        cs = cs.offset(1);
-        count += 1;
-    }
-    count
 }
 
 #[cfg(test)]

@@ -26,7 +26,6 @@ use error::Error;
 use fmt;
 use ops::{Add, Sub, AddAssign, SubAssign};
 use sys::time;
-#[cfg(issue = "10")]
 use sys_common::FromInner;
 
 #[stable(feature = "time", since = "1.3.0")]
@@ -332,7 +331,6 @@ impl fmt::Display for SystemTimeError {
     }
 }
 
-#[cfg(issue = "10")]
 impl FromInner<time::SystemTime> for SystemTime {
     fn from_inner(time: time::SystemTime) -> SystemTime {
         SystemTime(time)
