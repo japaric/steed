@@ -1,22 +1,24 @@
+use ctypes::c_int;
+use ctypes::c_ushort;
 use ffi::{CString, CStr, OsString, OsStr};
 use fmt;
 use io::{self, Error, ErrorKind, SeekFrom};
+use linux::mode_t;
+use linux;
 use mem;
 use path::{Path, PathBuf};
 use ptr;
-use ctypes::c_int;
-use sys::{AsInner, FromInner};
+use super::cvt_r;
+use sys::errno;
 use sys::ext::ffi::{OsStrExt, OsStringExt};
+use sys::fd::FileDesc;
 use sys::time::SystemTime;
+use sys::{AsInner, FromInner};
 
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-enum FileDesc { }
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 enum Dir { }
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 enum dirent64 { }
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-enum mode_t { }
 
 pub struct File(FileDesc);
 
@@ -146,7 +148,7 @@ impl OpenOptions {
             create_new: false,
             // system-specific
             custom_flags: 0,
-            mode: unimplemented!(),
+            mode: 0o666,
         }
     }
 
@@ -161,21 +163,69 @@ impl OpenOptions {
     pub fn mode(&mut self, mode: u32) { unimplemented!(); }
 
     fn get_access_mode(&self) -> io::Result<c_int> {
-        unimplemented!();
+        match (self.read, self.write, self.append) {
+            (true,  false, false) => Ok(linux::O_RDONLY),
+            (false, true,  false) => Ok(linux::O_WRONLY),
+            (true,  true,  false) => Ok(linux::O_RDWR),
+            (false, _,     true)  => Ok(linux::O_WRONLY | linux::O_APPEND),
+            (true,  _,     true)  => Ok(linux::O_RDWR | linux::O_APPEND),
+            (false, false, false) => Err(Error::from_raw_os_error(errno::EINVAL)),
+        }
     }
 
     fn get_creation_mode(&self) -> io::Result<c_int> {
-        unimplemented!();
+        match (self.write, self.append) {
+            (true, false) => {}
+            (false, false) => {
+                if self.truncate || self.create || self.create_new {
+                    return Err(Error::from_raw_os_error(errno::EINVAL));
+                }
+            },
+            (_, true) => {
+                if self.truncate && !self.create_new {
+                    return Err(Error::from_raw_os_error(errno::EINVAL));
+                }
+            },
+        }
+
+        Ok(match (self.create, self.truncate, self.create_new) {
+            (false, false, false) => 0,
+            (true,  false, false) => linux::O_CREAT,
+            (false, true,  false) => linux::O_TRUNC,
+            (true,  true,  false) => linux::O_CREAT | linux::O_TRUNC,
+            (_,      _,    true)  => linux::O_CREAT | linux::O_EXCL,
+       })
     }
 }
 
 impl File {
     pub fn open(path: &Path, opts: &OpenOptions) -> io::Result<File> {
-        unimplemented!();
+        let path = cstr(path)?;
+        File::open_c(&path, opts)
     }
 
     pub fn open_c(path: &CStr, opts: &OpenOptions) -> io::Result<File> {
-        unimplemented!();
+        let flags = linux::O_CLOEXEC |
+                    linux::O_LARGEFILE |
+                    opts.get_access_mode()? |
+                    opts.get_creation_mode()? |
+                    (opts.custom_flags as c_int & !linux::O_ACCMODE);
+        let fd = FileDesc::new(cvt_r(|| unsafe {
+            linux::open(path.as_ptr(), flags, opts.mode as c_ushort)
+        })? as c_int);
+
+        // Currently the standard library supports Linux 2.6.18 which did not
+        // have the O_CLOEXEC flag (passed above). If we're running on an older
+        // Linux kernel then the flag is just ignored by the OS, so we continue
+        // to explicitly ask for a CLOEXEC fd here.
+        //
+        // The CLOEXEC flag, however, is supported on versions of OSX/BSD/etc
+        // that we support, so we only do this on Linux currently.
+        if cfg!(target_os = "linux") {
+            fd.set_cloexec()?;
+        }
+
+        Ok(File(fd))
     }
 
     pub fn file_attr(&self) -> io::Result<FileAttr> {
@@ -183,11 +233,13 @@ impl File {
     }
 
     pub fn fsync(&self) -> io::Result<()> {
-        unimplemented!();
+        cvt_r(|| unsafe { linux::fsync(self.0.raw()) })?;
+        Ok(())
     }
 
     pub fn datasync(&self) -> io::Result<()> {
-        unimplemented!();
+        cvt_r(|| unsafe { linux::fdatasync(self.0.raw()) })?;
+        Ok(())
     }
 
     pub fn truncate(&self, size: u64) -> io::Result<()> {
@@ -195,27 +247,27 @@ impl File {
     }
 
     pub fn read(&self, buf: &mut [u8]) -> io::Result<usize> {
-        unimplemented!();
+        self.0.read(buf)
     }
 
     pub fn read_to_end(&self, buf: &mut Vec<u8>) -> io::Result<usize> {
-        unimplemented!();
+        self.0.read_to_end(buf)
     }
 
     pub fn read_at(&self, buf: &mut [u8], offset: u64) -> io::Result<usize> {
-        unimplemented!();
+        self.0.read_at(buf, offset)
     }
 
     pub fn write(&self, buf: &[u8]) -> io::Result<usize> {
-        unimplemented!();
+        self.0.write(buf)
     }
 
     pub fn write_at(&self, buf: &[u8], offset: u64) -> io::Result<usize> {
-        unimplemented!();
+        self.0.write_at(buf, offset)
     }
 
     pub fn flush(&self) -> io::Result<()> {
-        unimplemented!();
+        Ok(())
     }
 
     pub fn seek(&self, pos: SeekFrom) -> io::Result<u64> {

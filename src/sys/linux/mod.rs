@@ -1,5 +1,5 @@
 pub mod ext;
-// Rust 1.14.0
+pub mod fd;
 pub mod fs;
 pub mod io;
 pub mod memchr;
@@ -11,9 +11,11 @@ pub mod os;
 pub mod time;
 
 use io::ErrorKind;
+use io::Error;
+use io::Result;
 
 // Generated from the Linux source tree using generate/errno.py
-mod errno;
+pub mod errno;
 
 mod libc {
     pub use ctypes::c_int;
@@ -44,5 +46,23 @@ pub fn decode_error_kind(errno: i32) -> ErrorKind {
             ErrorKind::WouldBlock,
 
         _ => ErrorKind::Other,
+    }
+}
+
+pub fn cvt(ret: isize) -> Result<usize> {
+    if ret < 0 {
+        assert!(ret >= -0x7fff_ffff);
+        Err(Error::from_raw_os_error(-ret as i32))
+    } else {
+        Ok(ret as usize)
+    }
+}
+
+pub fn cvt_r<F: FnMut() -> isize>(mut f: F) -> Result<usize> {
+    loop {
+        match cvt(f()) {
+            Err(ref e) if e.kind() == ErrorKind::Interrupted => {}
+            other => return other,
+        }
     }
 }

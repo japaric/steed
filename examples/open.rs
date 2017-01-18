@@ -10,7 +10,7 @@ use std::io;
 
 #[no_mangle]
 pub fn main() -> i32 {
-    let mut f = File::open(b"/target/hello\0").unwrap();
+    let mut f = File::open("target/hello").unwrap();
     let mut buffer = [0; 256];
     let n = f.read(&mut buffer).unwrap();
     io::stdout().write_all(&buffer[..n]).unwrap();

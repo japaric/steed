@@ -9,7 +9,7 @@ use std::io::Write;
 
 #[no_mangle]
 pub fn main() -> i32 {
-    let mut f = File::create(b"/target/hello\0").unwrap();
+    let mut f = File::create("target/hello").unwrap();
     f.write_all(b"Hello, world!\n").unwrap();
     0
 }

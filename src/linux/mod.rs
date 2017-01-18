@@ -38,7 +38,7 @@ pub mod types;
 
 use core::intrinsics;
 
-use ctypes::{c_char, c_int, c_uint, size_t, ssize_t};
+use ctypes::{c_char, c_int, c_uint, c_ulong, size_t, ssize_t};
 use self::types::umode_t;
 
 pub use self::arch::*;
@@ -52,6 +52,7 @@ pub const O_ACCMODE: c_int = 0o00000003;
 pub const O_RDONLY: c_int = 0o00000000;
 pub const O_RDWR: c_int = 0o00000002;
 pub const O_WRONLY: c_int = 0o00000001;
+pub const O_LARGEFILE: c_int = 0o00100000;
 
 // include/uapi/linux/time.h
 pub const CLOCK_MONOTONIC: clockid_t = 1;
@@ -67,8 +68,8 @@ pub unsafe fn clock_gettime(which_clock: clockid_t,
 
 // fs/open.c
 #[inline(always)]
-pub unsafe fn close(fd: c_uint) -> c_int {
-    syscall!(CLOSE, fd) as c_int
+pub unsafe fn close(fd: c_int) -> ssize_t {
+    syscall!(CLOSE, fd) as ssize_t
 }
 
 // kernel/exit.c
@@ -84,21 +85,42 @@ pub unsafe fn exit(code: c_int) -> ! {
 pub unsafe fn open(filename: *const c_char,
                    flags: c_int,
                    mode: umode_t)
-                   -> c_int {
-    syscall!(OPENAT, AT_FDCWD, filename, flags, mode) as c_int
+                   -> ssize_t {
+    syscall!(OPENAT, AT_FDCWD, filename, flags, mode) as ssize_t
 }
 
 // fs/read_write.c
 #[inline(always)]
-pub unsafe fn read(fd: c_uint, buffer: *mut c_char, count: size_t) -> ssize_t {
+pub unsafe fn read(fd: c_int, buffer: *mut c_char, count: size_t) -> ssize_t {
     syscall!(READ, fd, buffer, count) as ssize_t
 }
 
 // fs/read_write.c
 #[inline(always)]
-pub unsafe fn write(fd: c_uint,
+pub unsafe fn write(fd: c_int,
                     buffer: *const c_char,
                     count: size_t)
                     -> ssize_t {
     syscall!(WRITE, fd, buffer, count) as ssize_t
 }
+
+// fs/ioctl.c
+#[inline(always)]
+pub unsafe fn ioctl(fd: c_int, cmd: c_uint, arg: c_ulong) -> ssize_t {
+    syscall!(IOCTL, fd, cmd, arg) as ssize_t
+}
+
+// fs/ioctl.c
+#[inline(always)]
+pub unsafe fn fsync(fd: c_int) -> ssize_t {
+    syscall!(FSYNC, fd) as ssize_t
+}
+
+// fs/ioctl.c
+#[inline(always)]
+pub unsafe fn fdatasync(fd: c_int) -> ssize_t {
+    syscall!(FDATASYNC, fd) as ssize_t
+}
+
+// TODO?
+pub type mode_t = umode_t;

@@ -2,15 +2,15 @@
 
 use core::fmt;
 
-use ctypes::c_uint;
+use ctypes::c_int;
 use {linux, io, str};
 
 // Rust 1.14.0
 mod error;
 
-const STDIN: c_uint = 0;
-const STDOUT: c_uint = 1;
-const STDERR: c_uint = 2;
+const STDIN: c_int = 0;
+const STDOUT: c_int = 1;
+const STDERR: c_int = 2;
 
 #[stable(feature = "rust1", since = "1.0.0")]
 pub use self::error::{Result, Error, ErrorKind};
