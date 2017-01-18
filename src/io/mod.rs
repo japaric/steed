@@ -270,8 +270,6 @@ pub fn stdout() -> Stdout {
 #[stable(feature = "steed", since = "1.0.0")]
 #[doc(hidden)]
 pub fn _print(args: fmt::Arguments) {
-    use core::fmt::Write;
-
     if io::Write::write_fmt(&mut stdout(), args).is_err() {
         panic!("failed printing to stdout")
     }

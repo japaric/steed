@@ -2,15 +2,13 @@ use ctypes::c_int;
 use ctypes::c_ushort;
 use ffi::{CString, CStr, OsString, OsStr};
 use fmt;
-use io::{self, Error, ErrorKind, SeekFrom};
+use io::{self, Error, SeekFrom};
 use linux::mode_t;
 use linux;
-use mem;
 use path::{Path, PathBuf};
-use ptr;
 use super::cvt_r;
 use sys::errno;
-use sys::ext::ffi::{OsStrExt, OsStringExt};
+use sys::ext::ffi::OsStrExt;
 use sys::fd::FileDesc;
 use sys::time::SystemTime;
 use sys::{AsInner, FromInner};
@@ -18,11 +16,13 @@ use sys::{AsInner, FromInner};
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 enum Dir { }
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[allow(non_camel_case_types)]
 enum dirent64 { }
 
 pub struct File(FileDesc);
 
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[allow(non_camel_case_types)]
 pub enum stat64 { }
 #[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub enum ReadDir { }

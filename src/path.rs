@@ -99,6 +99,7 @@
 
 #![stable(feature = "rust1", since = "1.0.0")]
 
+#![cfg_attr(not(issue = "21"), allow(unused_imports))]
 use ascii::*;
 use borrow::{Borrow, Cow};
 use cmp;
@@ -1849,6 +1850,7 @@ impl Path {
     /// This is an alias to [`fs::metadata`].
     ///
     /// [`fs::metadata`]: ../fs/fn.metadata.html
+    #[cfg(issue = "21")]
     #[stable(feature = "path_ext", since = "1.5.0")]
     pub fn metadata(&self) -> io::Result<fs::Metadata> {
         fs::metadata(self)
@@ -1859,6 +1861,7 @@ impl Path {
     /// This is an alias to [`fs::symlink_metadata`].
     ///
     /// [`fs::symlink_metadata`]: ../fs/fn.symlink_metadata.html
+    #[cfg(issue = "21")]
     #[stable(feature = "path_ext", since = "1.5.0")]
     pub fn symlink_metadata(&self) -> io::Result<fs::Metadata> {
         fs::symlink_metadata(self)
@@ -1870,6 +1873,7 @@ impl Path {
     /// This is an alias to [`fs::canonicalize`].
     ///
     /// [`fs::canonicalize`]: ../fs/fn.canonicalize.html
+    #[cfg(issue = "21")]
     #[stable(feature = "path_ext", since = "1.5.0")]
     pub fn canonicalize(&self) -> io::Result<PathBuf> {
         fs::canonicalize(self)
@@ -1880,6 +1884,7 @@ impl Path {
     /// This is an alias to [`fs::read_link`].
     ///
     /// [`fs::read_link`]: ../fs/fn.read_link.html
+    #[cfg(issue = "21")]
     #[stable(feature = "path_ext", since = "1.5.0")]
     pub fn read_link(&self) -> io::Result<PathBuf> {
         fs::read_link(self)
@@ -1895,6 +1900,7 @@ impl Path {
     /// [`io::Result`]: ../io/type.Result.html
     /// [`DirEntry`]: ../fs/struct.DirEntry.html
     /// [`fs::read_dir`]: ../fs/fn.read_dir.html
+    #[cfg(issue = "21")]
     #[stable(feature = "path_ext", since = "1.5.0")]
     pub fn read_dir(&self) -> io::Result<fs::ReadDir> {
         fs::read_dir(self)
@@ -1911,6 +1917,7 @@ impl Path {
     /// use std::path::Path;
     /// assert_eq!(Path::new("does_not_exist.txt").exists(), false);
     /// ```
+    #[cfg(issue = "21")]
     #[stable(feature = "path_ext", since = "1.5.0")]
     pub fn exists(&self) -> bool {
         fs::metadata(self).is_ok()
@@ -1928,6 +1935,7 @@ impl Path {
     /// assert_eq!(Path::new("./is_a_directory/").is_file(), false);
     /// assert_eq!(Path::new("a_file.txt").is_file(), true);
     /// ```
+    #[cfg(issue = "21")]
     #[stable(feature = "path_ext", since = "1.5.0")]
     pub fn is_file(&self) -> bool {
         fs::metadata(self).map(|m| m.is_file()).unwrap_or(false)
@@ -1945,6 +1953,7 @@ impl Path {
     /// assert_eq!(Path::new("./is_a_directory/").is_dir(), true);
     /// assert_eq!(Path::new("a_file.txt").is_dir(), false);
     /// ```
+    #[cfg(issue = "21")]
     #[stable(feature = "path_ext", since = "1.5.0")]
     pub fn is_dir(&self) -> bool {
         fs::metadata(self).map(|m| m.is_dir()).unwrap_or(false)

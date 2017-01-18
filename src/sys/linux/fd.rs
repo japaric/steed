@@ -10,11 +10,10 @@
 
 #![unstable(reason = "not public", issue = "0", feature = "fd")]
 
-use ctypes::{self, c_int, c_char};
+use ctypes::{c_int, c_char};
 use io::{self, Read};
 use linux;
 use mem;
-use sync::atomic::{AtomicBool, Ordering};
 use sys::cvt;
 use sys_common::AsInner;
 use sys_common::io::read_to_end_uninitialized;

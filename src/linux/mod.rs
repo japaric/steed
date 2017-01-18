@@ -123,4 +123,5 @@ pub unsafe fn fdatasync(fd: c_int) -> ssize_t {
 }
 
 // TODO?
+#[allow(non_camel_case_types)]
 pub type mode_t = umode_t;
