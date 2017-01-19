@@ -66,38 +66,26 @@ statically linked.
 - Small, statically linked binaries:
 
 ``` rust
-// hello.rs
-#![no_std]
-#![no_main]
-
-#[macro_use]
-extern crate steed;
-
-use steed::io;
-use steed::io::Write;
-
-#[no_mangle]
-pub fn main() -> i32 {
-    io::stdout().write_all(b"Hello, world!\n").map(|_| 0).unwrap_or(1)
-}
+// examples/zero.rs
+fn main() {}
 ```
 
 ```
-# cross build --target x86_64-unknown-linux-gnu --release --example hello
-$ ./hello
-Hello, world!
+# cross build --target x86_64-unknown-linux-gnu --release --example zero
+$ ./zero; echo $?
+0
 
-$ strip -s hello
+$ strip -s zero
 
-$ file hello
-hello: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, stripped
+$ file zero
+zero: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, stripped
 
-$ size hello
+$ size zero
    text    data     bss     dec     hex filename
-    131       0       0     131      83 hello
+     21       0       0      21      15 zero
 
-$ ls -l hello
--rwxr-xr-x 1 japaric japaric 592 Jan 01 00:00 hello
+$ ls -l zero
+-rwxr-xr-x 1 japaric japaric 408 Jan 01 00:00 zero
 ```
 
 **Disclaimer** The binary size will inevitably go up after we add missing
@@ -151,20 +139,73 @@ Or in terms of existing Rust targets:
 
 ## Usage
 
-Right now, you can only run the examples in this repository :-).
+To compile your library / application against `steed`, follow these steps:
+
+> **DISCLAIMER** `steed` has not achieved feature parity with `std` yet, so it's
+> likely that your crate won't compile against `steed`. However, if your crate
+> compiles against `steed` and then crashes or doesn't behave as expected at
+> runtime, that's a bug and we would appreciate a [bug report][issues].
+
+[issues]: https://github.com/japaric/steed/issues
 
 ```
-# NOTE do not install `cross` from within the `steed` directory, change
-# directories first before calling `cargo install`
-$ cargo install cross
+# if you don't have Xargo installed
+$ cargo install xargo
 
-# NOTE you must always pass `--target` to `cross`, do not omit it when compiling
-# for the host
-$ cross run --target aarch64-unknown-linux-gnu --example hello
+# instead of this step, just go to the crate you want to build
+$ cargo new --bin hello && cd $_
+
+# `steed` doesn't support unwinding right now, use `panic = abort`
+$ edit Cargo.toml && tail -n6 $_
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+lto = true
+panic = "abort"
+
+# if building an executable
+$ edit .cargo/config && cat $_
+[build]
+rustflags = [
+    "-C", "link-arg=-Wl,--build-id=none",
+    "-C", "link-arg=-nostartfiles",
+    "-C", "link-arg=-static",
+]
+
+# this is the part that replaces `std` with `steed`
+$ edit Xargo.toml && cat $_
+[dependencies.collections]  # `steed` depends on collections
+
+[dependencies.std]
+git = "https://github.com/japaric/steed"  # `path` works too
+stage = 1
+
+# Make sure to always pass `--target`, even if you are compiling for the HOST
+# (you could use `xargo build` here if you are not building an executable)
+$ xargo run --target x86_64-unknown-linux-gnu
 Hello, world!
+```
 
-$ cross run --target powerpc-unknown-linux-gnu --example panic
-panicked at 'explicit panic', examples/panic.rs:8
+If you want to cross compile, use `cross` instead of `xargo` (unless you have
+cross C toolchain lying around)
+
+```
+$ edit Cross.toml && cat $_
+[build]
+xargo = true
+
+[target.armv7-unknown-linux-gnueabihf]
+image = "japaric/arm-linux"
+
+[target.i686-unknown-linux-gnu]
+image = "japaric/i686-linux"
+
+[target.x86_64-unknown-linux-gnu]
+image = "japaric/x86_64-linux"
+
+$ cross run --target armv7-unknown-linux-gnueabihf
+Hello, world!
 ```
 
 ## Current functionality
@@ -187,12 +228,12 @@ Yup, that's all! I did say it was very early days, didn't I?
 ## Contributing
 
 There's plenty of work to do (*spoilers* most of it is copy pasting code from
-the rust-lang/rust repo) and *you* can help! Check out the [issue tracker].
-We have tagged the issues according to their difficulty from `D-easy` to
-`D-hard`. Each issue description has instructions on how to proceed but keep
-these general guidelines in mind:
+the rust-lang/rust repo) and *you* can help! Check out
+the [issue tracker][issues]. We have tagged the issues according to their
+difficulty from `D-easy` to `D-hard`. Each issue description has instructions on
+how to proceed but keep these general guidelines in mind:
 
-[issue tracker]: https://github.com/japaric/steed/issues
+[issues]: https://github.com/japaric/steed/issues
 
 - We have an IRC channel on Mozilla network, #rust-steed, if you have any
   question!
