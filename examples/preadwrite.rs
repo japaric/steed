@@ -3,6 +3,7 @@
 use std::fs::OpenOptions;
 use std::io::{self, Write};
 use std::os::unix::fs::FileExt;
+use std::process;
 
 pub fn main() {
     let f = OpenOptions::new()
@@ -12,8 +13,12 @@ pub fn main() {
         .truncate(true)
         .open("/target/readwrite")
         .unwrap();
-    f.write_at(b"Hi?\n", 0).unwrap();
+    f.write_at(b"She says: Hi?\n", 0).unwrap();
     let mut buffer = [0; 256];
-    let n = f.read_at(&mut buffer, 0).unwrap();
-    io::stdout().write_all(&buffer[..n]).unwrap();
+    let n = f.read_at(&mut buffer, 10).unwrap();
+    let read = &buffer[..n];
+    io::stdout().write_all(read).unwrap();
+    if read != b"Hi?\n" {
+        process::exit(1);
+    }
 }
