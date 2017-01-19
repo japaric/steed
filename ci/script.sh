@@ -7,6 +7,7 @@ main() {
         hello
         instant
         open
+        preadwrite
         stderr
         system-time
         vec

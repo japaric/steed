@@ -38,7 +38,7 @@ pub mod types;
 
 use core::intrinsics;
 
-use ctypes::{c_char, c_int, c_uint, c_ulong, size_t, ssize_t};
+use ctypes::{c_char, c_int, c_uint, c_ulong, c_longlong, size_t, ssize_t};
 use self::types::umode_t;
 
 pub use self::arch::*;
@@ -104,23 +104,100 @@ pub unsafe fn write(fd: c_int,
     syscall!(WRITE, fd, buffer, count) as ssize_t
 }
 
+// fs/read_write.c
+#[inline(always)]
+pub unsafe fn pread64(fd: c_int,
+                      buffer: *mut c_char,
+                      count: size_t,
+                      pos: loff_t)
+                      -> ssize_t {
+    #[cfg(all(target_pointer_width = "32", not(target_arch = "x86")))]
+    #[inline(always)]
+    unsafe fn pread64(fd: c_int,
+                      buffer: *const c_char,
+                      count: size_t,
+                      pos: loff_t)
+                      -> ssize_t {
+        syscall!(PREAD64, fd, buffer, count, 0, pos >> 32, pos & 0xffff_ffff) as ssize_t
+    }
+    #[cfg(target_arch = "x86")]
+    #[inline(always)]
+    unsafe fn pread64(fd: c_int,
+                      buffer: *const c_char,
+                      count: size_t,
+                      pos: loff_t)
+                      -> ssize_t {
+        syscall!(PREAD64, fd, buffer, count, pos >> 32, pos & 0xffff_ffff) as ssize_t
+    }
+    #[cfg(target_pointer_width = "64")]
+    #[inline(always)]
+    unsafe fn pread64(fd: c_int,
+                      buffer: *const c_char,
+                      count: size_t,
+                      pos: loff_t)
+                      -> ssize_t {
+        syscall!(PREAD64, fd, buffer, count, pos) as ssize_t
+    }
+    pread64(fd, buffer, count, pos)
+}
+
+// fs/read_write.c
+#[inline(always)]
+pub unsafe fn pwrite64(fd: c_int,
+                       buffer: *const c_char,
+                       count: size_t,
+                       pos: loff_t)
+                       -> ssize_t {
+    #[cfg(all(target_pointer_width = "32", not(target_arch = "x86")))]
+    #[inline(always)]
+    unsafe fn pwrite64(fd: c_int,
+                       buffer: *const c_char,
+                       count: size_t,
+                       pos: loff_t)
+                       -> ssize_t {
+        syscall!(PWRITE64, fd, buffer, count, 0, pos >> 32, pos & 0xffff_ffff) as ssize_t
+    }
+    #[cfg(target_arch = "x86")]
+    #[inline(always)]
+    unsafe fn pwrite64(fd: c_int,
+                       buffer: *const c_char,
+                       count: size_t,
+                       pos: loff_t)
+                       -> ssize_t {
+        syscall!(PWRITE64, fd, buffer, count, pos >> 32, pos & 0xffff_ffff) as ssize_t
+    }
+    #[cfg(target_pointer_width = "64")]
+    #[inline(always)]
+    unsafe fn pwrite64(fd: c_int,
+                       buffer: *const c_char,
+                       count: size_t,
+                       pos: loff_t)
+                       -> ssize_t {
+        syscall!(PWRITE64, fd, buffer, count, pos) as ssize_t
+    }
+    pwrite64(fd, buffer, count, pos)
+}
+
 // fs/ioctl.c
 #[inline(always)]
 pub unsafe fn ioctl(fd: c_int, cmd: c_uint, arg: c_ulong) -> ssize_t {
     syscall!(IOCTL, fd, cmd, arg) as ssize_t
 }
 
-// fs/ioctl.c
+// fs/sync.c
 #[inline(always)]
 pub unsafe fn fsync(fd: c_int) -> ssize_t {
     syscall!(FSYNC, fd) as ssize_t
 }
 
-// fs/ioctl.c
+// fs/sync.c
 #[inline(always)]
 pub unsafe fn fdatasync(fd: c_int) -> ssize_t {
     syscall!(FDATASYNC, fd) as ssize_t
 }
+
+#[allow(non_camel_case_types)]
+pub type loff_t = c_longlong;
 
 // TODO?
 #[allow(non_camel_case_types)]

@@ -130,6 +130,7 @@ pub use std_unicode::char;
 mod macros;
 
 pub mod io;
+pub mod os;
 pub mod process;
 
 // Rust 1.14.0
@@ -173,11 +174,6 @@ mod libc {
             count += 1;
         }
         count
-    }
-}
-mod os {
-    pub mod raw {
-        pub use ctypes::*;
     }
 }
 

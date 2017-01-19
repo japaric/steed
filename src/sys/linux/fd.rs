@@ -47,11 +47,14 @@ impl FileDesc {
         (&mut me).read_to_end(buf)
     }
 
-    /*
     pub fn read_at(&self, buf: &mut [u8], offset: u64) -> io::Result<usize> {
-        unimplemented!();
+        unsafe {
+            cvt(linux::pread64(self.fd,
+                               buf.as_mut_ptr() as *mut c_char,
+                               buf.len(),
+                               offset as i64))
+        }
     }
-    */
 
     pub fn write(&self, buf: &[u8]) -> io::Result<usize> {
         Ok(cvt(unsafe {
@@ -59,11 +62,14 @@ impl FileDesc {
         })?)
     }
 
-    /*
     pub fn write_at(&self, buf: &[u8], offset: u64) -> io::Result<usize> {
-        unimplemented!();
+        unsafe {
+            cvt(linux::pwrite64(self.fd,
+                                buf.as_ptr() as *const c_char,
+                                buf.len(),
+                                offset as i64))
+        }
     }
-    */
 
     pub fn set_cloexec(&self) -> io::Result<()> {
         unsafe {
