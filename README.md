@@ -150,6 +150,7 @@ To compile your library / application against `steed`, follow these steps:
 
 ```
 # if you don't have Xargo installed
+# (Xargo v0.3.4 or newer is required)
 $ cargo install xargo
 
 # instead of this step, just go to the crate you want to build
@@ -191,6 +192,10 @@ If you want to cross compile, use `cross` instead of `xargo` (unless you have
 cross C toolchain lying around)
 
 ```
+# change directories first if you have a `.cargo/config` file lying around
+# (Cross v0.1.7 or newer is required)
+$ cargo install cross
+
 $ edit Cross.toml && cat $_
 [build]
 xargo = true
