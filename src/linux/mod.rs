@@ -111,7 +111,34 @@ pub unsafe fn pread64(fd: c_int,
                       count: size_t,
                       pos: loff_t)
                       -> ssize_t {
-    syscall!(PREAD64, fd, buffer, count, pos) as ssize_t
+    #[cfg(all(target_pointer_width = "32", not(target_arch = "x86")))]
+    #[inline(always)]
+    unsafe fn pread64(fd: c_int,
+                      buffer: *const c_char,
+                      count: size_t,
+                      pos: loff_t)
+                      -> ssize_t {
+        syscall!(PREAD64, fd, buffer, count, 0, pos >> 32, pos & 0xffff_ffff) as ssize_t
+    }
+    #[cfg(target_arch = "x86")]
+    #[inline(always)]
+    unsafe fn pread64(fd: c_int,
+                      buffer: *const c_char,
+                      count: size_t,
+                      pos: loff_t)
+                      -> ssize_t {
+        syscall!(PREAD64, fd, buffer, count, pos >> 32, pos & 0xffff_ffff) as ssize_t
+    }
+    #[cfg(target_pointer_width = "64")]
+    #[inline(always)]
+    unsafe fn pread64(fd: c_int,
+                      buffer: *const c_char,
+                      count: size_t,
+                      pos: loff_t)
+                      -> ssize_t {
+        syscall!(PREAD64, fd, buffer, count, pos) as ssize_t
+    }
+    pread64(fd, buffer, count, pos)
 }
 
 // fs/read_write.c
@@ -121,7 +148,34 @@ pub unsafe fn pwrite64(fd: c_int,
                        count: size_t,
                        pos: loff_t)
                        -> ssize_t {
-    syscall!(PWRITE64, fd, buffer, count, pos) as ssize_t
+    #[cfg(all(target_pointer_width = "32", not(target_arch = "x86")))]
+    #[inline(always)]
+    unsafe fn pwrite64(fd: c_int,
+                       buffer: *const c_char,
+                       count: size_t,
+                       pos: loff_t)
+                       -> ssize_t {
+        syscall!(PWRITE64, fd, buffer, count, 0, pos >> 32, pos & 0xffff_ffff) as ssize_t
+    }
+    #[cfg(target_arch = "x86")]
+    #[inline(always)]
+    unsafe fn pwrite64(fd: c_int,
+                       buffer: *const c_char,
+                       count: size_t,
+                       pos: loff_t)
+                       -> ssize_t {
+        syscall!(PWRITE64, fd, buffer, count, pos >> 32, pos & 0xffff_ffff) as ssize_t
+    }
+    #[cfg(target_pointer_width = "64")]
+    #[inline(always)]
+    unsafe fn pwrite64(fd: c_int,
+                       buffer: *const c_char,
+                       count: size_t,
+                       pos: loff_t)
+                       -> ssize_t {
+        syscall!(PWRITE64, fd, buffer, count, pos) as ssize_t
+    }
+    pwrite64(fd, buffer, count, pos)
 }
 
 // fs/ioctl.c
