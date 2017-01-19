@@ -234,9 +234,11 @@ impl File {
         Ok(File(fd))
     }
 
+    /*
     pub fn file_attr(&self) -> io::Result<FileAttr> {
         unimplemented!();
     }
+    */
 
     pub fn fsync(&self) -> io::Result<()> {
         cvt_r(|| unsafe { linux::fsync(self.0.raw()) })?;
@@ -249,7 +251,9 @@ impl File {
     }
 
     pub fn truncate(&self, size: u64) -> io::Result<()> {
-        unimplemented!();
+        cvt_r(|| unsafe {
+            linux::ftruncate64(self.0.raw(), size as i64)
+        }).map(|_| ())
     }
 
     pub fn read(&self, buf: &mut [u8]) -> io::Result<usize> {

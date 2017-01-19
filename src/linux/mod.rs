@@ -178,6 +178,35 @@ pub unsafe fn pwrite64(fd: c_int,
     pwrite64(fd, buffer, count, pos)
 }
 
+// fs/open.c
+#[inline(always)]
+pub unsafe fn ftruncate64(fd: c_int,
+                          length: loff_t)
+                          -> ssize_t {
+    #[cfg(all(target_pointer_width = "32", not(target_arch = "x86")))]
+    #[inline(always)]
+    unsafe fn ftruncate64(fd: c_int,
+                          length: loff_t)
+                          -> ssize_t {
+        syscall!(FTRUNCATE64, fd, 0, length >> 32, length & 0xffff_ffff) as ssize_t
+    }
+    #[cfg(target_arch = "x86")]
+    #[inline(always)]
+    unsafe fn ftruncate64(fd: c_int,
+                          length: loff_t)
+                          -> ssize_t {
+        syscall!(FTRUNCATE64, fd, length >> 32, length & 0xffff_ffff) as ssize_t
+    }
+    #[cfg(target_pointer_width = "64")]
+    #[inline(always)]
+    unsafe fn ftruncate64(fd: c_int,
+                          length: loff_t)
+                          -> ssize_t {
+        syscall!(FTRUNCATE, fd, length) as ssize_t
+    }
+    ftruncate64(fd, length)
+}
+
 // fs/ioctl.c
 #[inline(always)]
 pub unsafe fn ioctl(fd: c_int, cmd: c_uint, arg: c_ulong) -> ssize_t {

@@ -13,7 +13,8 @@ pub fn main() {
         .truncate(true)
         .open("/target/readwrite")
         .unwrap();
-    f.write_at(b"She says: Hi?\n", 0).unwrap();
+    f.write_at(b"She says: Hi?\nWhat do you say?\n", 0).unwrap();
+    f.set_len(14).unwrap();
     let mut buffer = [0; 256];
     let n = f.read_at(&mut buffer, 10).unwrap();
     let read = &buffer[..n];

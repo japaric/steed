@@ -309,7 +309,6 @@ impl File {
     /// # Ok(())
     /// # }
     /// ```
-    #[cfg(issue = "18")]
     #[stable(feature = "rust1", since = "1.0.0")]
     pub fn set_len(&self, size: u64) -> io::Result<()> {
         self.inner.truncate(size)
