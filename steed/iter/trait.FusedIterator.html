@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `FusedIterator` trait in crate `steed`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, FusedIterator">
+
+    <title>steed::iter::FusedIterator - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../index.html'>steed</a>::<wbr><a href='index.html'>iter</a></p><script>window.sidebarCurrent = {name: 'FusedIterator', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content trait">
+<h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>steed</a>::<wbr><a href='index.html'>iter</a>::<wbr><a class='trait' href=''>FusedIterator</a></span><span class='out-of-band'><span class='since' title='Stable since Rust version '></span><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/iter/traits.rs.html#769' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait FusedIterator: <a class='trait' href='../../steed/iter/trait.Iterator.html' title='steed::iter::Iterator'>Iterator</a> { }</pre><div class='stability'><div class='stab unstable'><span class=microscope>🔬</span> This is a nightly-only experimental API.  (<code>fused</code>)</div></div><div class='docblock'><p>An iterator that always continues to yield <code>None</code> when exhausted.</p>
+
+<p>Calling next on a fused iterator that has returned <code>None</code> once is guaranteed
+to return <a href="../../std/option/enum.Option.html#variant.None"><code>None</code></a> again. This trait is should be implemented by all iterators
+that behave this way because it allows for some significant optimizations.</p>
+
+<p>Note: In general, you should not use <code>FusedIterator</code> in generic bounds if
+you need a fused iterator. Instead, you should just call <a href="../../std/iter/trait.Iterator.html#method.fuse"><code>Iterator::fuse()</code></a>
+on the iterator. If the iterator is already fused, the additional <a href="../../std/iter/struct.Fuse.html"><code>Fuse</code></a>
+wrapper will be a no-op with no performance penalty.</p>
+</div>
+        <h2 id='implementors'>Implementors</h2>
+        <ul class='item-list' id='implementors-list'>
+    <li><code>impl&lt;I&gt; FusedIterator for <a class='struct' href='../../steed/boxed/struct.Box.html' title='steed::boxed::Box'>Box</a>&lt;I&gt; <span class='where'>where I: <a class='trait' href='../../steed/iter/trait.FusedIterator.html' title='steed::iter::FusedIterator'>FusedIterator</a> + ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a></span></code></li>
+<li><code>impl&lt;I&gt; FusedIterator for <a class='struct' href='https://doc.rust-lang.org/nightly/std_unicode/u_str/struct.Utf16Encoder.html' title='std_unicode::u_str::Utf16Encoder'>Utf16Encoder</a>&lt;I&gt; <span class='where'>where I: <a class='trait' href='../../steed/iter/trait.FusedIterator.html' title='steed::iter::FusedIterator'>FusedIterator</a>&lt;Item=char&gt;</span></code></li>
+<li><code>impl&lt;'a&gt; FusedIterator for <a class='struct' href='../../steed/str/struct.SplitWhitespace.html' title='steed::str::SplitWhitespace'>SplitWhitespace</a>&lt;'a&gt;</code></li>
+<li><code>impl FusedIterator for <a class='struct' href='../../steed/char/struct.ToLowercase.html' title='steed::char::ToLowercase'>ToLowercase</a></code></li>
+<li><code>impl FusedIterator for <a class='struct' href='../../steed/char/struct.ToUppercase.html' title='steed::char::ToUppercase'>ToUppercase</a></code></li>
+<li><code>impl FusedIterator for <a class='struct' href='../../steed/char/struct.EscapeUnicode.html' title='steed::char::EscapeUnicode'>EscapeUnicode</a></code></li>
+<li><code>impl FusedIterator for <a class='struct' href='../../steed/char/struct.EscapeDefault.html' title='steed::char::EscapeDefault'>EscapeDefault</a></code></li>
+<li><code>impl FusedIterator for <a class='struct' href='../../steed/char/struct.EscapeDebug.html' title='steed::char::EscapeDebug'>EscapeDebug</a></code></li>
+<li><code>impl&lt;I&gt; FusedIterator for <a class='struct' href='../../steed/char/struct.DecodeUtf8.html' title='steed::char::DecodeUtf8'>DecodeUtf8</a>&lt;I&gt; <span class='where'>where I: <a class='trait' href='../../steed/iter/trait.FusedIterator.html' title='steed::iter::FusedIterator'>FusedIterator</a>&lt;Item=u8&gt;</span></code></li>
+<li><code>impl&lt;A&gt; FusedIterator for steed::iter::<a class='struct' href='../../steed/iter/struct.StepBy.html' title='steed::iter::StepBy'>StepBy</a>&lt;A, <a class='struct' href='../../steed/ops/struct.RangeFrom.html' title='steed::ops::RangeFrom'>RangeFrom</a>&lt;A&gt;&gt; <span class='where fmt-newline'>where A: <a class='trait' href='../../steed/clone/trait.Clone.html' title='steed::clone::Clone'>Clone</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;'a A: <a class='trait' href='../../steed/ops/trait.Add.html' title='steed::ops::Add'>Add</a>&lt;&amp;'a A&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;'a A::<a class='trait' href='../../steed/ops/trait.Add.html' title='steed::ops::Add'>Output</a> == A</span></code></li>
+<li><code>impl&lt;A&gt; FusedIterator for steed::iter::<a class='struct' href='../../steed/iter/struct.StepBy.html' title='steed::iter::StepBy'>StepBy</a>&lt;A, <a class='struct' href='../../steed/ops/struct.Range.html' title='steed::ops::Range'>Range</a>&lt;A&gt;&gt; <span class='where'>where A: <a class='trait' href='../../steed/clone/trait.Clone.html' title='steed::clone::Clone'>Clone</a> + <a class='trait' href='../../steed/iter/trait.Step.html' title='steed::iter::Step'>Step</a></span></code></li>
+<li><code>impl&lt;A&gt; FusedIterator for steed::iter::<a class='struct' href='../../steed/iter/struct.StepBy.html' title='steed::iter::StepBy'>StepBy</a>&lt;A, <a class='enum' href='../../steed/ops/enum.RangeInclusive.html' title='steed::ops::RangeInclusive'>RangeInclusive</a>&lt;A&gt;&gt; <span class='where'>where A: <a class='trait' href='../../steed/clone/trait.Clone.html' title='steed::clone::Clone'>Clone</a> + <a class='trait' href='../../steed/iter/trait.Step.html' title='steed::iter::Step'>Step</a></span></code></li>
+<li><code>impl&lt;A&gt; FusedIterator for steed::ops::<a class='struct' href='../../steed/ops/struct.Range.html' title='steed::ops::Range'>Range</a>&lt;A&gt; <span class='where fmt-newline'>where A: <a class='trait' href='../../steed/iter/trait.Step.html' title='steed::iter::Step'>Step</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;'a A: <a class='trait' href='../../steed/ops/trait.Add.html' title='steed::ops::Add'>Add</a>&lt;&amp;'a A&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;'a A::<a class='trait' href='../../steed/ops/trait.Add.html' title='steed::ops::Add'>Output</a> == A</span></code></li>
+<li><code>impl&lt;A&gt; FusedIterator for <a class='struct' href='../../steed/ops/struct.RangeFrom.html' title='steed::ops::RangeFrom'>RangeFrom</a>&lt;A&gt; <span class='where fmt-newline'>where A: <a class='trait' href='../../steed/iter/trait.Step.html' title='steed::iter::Step'>Step</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;'a A: <a class='trait' href='../../steed/ops/trait.Add.html' title='steed::ops::Add'>Add</a>&lt;&amp;'a A&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;'a A::<a class='trait' href='../../steed/ops/trait.Add.html' title='steed::ops::Add'>Output</a> == A</span></code></li>
+<li><code>impl&lt;A&gt; FusedIterator for <a class='enum' href='../../steed/ops/enum.RangeInclusive.html' title='steed::ops::RangeInclusive'>RangeInclusive</a>&lt;A&gt; <span class='where fmt-newline'>where A: <a class='trait' href='../../steed/iter/trait.Step.html' title='steed::iter::Step'>Step</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;'a A: <a class='trait' href='../../steed/ops/trait.Add.html' title='steed::ops::Add'>Add</a>&lt;&amp;'a A&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;'a A::<a class='trait' href='../../steed/ops/trait.Add.html' title='steed::ops::Add'>Output</a> == A</span></code></li>
+<li><code>impl&lt;A&gt; FusedIterator for <a class='struct' href='../../steed/iter/struct.Repeat.html' title='steed::iter::Repeat'>Repeat</a>&lt;A&gt; <span class='where'>where A: <a class='trait' href='../../steed/clone/trait.Clone.html' title='steed::clone::Clone'>Clone</a></span></code></li>
+<li><code>impl&lt;T&gt; FusedIterator for <a class='struct' href='../../steed/iter/struct.Empty.html' title='steed::iter::Empty'>Empty</a>&lt;T&gt;</code></li>
+<li><code>impl&lt;T&gt; FusedIterator for <a class='struct' href='../../steed/iter/struct.Once.html' title='steed::iter::Once'>Once</a>&lt;T&gt;</code></li>
+<li><code>impl&lt;'a, I&gt; FusedIterator for &amp;'a mut I <span class='where'>where I: <a class='trait' href='../../steed/iter/trait.FusedIterator.html' title='steed::iter::FusedIterator'>FusedIterator</a> + ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a></span></code></li>
+<li><code>impl&lt;I&gt; FusedIterator for <a class='struct' href='../../steed/iter/struct.Rev.html' title='steed::iter::Rev'>Rev</a>&lt;I&gt; <span class='where'>where I: <a class='trait' href='../../steed/iter/trait.FusedIterator.html' title='steed::iter::FusedIterator'>FusedIterator</a> + <a class='trait' href='../../steed/iter/trait.DoubleEndedIterator.html' title='steed::iter::DoubleEndedIterator'>DoubleEndedIterator</a></span></code></li>
+<li><code>impl&lt;'a, I, T&gt; FusedIterator for <a class='struct' href='../../steed/iter/struct.Cloned.html' title='steed::iter::Cloned'>Cloned</a>&lt;I&gt; <span class='where fmt-newline'>where I: <a class='trait' href='../../steed/iter/trait.FusedIterator.html' title='steed::iter::FusedIterator'>FusedIterator</a>&lt;Item=&amp;'a T&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;T: 'a + <a class='trait' href='../../steed/clone/trait.Clone.html' title='steed::clone::Clone'>Clone</a></span></code></li>
+<li><code>impl&lt;I&gt; FusedIterator for <a class='struct' href='../../steed/iter/struct.Cycle.html' title='steed::iter::Cycle'>Cycle</a>&lt;I&gt; <span class='where'>where I: <a class='trait' href='../../steed/clone/trait.Clone.html' title='steed::clone::Clone'>Clone</a> + <a class='trait' href='../../steed/iter/trait.Iterator.html' title='steed::iter::Iterator'>Iterator</a></span></code></li>
+<li><code>impl&lt;A, B&gt; FusedIterator for <a class='struct' href='../../steed/iter/struct.Chain.html' title='steed::iter::Chain'>Chain</a>&lt;A, B&gt; <span class='where fmt-newline'>where A: <a class='trait' href='../../steed/iter/trait.FusedIterator.html' title='steed::iter::FusedIterator'>FusedIterator</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B: <a class='trait' href='../../steed/iter/trait.FusedIterator.html' title='steed::iter::FusedIterator'>FusedIterator</a>&lt;Item=A::<a class='trait' href='../../steed/iter/trait.Iterator.html' title='steed::iter::Iterator'>Item</a>&gt;</span></code></li>
+<li><code>impl&lt;A, B&gt; FusedIterator for <a class='struct' href='../../steed/iter/struct.Zip.html' title='steed::iter::Zip'>Zip</a>&lt;A, B&gt; <span class='where'>where A: <a class='trait' href='../../steed/iter/trait.FusedIterator.html' title='steed::iter::FusedIterator'>FusedIterator</a>, B: <a class='trait' href='../../steed/iter/trait.FusedIterator.html' title='steed::iter::FusedIterator'>FusedIterator</a></span></code></li>
+<li><code>impl&lt;B, I, F&gt; FusedIterator for <a class='struct' href='../../steed/iter/struct.Map.html' title='steed::iter::Map'>Map</a>&lt;I, F&gt; <span class='where fmt-newline'>where F: <a class='trait' href='../../steed/ops/trait.FnMut.html' title='steed::ops::FnMut'>FnMut</a>(I::<a class='trait' href='../../steed/iter/trait.Iterator.html' title='steed::iter::Iterator'>Item</a>) -&gt; B,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I: <a class='trait' href='../../steed/iter/trait.FusedIterator.html' title='steed::iter::FusedIterator'>FusedIterator</a></span></code></li>
+<li><code>impl&lt;I, P&gt; FusedIterator for <a class='struct' href='../../steed/iter/struct.Filter.html' title='steed::iter::Filter'>Filter</a>&lt;I, P&gt; <span class='where fmt-newline'>where I: <a class='trait' href='../../steed/iter/trait.FusedIterator.html' title='steed::iter::FusedIterator'>FusedIterator</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P: <a class='trait' href='../../steed/ops/trait.FnMut.html' title='steed::ops::FnMut'>FnMut</a>(&amp;I::<a class='trait' href='../../steed/iter/trait.Iterator.html' title='steed::iter::Iterator'>Item</a>) -&gt; bool</span></code></li>
+<li><code>impl&lt;B, I, F&gt; FusedIterator for <a class='struct' href='../../steed/iter/struct.FilterMap.html' title='steed::iter::FilterMap'>FilterMap</a>&lt;I, F&gt; <span class='where fmt-newline'>where F: <a class='trait' href='../../steed/ops/trait.FnMut.html' title='steed::ops::FnMut'>FnMut</a>(I::<a class='trait' href='../../steed/iter/trait.Iterator.html' title='steed::iter::Iterator'>Item</a>) -&gt; <a class='enum' href='../../steed/option/enum.Option.html' title='steed::option::Option'>Option</a>&lt;B&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I: <a class='trait' href='../../steed/iter/trait.FusedIterator.html' title='steed::iter::FusedIterator'>FusedIterator</a></span></code></li>
+<li><code>impl&lt;I&gt; FusedIterator for <a class='struct' href='../../steed/iter/struct.Enumerate.html' title='steed::iter::Enumerate'>Enumerate</a>&lt;I&gt; <span class='where'>where I: <a class='trait' href='../../steed/iter/trait.FusedIterator.html' title='steed::iter::FusedIterator'>FusedIterator</a></span></code></li>
+<li><code>impl&lt;I&gt; FusedIterator for <a class='struct' href='../../steed/iter/struct.Peekable.html' title='steed::iter::Peekable'>Peekable</a>&lt;I&gt; <span class='where'>where I: <a class='trait' href='../../steed/iter/trait.FusedIterator.html' title='steed::iter::FusedIterator'>FusedIterator</a></span></code></li>
+<li><code>impl&lt;I, P&gt; FusedIterator for <a class='struct' href='../../steed/iter/struct.SkipWhile.html' title='steed::iter::SkipWhile'>SkipWhile</a>&lt;I, P&gt; <span class='where fmt-newline'>where I: <a class='trait' href='../../steed/iter/trait.FusedIterator.html' title='steed::iter::FusedIterator'>FusedIterator</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P: <a class='trait' href='../../steed/ops/trait.FnMut.html' title='steed::ops::FnMut'>FnMut</a>(&amp;I::<a class='trait' href='../../steed/iter/trait.Iterator.html' title='steed::iter::Iterator'>Item</a>) -&gt; bool</span></code></li>
+<li><code>impl&lt;I, P&gt; FusedIterator for <a class='struct' href='../../steed/iter/struct.TakeWhile.html' title='steed::iter::TakeWhile'>TakeWhile</a>&lt;I, P&gt; <span class='where fmt-newline'>where I: <a class='trait' href='../../steed/iter/trait.FusedIterator.html' title='steed::iter::FusedIterator'>FusedIterator</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P: <a class='trait' href='../../steed/ops/trait.FnMut.html' title='steed::ops::FnMut'>FnMut</a>(&amp;I::<a class='trait' href='../../steed/iter/trait.Iterator.html' title='steed::iter::Iterator'>Item</a>) -&gt; bool</span></code></li>
+<li><code>impl&lt;I&gt; FusedIterator for <a class='struct' href='../../steed/iter/struct.Skip.html' title='steed::iter::Skip'>Skip</a>&lt;I&gt; <span class='where'>where I: <a class='trait' href='../../steed/iter/trait.FusedIterator.html' title='steed::iter::FusedIterator'>FusedIterator</a></span></code></li>
+<li><code>impl&lt;I&gt; FusedIterator for <a class='struct' href='../../steed/iter/struct.Take.html' title='steed::iter::Take'>Take</a>&lt;I&gt; <span class='where'>where I: <a class='trait' href='../../steed/iter/trait.FusedIterator.html' title='steed::iter::FusedIterator'>FusedIterator</a></span></code></li>
+<li><code>impl&lt;B, I, St, F&gt; FusedIterator for <a class='struct' href='../../steed/iter/struct.Scan.html' title='steed::iter::Scan'>Scan</a>&lt;I, St, F&gt; <span class='where fmt-newline'>where F: <a class='trait' href='../../steed/ops/trait.FnMut.html' title='steed::ops::FnMut'>FnMut</a>(&amp;mut St, I::<a class='trait' href='../../steed/iter/trait.Iterator.html' title='steed::iter::Iterator'>Item</a>) -&gt; <a class='enum' href='../../steed/option/enum.Option.html' title='steed::option::Option'>Option</a>&lt;B&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I: <a class='trait' href='../../steed/iter/trait.FusedIterator.html' title='steed::iter::FusedIterator'>FusedIterator</a></span></code></li>
+<li><code>impl&lt;I, U, F&gt; FusedIterator for <a class='struct' href='../../steed/iter/struct.FlatMap.html' title='steed::iter::FlatMap'>FlatMap</a>&lt;I, U, F&gt; <span class='where fmt-newline'>where F: <a class='trait' href='../../steed/ops/trait.FnMut.html' title='steed::ops::FnMut'>FnMut</a>(I::<a class='trait' href='../../steed/iter/trait.Iterator.html' title='steed::iter::Iterator'>Item</a>) -&gt; U,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I: <a class='trait' href='../../steed/iter/trait.FusedIterator.html' title='steed::iter::FusedIterator'>FusedIterator</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U: <a class='trait' href='../../steed/iter/trait.IntoIterator.html' title='steed::iter::IntoIterator'>IntoIterator</a></span></code></li>
+<li><code>impl&lt;I&gt; FusedIterator for <a class='struct' href='../../steed/iter/struct.Fuse.html' title='steed::iter::Fuse'>Fuse</a>&lt;I&gt; <span class='where'>where I: <a class='trait' href='../../steed/iter/trait.Iterator.html' title='steed::iter::Iterator'>Iterator</a></span></code></li>
+<li><code>impl&lt;I, F&gt; FusedIterator for <a class='struct' href='../../steed/iter/struct.Inspect.html' title='steed::iter::Inspect'>Inspect</a>&lt;I, F&gt; <span class='where fmt-newline'>where F: <a class='trait' href='../../steed/ops/trait.FnMut.html' title='steed::ops::FnMut'>FnMut</a>(&amp;I::<a class='trait' href='../../steed/iter/trait.Iterator.html' title='steed::iter::Iterator'>Item</a>) -&gt; (),<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I: <a class='trait' href='../../steed/iter/trait.FusedIterator.html' title='steed::iter::FusedIterator'>FusedIterator</a></span></code></li>
+<li><code>impl&lt;'a, A&gt; FusedIterator for steed::option::<a class='struct' href='../../steed/option/struct.Iter.html' title='steed::option::Iter'>Iter</a>&lt;'a, A&gt;</code></li>
+<li><code>impl&lt;'a, A&gt; FusedIterator for steed::option::<a class='struct' href='../../steed/option/struct.IterMut.html' title='steed::option::IterMut'>IterMut</a>&lt;'a, A&gt;</code></li>
+<li><code>impl&lt;A&gt; FusedIterator for steed::option::<a class='struct' href='../../steed/option/struct.IntoIter.html' title='steed::option::IntoIter'>IntoIter</a>&lt;A&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; FusedIterator for steed::result::<a class='struct' href='../../steed/result/struct.Iter.html' title='steed::result::Iter'>Iter</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; FusedIterator for steed::result::<a class='struct' href='../../steed/result/struct.IterMut.html' title='steed::result::IterMut'>IterMut</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;T&gt; FusedIterator for steed::result::<a class='struct' href='../../steed/result/struct.IntoIter.html' title='steed::result::IntoIter'>IntoIter</a>&lt;T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; FusedIterator for steed::slice::<a class='struct' href='../../steed/slice/struct.Iter.html' title='steed::slice::Iter'>Iter</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; FusedIterator for steed::slice::<a class='struct' href='../../steed/slice/struct.IterMut.html' title='steed::slice::IterMut'>IterMut</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;'a, T, P&gt; FusedIterator for steed::slice::<a class='struct' href='../../steed/slice/struct.Split.html' title='steed::slice::Split'>Split</a>&lt;'a, T, P&gt; <span class='where'>where P: <a class='trait' href='../../steed/ops/trait.FnMut.html' title='steed::ops::FnMut'>FnMut</a>(&amp;T) -&gt; bool</span></code></li>
+<li><code>impl&lt;'a, T, P&gt; FusedIterator for <a class='struct' href='../../steed/slice/struct.SplitMut.html' title='steed::slice::SplitMut'>SplitMut</a>&lt;'a, T, P&gt; <span class='where'>where P: <a class='trait' href='../../steed/ops/trait.FnMut.html' title='steed::ops::FnMut'>FnMut</a>(&amp;T) -&gt; bool</span></code></li>
+<li><code>impl&lt;'a, T&gt; FusedIterator for <a class='struct' href='../../steed/slice/struct.Windows.html' title='steed::slice::Windows'>Windows</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; FusedIterator for <a class='struct' href='../../steed/slice/struct.Chunks.html' title='steed::slice::Chunks'>Chunks</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; FusedIterator for <a class='struct' href='../../steed/slice/struct.ChunksMut.html' title='steed::slice::ChunksMut'>ChunksMut</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;'a&gt; FusedIterator for <a class='struct' href='../../steed/str/struct.Chars.html' title='steed::str::Chars'>Chars</a>&lt;'a&gt;</code></li>
+<li><code>impl&lt;'a&gt; FusedIterator for <a class='struct' href='../../steed/str/struct.CharIndices.html' title='steed::str::CharIndices'>CharIndices</a>&lt;'a&gt;</code></li>
+<li><code>impl&lt;'a&gt; FusedIterator for <a class='struct' href='../../steed/str/struct.Bytes.html' title='steed::str::Bytes'>Bytes</a>&lt;'a&gt;</code></li>
+<li><code>impl&lt;'a&gt; FusedIterator for <a class='struct' href='../../steed/str/struct.Lines.html' title='steed::str::Lines'>Lines</a>&lt;'a&gt;</code></li>
+<li><code>impl&lt;'a&gt; FusedIterator for <a class='struct' href='../../steed/str/struct.LinesAny.html' title='steed::str::LinesAny'>LinesAny</a>&lt;'a&gt;</code></li>
+<li><code>impl&lt;'a, T, P&gt; FusedIterator for steed::slice::<a class='struct' href='../../steed/slice/struct.SplitN.html' title='steed::slice::SplitN'>SplitN</a>&lt;'a, T, P&gt; <span class='where'>where P: <a class='trait' href='../../steed/ops/trait.FnMut.html' title='steed::ops::FnMut'>FnMut</a>(&amp;T) -&gt; bool</span></code></li>
+<li><code>impl&lt;'a, T, P&gt; FusedIterator for steed::slice::<a class='struct' href='../../steed/slice/struct.RSplitN.html' title='steed::slice::RSplitN'>RSplitN</a>&lt;'a, T, P&gt; <span class='where'>where P: <a class='trait' href='../../steed/ops/trait.FnMut.html' title='steed::ops::FnMut'>FnMut</a>(&amp;T) -&gt; bool</span></code></li>
+<li><code>impl&lt;'a, T, P&gt; FusedIterator for <a class='struct' href='../../steed/slice/struct.SplitNMut.html' title='steed::slice::SplitNMut'>SplitNMut</a>&lt;'a, T, P&gt; <span class='where'>where P: <a class='trait' href='../../steed/ops/trait.FnMut.html' title='steed::ops::FnMut'>FnMut</a>(&amp;T) -&gt; bool</span></code></li>
+<li><code>impl&lt;'a, T, P&gt; FusedIterator for <a class='struct' href='../../steed/slice/struct.RSplitNMut.html' title='steed::slice::RSplitNMut'>RSplitNMut</a>&lt;'a, T, P&gt; <span class='where fmt-newline'>where P: <a class='trait' href='../../steed/ops/trait.FnMut.html' title='steed::ops::FnMut'>FnMut</a>(&amp;T) -&gt; bool</span></code></li>
+<li><code>impl&lt;'a, P&gt; FusedIterator for steed::str::<a class='struct' href='../../steed/str/struct.Split.html' title='steed::str::Split'>Split</a>&lt;'a, P&gt; <span class='where'>where P: <a class='trait' href='../../steed/str/pattern/trait.Pattern.html' title='steed::str::pattern::Pattern'>Pattern</a>&lt;'a&gt;</span></code></li>
+<li><code>impl&lt;'a, P&gt; FusedIterator for <a class='struct' href='../../steed/str/struct.RSplit.html' title='steed::str::RSplit'>RSplit</a>&lt;'a, P&gt; <span class='where fmt-newline'>where P: <a class='trait' href='../../steed/str/pattern/trait.Pattern.html' title='steed::str::pattern::Pattern'>Pattern</a>&lt;'a&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P::<a class='trait' href='../../steed/str/pattern/trait.Pattern.html' title='steed::str::pattern::Pattern'>Searcher</a>: <a class='trait' href='../../steed/str/pattern/trait.ReverseSearcher.html' title='steed::str::pattern::ReverseSearcher'>ReverseSearcher</a>&lt;'a&gt;</span></code></li>
+<li><code>impl&lt;'a, P&gt; FusedIterator for <a class='struct' href='../../steed/str/struct.SplitTerminator.html' title='steed::str::SplitTerminator'>SplitTerminator</a>&lt;'a, P&gt; <span class='where'>where P: <a class='trait' href='../../steed/str/pattern/trait.Pattern.html' title='steed::str::pattern::Pattern'>Pattern</a>&lt;'a&gt;</span></code></li>
+<li><code>impl&lt;'a, P&gt; FusedIterator for <a class='struct' href='../../steed/str/struct.RSplitTerminator.html' title='steed::str::RSplitTerminator'>RSplitTerminator</a>&lt;'a, P&gt; <span class='where fmt-newline'>where P: <a class='trait' href='../../steed/str/pattern/trait.Pattern.html' title='steed::str::pattern::Pattern'>Pattern</a>&lt;'a&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P::<a class='trait' href='../../steed/str/pattern/trait.Pattern.html' title='steed::str::pattern::Pattern'>Searcher</a>: <a class='trait' href='../../steed/str/pattern/trait.ReverseSearcher.html' title='steed::str::pattern::ReverseSearcher'>ReverseSearcher</a>&lt;'a&gt;</span></code></li>
+<li><code>impl&lt;'a, P&gt; FusedIterator for steed::str::<a class='struct' href='../../steed/str/struct.SplitN.html' title='steed::str::SplitN'>SplitN</a>&lt;'a, P&gt; <span class='where'>where P: <a class='trait' href='../../steed/str/pattern/trait.Pattern.html' title='steed::str::pattern::Pattern'>Pattern</a>&lt;'a&gt;</span></code></li>
+<li><code>impl&lt;'a, P&gt; FusedIterator for steed::str::<a class='struct' href='../../steed/str/struct.RSplitN.html' title='steed::str::RSplitN'>RSplitN</a>&lt;'a, P&gt; <span class='where fmt-newline'>where P: <a class='trait' href='../../steed/str/pattern/trait.Pattern.html' title='steed::str::pattern::Pattern'>Pattern</a>&lt;'a&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P::<a class='trait' href='../../steed/str/pattern/trait.Pattern.html' title='steed::str::pattern::Pattern'>Searcher</a>: <a class='trait' href='../../steed/str/pattern/trait.ReverseSearcher.html' title='steed::str::pattern::ReverseSearcher'>ReverseSearcher</a>&lt;'a&gt;</span></code></li>
+<li><code>impl&lt;'a, P&gt; FusedIterator for <a class='struct' href='../../steed/str/struct.MatchIndices.html' title='steed::str::MatchIndices'>MatchIndices</a>&lt;'a, P&gt; <span class='where'>where P: <a class='trait' href='../../steed/str/pattern/trait.Pattern.html' title='steed::str::pattern::Pattern'>Pattern</a>&lt;'a&gt;</span></code></li>
+<li><code>impl&lt;'a, P&gt; FusedIterator for <a class='struct' href='../../steed/str/struct.RMatchIndices.html' title='steed::str::RMatchIndices'>RMatchIndices</a>&lt;'a, P&gt; <span class='where fmt-newline'>where P: <a class='trait' href='../../steed/str/pattern/trait.Pattern.html' title='steed::str::pattern::Pattern'>Pattern</a>&lt;'a&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P::<a class='trait' href='../../steed/str/pattern/trait.Pattern.html' title='steed::str::pattern::Pattern'>Searcher</a>: <a class='trait' href='../../steed/str/pattern/trait.ReverseSearcher.html' title='steed::str::pattern::ReverseSearcher'>ReverseSearcher</a>&lt;'a&gt;</span></code></li>
+<li><code>impl&lt;'a, P&gt; FusedIterator for <a class='struct' href='../../steed/str/struct.Matches.html' title='steed::str::Matches'>Matches</a>&lt;'a, P&gt; <span class='where'>where P: <a class='trait' href='../../steed/str/pattern/trait.Pattern.html' title='steed::str::pattern::Pattern'>Pattern</a>&lt;'a&gt;</span></code></li>
+<li><code>impl&lt;'a, P&gt; FusedIterator for <a class='struct' href='../../steed/str/struct.RMatches.html' title='steed::str::RMatches'>RMatches</a>&lt;'a, P&gt; <span class='where fmt-newline'>where P: <a class='trait' href='../../steed/str/pattern/trait.Pattern.html' title='steed::str::pattern::Pattern'>Pattern</a>&lt;'a&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P::<a class='trait' href='../../steed/str/pattern/trait.Pattern.html' title='steed::str::pattern::Pattern'>Searcher</a>: <a class='trait' href='../../steed/str/pattern/trait.ReverseSearcher.html' title='steed::str::pattern::ReverseSearcher'>ReverseSearcher</a>&lt;'a&gt;</span></code></li>
+<li><code>impl&lt;'a, T&gt; FusedIterator for steed::collections::binary_heap::<a class='struct' href='../../steed/collections/binary_heap/struct.Iter.html' title='steed::collections::binary_heap::Iter'>Iter</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;T&gt; FusedIterator for steed::collections::binary_heap::<a class='struct' href='../../steed/collections/binary_heap/struct.IntoIter.html' title='steed::collections::binary_heap::IntoIter'>IntoIter</a>&lt;T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; FusedIterator for steed::collections::binary_heap::<a class='struct' href='../../steed/collections/binary_heap/struct.Drain.html' title='steed::collections::binary_heap::Drain'>Drain</a>&lt;'a, T&gt; <span class='where'>where T: 'a</span></code></li>
+<li><code>impl&lt;'a, K, V&gt; FusedIterator for steed::collections::btree_map::<a class='struct' href='../../steed/collections/btree_map/struct.Iter.html' title='steed::collections::btree_map::Iter'>Iter</a>&lt;'a, K, V&gt;</code></li>
+<li><code>impl&lt;'a, K, V&gt; FusedIterator for steed::collections::btree_map::<a class='struct' href='../../steed/collections/btree_map/struct.IterMut.html' title='steed::collections::btree_map::IterMut'>IterMut</a>&lt;'a, K, V&gt;</code></li>
+<li><code>impl&lt;K, V&gt; FusedIterator for steed::collections::btree_map::<a class='struct' href='../../steed/collections/btree_map/struct.IntoIter.html' title='steed::collections::btree_map::IntoIter'>IntoIter</a>&lt;K, V&gt;</code></li>
+<li><code>impl&lt;'a, K, V&gt; FusedIterator for <a class='struct' href='../../steed/collections/btree_map/struct.Keys.html' title='steed::collections::btree_map::Keys'>Keys</a>&lt;'a, K, V&gt;</code></li>
+<li><code>impl&lt;'a, K, V&gt; FusedIterator for <a class='struct' href='../../steed/collections/btree_map/struct.Values.html' title='steed::collections::btree_map::Values'>Values</a>&lt;'a, K, V&gt;</code></li>
+<li><code>impl&lt;'a, K, V&gt; FusedIterator for <a class='struct' href='../../steed/collections/btree_map/struct.ValuesMut.html' title='steed::collections::btree_map::ValuesMut'>ValuesMut</a>&lt;'a, K, V&gt;</code></li>
+<li><code>impl&lt;'a, K, V&gt; FusedIterator for steed::collections::btree_map::<a class='struct' href='../../steed/collections/btree_map/struct.Range.html' title='steed::collections::btree_map::Range'>Range</a>&lt;'a, K, V&gt;</code></li>
+<li><code>impl&lt;'a, K, V&gt; FusedIterator for <a class='struct' href='../../steed/collections/btree_map/struct.RangeMut.html' title='steed::collections::btree_map::RangeMut'>RangeMut</a>&lt;'a, K, V&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; FusedIterator for steed::collections::btree_set::<a class='struct' href='../../steed/collections/btree_set/struct.Iter.html' title='steed::collections::btree_set::Iter'>Iter</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;T&gt; FusedIterator for steed::collections::btree_set::<a class='struct' href='../../steed/collections/btree_set/struct.IntoIter.html' title='steed::collections::btree_set::IntoIter'>IntoIter</a>&lt;T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; FusedIterator for steed::collections::btree_set::<a class='struct' href='../../steed/collections/btree_set/struct.Range.html' title='steed::collections::btree_set::Range'>Range</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; FusedIterator for <a class='struct' href='../../steed/collections/btree_set/struct.Difference.html' title='steed::collections::btree_set::Difference'>Difference</a>&lt;'a, T&gt; <span class='where'>where T: <a class='trait' href='../../steed/cmp/trait.Ord.html' title='steed::cmp::Ord'>Ord</a></span></code></li>
+<li><code>impl&lt;'a, T&gt; FusedIterator for <a class='struct' href='../../steed/collections/btree_set/struct.SymmetricDifference.html' title='steed::collections::btree_set::SymmetricDifference'>SymmetricDifference</a>&lt;'a, T&gt; <span class='where'>where T: <a class='trait' href='../../steed/cmp/trait.Ord.html' title='steed::cmp::Ord'>Ord</a></span></code></li>
+<li><code>impl&lt;'a, T&gt; FusedIterator for <a class='struct' href='../../steed/collections/btree_set/struct.Intersection.html' title='steed::collections::btree_set::Intersection'>Intersection</a>&lt;'a, T&gt; <span class='where'>where T: <a class='trait' href='../../steed/cmp/trait.Ord.html' title='steed::cmp::Ord'>Ord</a></span></code></li>
+<li><code>impl&lt;'a, T&gt; FusedIterator for <a class='struct' href='../../steed/collections/btree_set/struct.Union.html' title='steed::collections::btree_set::Union'>Union</a>&lt;'a, T&gt; <span class='where'>where T: <a class='trait' href='../../steed/cmp/trait.Ord.html' title='steed::cmp::Ord'>Ord</a></span></code></li>
+<li><code>impl&lt;E&gt; FusedIterator for collections::enum_set::<a class='struct' href='https://doc.rust-lang.org/nightly/collections/enum_set/struct.Iter.html' title='collections::enum_set::Iter'>Iter</a>&lt;E&gt; <span class='where'>where E: <a class='trait' href='https://doc.rust-lang.org/nightly/collections/enum_set/trait.CLike.html' title='collections::enum_set::CLike'>CLike</a></span></code></li>
+<li><code>impl&lt;'a, T&gt; FusedIterator for steed::collections::linked_list::<a class='struct' href='../../steed/collections/linked_list/struct.Iter.html' title='steed::collections::linked_list::Iter'>Iter</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; FusedIterator for steed::collections::linked_list::<a class='struct' href='../../steed/collections/linked_list/struct.IterMut.html' title='steed::collections::linked_list::IterMut'>IterMut</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;T&gt; FusedIterator for steed::collections::linked_list::<a class='struct' href='../../steed/collections/linked_list/struct.IntoIter.html' title='steed::collections::linked_list::IntoIter'>IntoIter</a>&lt;T&gt;</code></li>
+<li><code>impl&lt;'a&gt; FusedIterator for <a class='struct' href='../../steed/str/struct.EncodeUtf16.html' title='steed::str::EncodeUtf16'>EncodeUtf16</a>&lt;'a&gt;</code></li>
+<li><code>impl&lt;'a&gt; FusedIterator for steed::string::<a class='struct' href='../../steed/string/struct.Drain.html' title='steed::string::Drain'>Drain</a>&lt;'a&gt;</code></li>
+<li><code>impl&lt;T&gt; FusedIterator for steed::vec::<a class='struct' href='../../steed/vec/struct.IntoIter.html' title='steed::vec::IntoIter'>IntoIter</a>&lt;T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; FusedIterator for steed::vec::<a class='struct' href='../../steed/vec/struct.Drain.html' title='steed::vec::Drain'>Drain</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; FusedIterator for steed::collections::vec_deque::<a class='struct' href='../../steed/collections/vec_deque/struct.Iter.html' title='steed::collections::vec_deque::Iter'>Iter</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; FusedIterator for steed::collections::vec_deque::<a class='struct' href='../../steed/collections/vec_deque/struct.IterMut.html' title='steed::collections::vec_deque::IterMut'>IterMut</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;T&gt; FusedIterator for steed::collections::vec_deque::<a class='struct' href='../../steed/collections/vec_deque/struct.IntoIter.html' title='steed::collections::vec_deque::IntoIter'>IntoIter</a>&lt;T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; FusedIterator for steed::collections::vec_deque::<a class='struct' href='../../steed/collections/vec_deque/struct.Drain.html' title='steed::collections::vec_deque::Drain'>Drain</a>&lt;'a, T&gt; <span class='where'>where T: 'a</span></code></li>
+</ul><script type="text/javascript" async
+                         src="../../implementors/core/iter/traits/trait.FusedIterator.js">
+                 </script></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "steed";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

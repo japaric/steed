@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Duration","A duration type to represent a span of time, typically used for system timeouts."],["SystemTimeError","An error returned from the `duration_since` method on `SystemTime`, used to learn how far in the opposite direction a system time lies."]]});

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Prefix` enum in crate `std`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Prefix">
+
+    <title>std::path::Prefix - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../index.html'>std</a>::<wbr><a href='index.html'>path</a></p><script>window.sidebarCurrent = {name: 'Prefix', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content enum">
+<h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>std</a>::<wbr><a href='index.html'>path</a>::<wbr><a class='enum' href=''>Prefix</a></span><span class='out-of-band'><span class='since' title='Stable since Rust version 1.0.0'>1.0.0</span><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/std/path.rs.html#142-172' title='goto source code'>[src]</a></span></h1>
+<pre class='rust enum'>pub enum Prefix&lt;'a&gt; {
+    Verbatim(&amp;'a <a class='struct' href='../../std/ffi/struct.OsStr.html' title='std::ffi::OsStr'>OsStr</a>),
+    VerbatimUNC(&amp;'a <a class='struct' href='../../std/ffi/struct.OsStr.html' title='std::ffi::OsStr'>OsStr</a>,&nbsp;&amp;'a <a class='struct' href='../../std/ffi/struct.OsStr.html' title='std::ffi::OsStr'>OsStr</a>),
+    VerbatimDisk(u8),
+    DeviceNS(&amp;'a <a class='struct' href='../../std/ffi/struct.OsStr.html' title='std::ffi::OsStr'>OsStr</a>),
+    UNC(&amp;'a <a class='struct' href='../../std/ffi/struct.OsStr.html' title='std::ffi::OsStr'>OsStr</a>,&nbsp;&amp;'a <a class='struct' href='../../std/ffi/struct.OsStr.html' title='std::ffi::OsStr'>OsStr</a>),
+    Disk(u8),
+}</pre><div class='docblock'><p>Path prefixes (Windows only).</p>
+
+<p>Windows uses a variety of path styles, including references to drive
+volumes (like <code>C:</code>), network shared folders (like <code>\\server\share</code>) and
+others. In addition, some path prefixes are &quot;verbatim&quot;, in which case
+<code>/</code> is <em>not</em> treated as a separator and essentially no normalization is
+performed.</p>
+</div><h2 class='variants'>Variants</h2>
+<span id='variant.Verbatim' class='variant'><span id='Verbatim.v' class='invisible'><code>Verbatim(&amp;'a <a class='struct' href='../../std/ffi/struct.OsStr.html' title='std::ffi::OsStr'>OsStr</a>)</code></span></span><div class='docblock'><p>Prefix <code>\\?\</code>, together with the given component immediately following it.</p>
+</div><span id='variant.VerbatimUNC' class='variant'><span id='VerbatimUNC.v' class='invisible'><code>VerbatimUNC(&amp;'a <a class='struct' href='../../std/ffi/struct.OsStr.html' title='std::ffi::OsStr'>OsStr</a>,&nbsp;&amp;'a <a class='struct' href='../../std/ffi/struct.OsStr.html' title='std::ffi::OsStr'>OsStr</a>)</code></span></span><div class='docblock'><p>Prefix <code>\\?\UNC\</code>, with the &quot;server&quot; and &quot;share&quot; components following it.</p>
+</div><span id='variant.VerbatimDisk' class='variant'><span id='VerbatimDisk.v' class='invisible'><code>VerbatimDisk(u8)</code></span></span><div class='docblock'><p>Prefix like <code>\\?\C:\</code>, for the given drive letter</p>
+</div><span id='variant.DeviceNS' class='variant'><span id='DeviceNS.v' class='invisible'><code>DeviceNS(&amp;'a <a class='struct' href='../../std/ffi/struct.OsStr.html' title='std::ffi::OsStr'>OsStr</a>)</code></span></span><div class='docblock'><p>Prefix <code>\\.\</code>, together with the given component immediately following it.</p>
+</div><span id='variant.UNC' class='variant'><span id='UNC.v' class='invisible'><code>UNC(&amp;'a <a class='struct' href='../../std/ffi/struct.OsStr.html' title='std::ffi::OsStr'>OsStr</a>,&nbsp;&amp;'a <a class='struct' href='../../std/ffi/struct.OsStr.html' title='std::ffi::OsStr'>OsStr</a>)</code></span></span><div class='docblock'><p>Prefix <code>\\server\share</code>, with the given &quot;server&quot; and &quot;share&quot; components.</p>
+</div><span id='variant.Disk' class='variant'><span id='Disk.v' class='invisible'><code>Disk(u8)</code></span></span><div class='docblock'><p>Prefix <code>C:</code> for the given disk drive.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='enum' href='../../std/path/enum.Prefix.html' title='std::path::Prefix'>Prefix</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/std/path.rs.html#174-229' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.is_verbatim' class='method'><span id='is_verbatim.v' class='invisible'><code>fn <a href='#method.is_verbatim' class='fnname'>is_verbatim</a>(&amp;self) -&gt; bool</code></span></h4>
+<div class='docblock'><p>Determines if the prefix is verbatim, i.e. begins with <code>\\?\</code>.</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='trait' href='../../std/marker/trait.Copy.html' title='std::marker::Copy'>Copy</a> for <a class='enum' href='../../std/path/enum.Prefix.html' title='std::path::Prefix'>Prefix</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/std/path.rs.html#140' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='trait' href='../../std/clone/trait.Clone.html' title='std::clone::Clone'>Clone</a> for <a class='enum' href='../../std/path/enum.Prefix.html' title='std::path::Prefix'>Prefix</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/std/path.rs.html#140' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='../../std/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='enum' href='../../std/path/enum.Prefix.html' title='std::path::Prefix'>Prefix</a>&lt;'a&gt;</code></span></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="../../std/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='../../std/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></span></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="../../std/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='trait' href='../../std/fmt/trait.Debug.html' title='std::fmt::Debug'>Debug</a> for <a class='enum' href='../../std/path/enum.Prefix.html' title='std::path::Prefix'>Prefix</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/std/path.rs.html#140' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='../../std/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='../../std/fmt/struct.Formatter.html' title='std::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='../../std/fmt/type.Result.html' title='std::fmt::Result'>Result</a></code></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='trait' href='../../std/hash/trait.Hash.html' title='std::hash::Hash'>Hash</a> for <a class='enum' href='../../std/path/enum.Prefix.html' title='std::path::Prefix'>Prefix</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/std/path.rs.html#140' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.hash' class='method'><span id='hash.v' class='invisible'><code>fn <a href='../../std/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class='trait' href='../../std/hash/trait.Hasher.html' title='std::hash::Hasher'>Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></span></h4>
+<div class='docblock'><p>Feeds this value into the state given, updating the hasher as necessary.</p>
+</div><h4 id='method.hash_slice' class='method'><span id='hash_slice.v' class='invisible'><code>fn <a href='../../std/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: &amp;[Self], state: &amp;mut H) <span class='where'>where H: <a class='trait' href='../../std/hash/trait.Hasher.html' title='std::hash::Hasher'>Hasher</a></span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
+<div class='docblock'><p>Feeds a slice of this type into the state provided.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='trait' href='../../std/cmp/trait.PartialOrd.html' title='std::cmp::PartialOrd'>PartialOrd</a> for <a class='enum' href='../../std/path/enum.Prefix.html' title='std::path::Prefix'>Prefix</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/std/path.rs.html#140' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.partial_cmp' class='method'><span id='partial_cmp.v' class='invisible'><code>fn <a href='../../std/cmp/trait.PartialOrd.html#tymethod.partial_cmp' class='fnname'>partial_cmp</a>(&amp;self, __arg_0: &amp;<a class='enum' href='../../std/path/enum.Prefix.html' title='std::path::Prefix'>Prefix</a>&lt;'a&gt;) -&gt; <a class='enum' href='../../std/option/enum.Option.html' title='std::option::Option'>Option</a>&lt;<a class='enum' href='../../std/cmp/enum.Ordering.html' title='std::cmp::Ordering'>Ordering</a>&gt;</code></span></h4>
+<div class='docblock'><p>This method returns an ordering between <code>self</code> and <code>other</code> values if one exists. <a href="../../std/cmp/trait.PartialOrd.html#tymethod.partial_cmp">Read more</a></p>
+</div><h4 id='method.lt' class='method'><span id='lt.v' class='invisible'><code>fn <a href='../../std/cmp/trait.PartialOrd.html#method.lt' class='fnname'>lt</a>(&amp;self, __arg_0: &amp;<a class='enum' href='../../std/path/enum.Prefix.html' title='std::path::Prefix'>Prefix</a>&lt;'a&gt;) -&gt; bool</code></span></h4>
+<div class='docblock'><p>This method tests less than (for <code>self</code> and <code>other</code>) and is used by the <code>&lt;</code> operator. <a href="../../std/cmp/trait.PartialOrd.html#method.lt">Read more</a></p>
+</div><h4 id='method.le' class='method'><span id='le.v' class='invisible'><code>fn <a href='../../std/cmp/trait.PartialOrd.html#method.le' class='fnname'>le</a>(&amp;self, __arg_0: &amp;<a class='enum' href='../../std/path/enum.Prefix.html' title='std::path::Prefix'>Prefix</a>&lt;'a&gt;) -&gt; bool</code></span></h4>
+<div class='docblock'><p>This method tests less than or equal to (for <code>self</code> and <code>other</code>) and is used by the <code>&lt;=</code> operator. <a href="../../std/cmp/trait.PartialOrd.html#method.le">Read more</a></p>
+</div><h4 id='method.gt' class='method'><span id='gt.v' class='invisible'><code>fn <a href='../../std/cmp/trait.PartialOrd.html#method.gt' class='fnname'>gt</a>(&amp;self, __arg_0: &amp;<a class='enum' href='../../std/path/enum.Prefix.html' title='std::path::Prefix'>Prefix</a>&lt;'a&gt;) -&gt; bool</code></span></h4>
+<div class='docblock'><p>This method tests greater than (for <code>self</code> and <code>other</code>) and is used by the <code>&gt;</code> operator. <a href="../../std/cmp/trait.PartialOrd.html#method.gt">Read more</a></p>
+</div><h4 id='method.ge' class='method'><span id='ge.v' class='invisible'><code>fn <a href='../../std/cmp/trait.PartialOrd.html#method.ge' class='fnname'>ge</a>(&amp;self, __arg_0: &amp;<a class='enum' href='../../std/path/enum.Prefix.html' title='std::path::Prefix'>Prefix</a>&lt;'a&gt;) -&gt; bool</code></span></h4>
+<div class='docblock'><p>This method tests greater than or equal to (for <code>self</code> and <code>other</code>) and is used by the <code>&gt;=</code> operator. <a href="../../std/cmp/trait.PartialOrd.html#method.ge">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='trait' href='../../std/cmp/trait.Ord.html' title='std::cmp::Ord'>Ord</a> for <a class='enum' href='../../std/path/enum.Prefix.html' title='std::path::Prefix'>Prefix</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/std/path.rs.html#140' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.cmp' class='method'><span id='cmp.v' class='invisible'><code>fn <a href='../../std/cmp/trait.Ord.html#tymethod.cmp' class='fnname'>cmp</a>(&amp;self, __arg_0: &amp;<a class='enum' href='../../std/path/enum.Prefix.html' title='std::path::Prefix'>Prefix</a>&lt;'a&gt;) -&gt; <a class='enum' href='../../std/cmp/enum.Ordering.html' title='std::cmp::Ordering'>Ordering</a></code></span></h4>
+<div class='docblock'><p>This method returns an <code>Ordering</code> between <code>self</code> and <code>other</code>. <a href="../../std/cmp/trait.Ord.html#tymethod.cmp">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='trait' href='../../std/cmp/trait.PartialEq.html' title='std::cmp::PartialEq'>PartialEq</a> for <a class='enum' href='../../std/path/enum.Prefix.html' title='std::path::Prefix'>Prefix</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/std/path.rs.html#140' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.eq' class='method'><span id='eq.v' class='invisible'><code>fn <a href='../../std/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class='enum' href='../../std/path/enum.Prefix.html' title='std::path::Prefix'>Prefix</a>&lt;'a&gt;) -&gt; bool</code></span></h4>
+<div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="../../std/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
+</div><h4 id='method.ne' class='method'><span id='ne.v' class='invisible'><code>fn <a href='../../std/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, __arg_0: &amp;<a class='enum' href='../../std/path/enum.Prefix.html' title='std::path::Prefix'>Prefix</a>&lt;'a&gt;) -&gt; bool</code></span></h4>
+<div class='docblock'><p>This method tests for <code>!=</code>.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='trait' href='../../std/cmp/trait.Eq.html' title='std::cmp::Eq'>Eq</a> for <a class='enum' href='../../std/path/enum.Prefix.html' title='std::path::Prefix'>Prefix</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/std/path.rs.html#140' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "std";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

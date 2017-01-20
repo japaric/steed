@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `ExactSizeIterator` trait in crate `steed`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, ExactSizeIterator">
+
+    <title>steed::iter::ExactSizeIterator - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../index.html'>steed</a>::<wbr><a href='index.html'>iter</a></p><script>window.sidebarCurrent = {name: 'ExactSizeIterator', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content trait">
+<h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>steed</a>::<wbr><a href='index.html'>iter</a>::<wbr><a class='trait' href=''>ExactSizeIterator</a></span><span class='out-of-band'><span class='since' title='Stable since Rust version 1.0.0'>1.0.0</span><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/iter/traits.rs.html#491-552' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait ExactSizeIterator: <a class='trait' href='../../steed/iter/trait.Iterator.html' title='steed::iter::Iterator'>Iterator</a> {
+    fn <a href='#method.len' class='fnname'>len</a>(&amp;self) -&gt; usize { ... }
+    fn <a href='#method.is_empty' class='fnname'>is_empty</a>(&amp;self) -&gt; bool { ... }
+}</pre><div class='docblock'><p>An iterator that knows its exact length.</p>
+
+<p>Many <a href="trait.Iterator.html"><code>Iterator</code></a>s don&#39;t know how many times they will iterate, but some do.
+If an iterator knows how many times it can iterate, providing access to
+that information can be useful. For example, if you want to iterate
+backwards, a good start is to know where the end is.</p>
+
+<p>When implementing an <code>ExactSizeIterator</code>, You must also implement
+<a href="trait.Iterator.html"><code>Iterator</code></a>. When doing so, the implementation of <a href="trait.Iterator.html#method.size_hint"><code>size_hint()</code></a> <em>must</em>
+return the exact size of the iterator.</p>
+
+<p>The <a href="#method.len"><code>len()</code></a> method has a default implementation, so you usually shouldn&#39;t
+implement it. However, you may be able to provide a more performant
+implementation than the default, so overriding it in this case makes sense.</p>
+
+<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<p>Basic usage:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='comment'>// a finite range knows exactly how many times it will iterate</span>
+<span class='kw'>let</span> <span class='ident'>five</span> <span class='op'>=</span> <span class='number'>0</span>..<span class='number'>5</span>;
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>5</span>, <span class='ident'>five</span>.<span class='ident'>len</span>());</pre>
+
+<p>In the <a href="index.html">module level docs</a>, we implemented an <a href="trait.Iterator.html"><code>Iterator</code></a>,
+<code>Counter</code>. Let&#39;s implement <code>ExactSizeIterator</code> for it as well:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>impl</span> <span class='ident'>ExactSizeIterator</span> <span class='kw'>for</span> <span class='ident'>Counter</span> {
+    <span class='comment'>// We already have the number of iterations, so we can use it directly.</span>
+    <span class='kw'>fn</span> <span class='ident'>len</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
+        <span class='self'>self</span>.<span class='ident'>count</span>
+    }
+}
+
+<span class='comment'>// And now we can use it!</span>
+
+<span class='kw'>let</span> <span class='ident'>counter</span> <span class='op'>=</span> <span class='ident'>Counter</span>::<span class='ident'>new</span>();
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>0</span>, <span class='ident'>counter</span>.<span class='ident'>len</span>());</pre>
+</div>
+            <h2 id='provided-methods'>Provided Methods</h2>
+            <div class='methods'>
+        <h3 id='method.len' class='method'><span id='len.v' class='invisible'><code>fn <a href='#method.len' class='fnname'>len</a>(&amp;self) -&gt; usize</code></span></h3><div class='docblock'><p>Returns the exact number of times the iterator will iterate.</p>
+
+<p>This method has a default implementation, so you usually should not
+implement it directly. However, if you can provide a more efficient
+implementation, you can do so. See the <a href="trait.ExactSizeIterator.html">trait-level</a> docs for an
+example.</p>
+
+<p>This function has the same safety guarantees as the <a href="trait.Iterator.html#method.size_hint"><code>size_hint()</code></a>
+function.</p>
+
+<h1 id='examples-1' class='section-header'><a href='#examples-1'>Examples</a></h1>
+<p>Basic usage:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='comment'>// a finite range knows exactly how many times it will iterate</span>
+<span class='kw'>let</span> <span class='ident'>five</span> <span class='op'>=</span> <span class='number'>0</span>..<span class='number'>5</span>;
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>5</span>, <span class='ident'>five</span>.<span class='ident'>len</span>());</pre>
+</div><h3 id='method.is_empty' class='method'><span id='is_empty.v' class='invisible'><code>fn <a href='#method.is_empty' class='fnname'>is_empty</a>(&amp;self) -&gt; bool</code></span></h3><div class='stability'><div class='stab unstable'><span class=microscope>🔬</span> This is a nightly-only experimental API.  (<code>exact_size_is_empty</code>)</div></div><div class='docblock'><p>Returns whether the iterator is empty.</p>
+
+<p>This method has a default implementation using <code>self.len()</code>, so you
+don&#39;t need to implement it yourself.</p>
+
+<h1 id='examples-2' class='section-header'><a href='#examples-2'>Examples</a></h1>
+<p>Basic usage:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>exact_size_is_empty</span>)]</span>
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>one_element</span> <span class='op'>=</span> <span class='number'>0</span>..<span class='number'>1</span>;
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>one_element</span>.<span class='ident'>is_empty</span>());
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>one_element</span>.<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>(<span class='number'>0</span>));
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>one_element</span>.<span class='ident'>is_empty</span>());
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>one_element</span>.<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);</pre>
+</div></div>
+        <h2 id='implementors'>Implementors</h2>
+        <ul class='item-list' id='implementors-list'>
+    <li><code>impl&lt;I&gt; ExactSizeIterator for <a class='struct' href='../../steed/boxed/struct.Box.html' title='steed::boxed::Box'>Box</a>&lt;I&gt; <span class='where'>where I: <a class='trait' href='../../steed/iter/trait.ExactSizeIterator.html' title='steed::iter::ExactSizeIterator'>ExactSizeIterator</a> + ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a></span></code></li>
+<li><code>impl ExactSizeIterator for <a class='struct' href='../../steed/char/struct.EscapeUnicode.html' title='steed::char::EscapeUnicode'>EscapeUnicode</a></code></li>
+<li><code>impl ExactSizeIterator for <a class='struct' href='../../steed/char/struct.EscapeDefault.html' title='steed::char::EscapeDefault'>EscapeDefault</a></code></li>
+<li><code>impl ExactSizeIterator for <a class='struct' href='../../steed/char/struct.EscapeDebug.html' title='steed::char::EscapeDebug'>EscapeDebug</a></code></li>
+<li><code>impl&lt;T&gt; ExactSizeIterator for <a class='struct' href='../../steed/iter/struct.Empty.html' title='steed::iter::Empty'>Empty</a>&lt;T&gt;</code></li>
+<li><code>impl&lt;T&gt; ExactSizeIterator for <a class='struct' href='../../steed/iter/struct.Once.html' title='steed::iter::Once'>Once</a>&lt;T&gt;</code></li>
+<li><code>impl&lt;'a, I&gt; ExactSizeIterator for &amp;'a mut I <span class='where'>where I: <a class='trait' href='../../steed/iter/trait.ExactSizeIterator.html' title='steed::iter::ExactSizeIterator'>ExactSizeIterator</a> + ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a></span></code></li>
+<li><code>impl&lt;I&gt; ExactSizeIterator for <a class='struct' href='../../steed/iter/struct.Rev.html' title='steed::iter::Rev'>Rev</a>&lt;I&gt; <span class='where fmt-newline'>where I: <a class='trait' href='../../steed/iter/trait.ExactSizeIterator.html' title='steed::iter::ExactSizeIterator'>ExactSizeIterator</a> + <a class='trait' href='../../steed/iter/trait.DoubleEndedIterator.html' title='steed::iter::DoubleEndedIterator'>DoubleEndedIterator</a></span></code></li>
+<li><code>impl&lt;'a, I, T&gt; ExactSizeIterator for <a class='struct' href='../../steed/iter/struct.Cloned.html' title='steed::iter::Cloned'>Cloned</a>&lt;I&gt; <span class='where fmt-newline'>where I: <a class='trait' href='../../steed/iter/trait.ExactSizeIterator.html' title='steed::iter::ExactSizeIterator'>ExactSizeIterator</a>&lt;Item=&amp;'a T&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;T: 'a + <a class='trait' href='../../steed/clone/trait.Clone.html' title='steed::clone::Clone'>Clone</a></span></code></li>
+<li><code>impl&lt;A, B&gt; ExactSizeIterator for <a class='struct' href='../../steed/iter/struct.Zip.html' title='steed::iter::Zip'>Zip</a>&lt;A, B&gt; <span class='where fmt-newline'>where A: <a class='trait' href='../../steed/iter/trait.ExactSizeIterator.html' title='steed::iter::ExactSizeIterator'>ExactSizeIterator</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B: <a class='trait' href='../../steed/iter/trait.ExactSizeIterator.html' title='steed::iter::ExactSizeIterator'>ExactSizeIterator</a></span></code></li>
+<li><code>impl&lt;B, I, F&gt; ExactSizeIterator for <a class='struct' href='../../steed/iter/struct.Map.html' title='steed::iter::Map'>Map</a>&lt;I, F&gt; <span class='where fmt-newline'>where F: <a class='trait' href='../../steed/ops/trait.FnMut.html' title='steed::ops::FnMut'>FnMut</a>(I::<a class='trait' href='../../steed/iter/trait.Iterator.html' title='steed::iter::Iterator'>Item</a>) -&gt; B,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I: <a class='trait' href='../../steed/iter/trait.ExactSizeIterator.html' title='steed::iter::ExactSizeIterator'>ExactSizeIterator</a></span></code></li>
+<li><code>impl&lt;I&gt; ExactSizeIterator for <a class='struct' href='../../steed/iter/struct.Enumerate.html' title='steed::iter::Enumerate'>Enumerate</a>&lt;I&gt; <span class='where'>where I: <a class='trait' href='../../steed/iter/trait.ExactSizeIterator.html' title='steed::iter::ExactSizeIterator'>ExactSizeIterator</a></span></code></li>
+<li><code>impl&lt;I&gt; ExactSizeIterator for <a class='struct' href='../../steed/iter/struct.Peekable.html' title='steed::iter::Peekable'>Peekable</a>&lt;I&gt; <span class='where'>where I: <a class='trait' href='../../steed/iter/trait.ExactSizeIterator.html' title='steed::iter::ExactSizeIterator'>ExactSizeIterator</a></span></code></li>
+<li><code>impl&lt;I&gt; ExactSizeIterator for <a class='struct' href='../../steed/iter/struct.Skip.html' title='steed::iter::Skip'>Skip</a>&lt;I&gt; <span class='where'>where I: <a class='trait' href='../../steed/iter/trait.ExactSizeIterator.html' title='steed::iter::ExactSizeIterator'>ExactSizeIterator</a></span></code></li>
+<li><code>impl&lt;I&gt; ExactSizeIterator for <a class='struct' href='../../steed/iter/struct.Take.html' title='steed::iter::Take'>Take</a>&lt;I&gt; <span class='where'>where I: <a class='trait' href='../../steed/iter/trait.ExactSizeIterator.html' title='steed::iter::ExactSizeIterator'>ExactSizeIterator</a></span></code></li>
+<li><code>impl&lt;I&gt; ExactSizeIterator for <a class='struct' href='../../steed/iter/struct.Fuse.html' title='steed::iter::Fuse'>Fuse</a>&lt;I&gt; <span class='where'>where I: <a class='trait' href='../../steed/iter/trait.ExactSizeIterator.html' title='steed::iter::ExactSizeIterator'>ExactSizeIterator</a></span></code></li>
+<li><code>impl&lt;I, F&gt; ExactSizeIterator for <a class='struct' href='../../steed/iter/struct.Inspect.html' title='steed::iter::Inspect'>Inspect</a>&lt;I, F&gt; <span class='where fmt-newline'>where F: <a class='trait' href='../../steed/ops/trait.FnMut.html' title='steed::ops::FnMut'>FnMut</a>(&amp;I::<a class='trait' href='../../steed/iter/trait.Iterator.html' title='steed::iter::Iterator'>Item</a>) -&gt; (),<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I: <a class='trait' href='../../steed/iter/trait.ExactSizeIterator.html' title='steed::iter::ExactSizeIterator'>ExactSizeIterator</a></span></code></li>
+<li><code>impl&lt;'a, A&gt; ExactSizeIterator for steed::option::<a class='struct' href='../../steed/option/struct.Iter.html' title='steed::option::Iter'>Iter</a>&lt;'a, A&gt;</code></li>
+<li><code>impl&lt;'a, A&gt; ExactSizeIterator for steed::option::<a class='struct' href='../../steed/option/struct.IterMut.html' title='steed::option::IterMut'>IterMut</a>&lt;'a, A&gt;</code></li>
+<li><code>impl&lt;A&gt; ExactSizeIterator for steed::option::<a class='struct' href='../../steed/option/struct.IntoIter.html' title='steed::option::IntoIter'>IntoIter</a>&lt;A&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; ExactSizeIterator for steed::result::<a class='struct' href='../../steed/result/struct.Iter.html' title='steed::result::Iter'>Iter</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; ExactSizeIterator for steed::result::<a class='struct' href='../../steed/result/struct.IterMut.html' title='steed::result::IterMut'>IterMut</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;T&gt; ExactSizeIterator for steed::result::<a class='struct' href='../../steed/result/struct.IntoIter.html' title='steed::result::IntoIter'>IntoIter</a>&lt;T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; ExactSizeIterator for steed::slice::<a class='struct' href='../../steed/slice/struct.Iter.html' title='steed::slice::Iter'>Iter</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; ExactSizeIterator for steed::slice::<a class='struct' href='../../steed/slice/struct.IterMut.html' title='steed::slice::IterMut'>IterMut</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; ExactSizeIterator for <a class='struct' href='../../steed/slice/struct.Windows.html' title='steed::slice::Windows'>Windows</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; ExactSizeIterator for <a class='struct' href='../../steed/slice/struct.Chunks.html' title='steed::slice::Chunks'>Chunks</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; ExactSizeIterator for <a class='struct' href='../../steed/slice/struct.ChunksMut.html' title='steed::slice::ChunksMut'>ChunksMut</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;'a&gt; ExactSizeIterator for <a class='struct' href='../../steed/str/struct.Bytes.html' title='steed::str::Bytes'>Bytes</a>&lt;'a&gt;</code></li>
+<li><code>impl ExactSizeIterator for steed::ops::<a class='struct' href='../../steed/ops/struct.Range.html' title='steed::ops::Range'>Range</a>&lt;usize&gt;</code></li>
+<li><code>impl ExactSizeIterator for steed::ops::<a class='struct' href='../../steed/ops/struct.Range.html' title='steed::ops::Range'>Range</a>&lt;u8&gt;</code></li>
+<li><code>impl ExactSizeIterator for steed::ops::<a class='struct' href='../../steed/ops/struct.Range.html' title='steed::ops::Range'>Range</a>&lt;u16&gt;</code></li>
+<li><code>impl ExactSizeIterator for steed::ops::<a class='struct' href='../../steed/ops/struct.Range.html' title='steed::ops::Range'>Range</a>&lt;u32&gt;</code></li>
+<li><code>impl ExactSizeIterator for steed::ops::<a class='struct' href='../../steed/ops/struct.Range.html' title='steed::ops::Range'>Range</a>&lt;isize&gt;</code></li>
+<li><code>impl ExactSizeIterator for steed::ops::<a class='struct' href='../../steed/ops/struct.Range.html' title='steed::ops::Range'>Range</a>&lt;i8&gt;</code></li>
+<li><code>impl ExactSizeIterator for steed::ops::<a class='struct' href='../../steed/ops/struct.Range.html' title='steed::ops::Range'>Range</a>&lt;i16&gt;</code></li>
+<li><code>impl ExactSizeIterator for steed::ops::<a class='struct' href='../../steed/ops/struct.Range.html' title='steed::ops::Range'>Range</a>&lt;i32&gt;</code></li>
+<li><code>impl ExactSizeIterator for steed::ops::<a class='enum' href='../../steed/ops/enum.RangeInclusive.html' title='steed::ops::RangeInclusive'>RangeInclusive</a>&lt;u8&gt;</code></li>
+<li><code>impl ExactSizeIterator for steed::ops::<a class='enum' href='../../steed/ops/enum.RangeInclusive.html' title='steed::ops::RangeInclusive'>RangeInclusive</a>&lt;u16&gt;</code></li>
+<li><code>impl ExactSizeIterator for steed::ops::<a class='enum' href='../../steed/ops/enum.RangeInclusive.html' title='steed::ops::RangeInclusive'>RangeInclusive</a>&lt;i8&gt;</code></li>
+<li><code>impl ExactSizeIterator for steed::ops::<a class='enum' href='../../steed/ops/enum.RangeInclusive.html' title='steed::ops::RangeInclusive'>RangeInclusive</a>&lt;i16&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; ExactSizeIterator for steed::collections::binary_heap::<a class='struct' href='../../steed/collections/binary_heap/struct.Iter.html' title='steed::collections::binary_heap::Iter'>Iter</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;T&gt; ExactSizeIterator for steed::collections::binary_heap::<a class='struct' href='../../steed/collections/binary_heap/struct.IntoIter.html' title='steed::collections::binary_heap::IntoIter'>IntoIter</a>&lt;T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; ExactSizeIterator for steed::collections::binary_heap::<a class='struct' href='../../steed/collections/binary_heap/struct.Drain.html' title='steed::collections::binary_heap::Drain'>Drain</a>&lt;'a, T&gt; <span class='where'>where T: 'a</span></code></li>
+<li><code>impl&lt;'a, K, V&gt; ExactSizeIterator for steed::collections::btree_map::<a class='struct' href='../../steed/collections/btree_map/struct.Iter.html' title='steed::collections::btree_map::Iter'>Iter</a>&lt;'a, K, V&gt; <span class='where'>where K: 'a, V: 'a</span></code></li>
+<li><code>impl&lt;'a, K, V&gt; ExactSizeIterator for steed::collections::btree_map::<a class='struct' href='../../steed/collections/btree_map/struct.IterMut.html' title='steed::collections::btree_map::IterMut'>IterMut</a>&lt;'a, K, V&gt; <span class='where'>where K: 'a, V: 'a</span></code></li>
+<li><code>impl&lt;K, V&gt; ExactSizeIterator for steed::collections::btree_map::<a class='struct' href='../../steed/collections/btree_map/struct.IntoIter.html' title='steed::collections::btree_map::IntoIter'>IntoIter</a>&lt;K, V&gt;</code></li>
+<li><code>impl&lt;'a, K, V&gt; ExactSizeIterator for <a class='struct' href='../../steed/collections/btree_map/struct.Keys.html' title='steed::collections::btree_map::Keys'>Keys</a>&lt;'a, K, V&gt;</code></li>
+<li><code>impl&lt;'a, K, V&gt; ExactSizeIterator for <a class='struct' href='../../steed/collections/btree_map/struct.Values.html' title='steed::collections::btree_map::Values'>Values</a>&lt;'a, K, V&gt;</code></li>
+<li><code>impl&lt;'a, K, V&gt; ExactSizeIterator for <a class='struct' href='../../steed/collections/btree_map/struct.ValuesMut.html' title='steed::collections::btree_map::ValuesMut'>ValuesMut</a>&lt;'a, K, V&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; ExactSizeIterator for steed::collections::btree_set::<a class='struct' href='../../steed/collections/btree_set/struct.Iter.html' title='steed::collections::btree_set::Iter'>Iter</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;T&gt; ExactSizeIterator for steed::collections::btree_set::<a class='struct' href='../../steed/collections/btree_set/struct.IntoIter.html' title='steed::collections::btree_set::IntoIter'>IntoIter</a>&lt;T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; ExactSizeIterator for steed::collections::linked_list::<a class='struct' href='../../steed/collections/linked_list/struct.Iter.html' title='steed::collections::linked_list::Iter'>Iter</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; ExactSizeIterator for steed::collections::linked_list::<a class='struct' href='../../steed/collections/linked_list/struct.IterMut.html' title='steed::collections::linked_list::IterMut'>IterMut</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;T&gt; ExactSizeIterator for steed::collections::linked_list::<a class='struct' href='../../steed/collections/linked_list/struct.IntoIter.html' title='steed::collections::linked_list::IntoIter'>IntoIter</a>&lt;T&gt;</code></li>
+<li><code>impl&lt;T&gt; ExactSizeIterator for steed::vec::<a class='struct' href='../../steed/vec/struct.IntoIter.html' title='steed::vec::IntoIter'>IntoIter</a>&lt;T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; ExactSizeIterator for steed::vec::<a class='struct' href='../../steed/vec/struct.Drain.html' title='steed::vec::Drain'>Drain</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; ExactSizeIterator for steed::collections::vec_deque::<a class='struct' href='../../steed/collections/vec_deque/struct.Iter.html' title='steed::collections::vec_deque::Iter'>Iter</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; ExactSizeIterator for steed::collections::vec_deque::<a class='struct' href='../../steed/collections/vec_deque/struct.IterMut.html' title='steed::collections::vec_deque::IterMut'>IterMut</a>&lt;'a, T&gt;</code></li>
+<li><code>impl&lt;T&gt; ExactSizeIterator for steed::collections::vec_deque::<a class='struct' href='../../steed/collections/vec_deque/struct.IntoIter.html' title='steed::collections::vec_deque::IntoIter'>IntoIter</a>&lt;T&gt;</code></li>
+<li><code>impl&lt;'a, T&gt; ExactSizeIterator for steed::collections::vec_deque::<a class='struct' href='../../steed/collections/vec_deque/struct.Drain.html' title='steed::collections::vec_deque::Drain'>Drain</a>&lt;'a, T&gt; <span class='where'>where T: 'a</span></code></li>
+</ul><script type="text/javascript" async
+                         src="../../implementors/core/iter/traits/trait.ExactSizeIterator.js">
+                 </script></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "steed";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

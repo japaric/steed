@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["add",""],["pow",""]],"trait":[["Float","Trait for some basic operations on floats"]]});

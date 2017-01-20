@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `v1` mod in crate `steed`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, v1">
+
+    <title>steed::prelude::v1 - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../../index.html'>steed</a>::<wbr><a href='../index.html'>prelude</a></p><script>window.sidebarCurrent = {name: 'v1', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Module <a href='../../index.html'>steed</a>::<wbr><a href='../index.html'>prelude</a>::<wbr><a class='mod' href=''>v1</a></span><span class='out-of-band'><span class='since' title='Stable since Rust version 1.0.0'>1.0.0</span><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/steed/prelude/v1.rs.html#11-53' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>The first version of the prelude of The Rust Standard Library.</p>
+
+<p>See the <a href="../index.html">module-level documentation</a> for more.</p>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
+<table><tr><td><code>pub use marker::<a class='trait' href='../../../steed/marker/trait.Copy.html' title='steed::marker::Copy'>Copy</a>;</code></td></tr><tr><td><code>pub use marker::<a class='trait' href='../../../steed/marker/trait.Send.html' title='steed::marker::Send'>Send</a>;</code></td></tr><tr><td><code>pub use marker::<a class='trait' href='../../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a>;</code></td></tr><tr><td><code>pub use marker::<a class='trait' href='../../../steed/marker/trait.Sync.html' title='steed::marker::Sync'>Sync</a>;</code></td></tr><tr><td><code>pub use ops::<a class='trait' href='../../../steed/ops/trait.Drop.html' title='steed::ops::Drop'>Drop</a>;</code></td></tr><tr><td><code>pub use ops::<a class='trait' href='../../../steed/ops/trait.Fn.html' title='steed::ops::Fn'>Fn</a>;</code></td></tr><tr><td><code>pub use ops::<a class='trait' href='../../../steed/ops/trait.FnMut.html' title='steed::ops::FnMut'>FnMut</a>;</code></td></tr><tr><td><code>pub use ops::<a class='trait' href='../../../steed/ops/trait.FnOnce.html' title='steed::ops::FnOnce'>FnOnce</a>;</code></td></tr><tr><td><code>pub use mem::<a class='fn' href='../../../steed/mem/fn.drop.html' title='steed::mem::drop'>drop</a>;</code></td></tr><tr><td><code>pub use boxed::<a class='struct' href='../../../steed/boxed/struct.Box.html' title='steed::boxed::Box'>Box</a>;</code></td></tr><tr><td><code>pub use borrow::<a class='trait' href='../../../steed/borrow/trait.ToOwned.html' title='steed::borrow::ToOwned'>ToOwned</a>;</code></td></tr><tr><td><code>pub use clone::<a class='trait' href='../../../steed/clone/trait.Clone.html' title='steed::clone::Clone'>Clone</a>;</code></td></tr><tr><td><code>pub use cmp::<a class='trait' href='../../../steed/cmp/trait.PartialEq.html' title='steed::cmp::PartialEq'>PartialEq</a>;</code></td></tr><tr><td><code>pub use cmp::<a class='trait' href='../../../steed/cmp/trait.PartialOrd.html' title='steed::cmp::PartialOrd'>PartialOrd</a>;</code></td></tr><tr><td><code>pub use cmp::<a class='trait' href='../../../steed/cmp/trait.Eq.html' title='steed::cmp::Eq'>Eq</a>;</code></td></tr><tr><td><code>pub use cmp::<a class='trait' href='../../../steed/cmp/trait.Ord.html' title='steed::cmp::Ord'>Ord</a>;</code></td></tr><tr><td><code>pub use convert::<a class='trait' href='../../../steed/convert/trait.AsRef.html' title='steed::convert::AsRef'>AsRef</a>;</code></td></tr><tr><td><code>pub use convert::<a class='trait' href='../../../steed/convert/trait.AsMut.html' title='steed::convert::AsMut'>AsMut</a>;</code></td></tr><tr><td><code>pub use convert::<a class='trait' href='../../../steed/convert/trait.Into.html' title='steed::convert::Into'>Into</a>;</code></td></tr><tr><td><code>pub use convert::<a class='trait' href='../../../steed/convert/trait.From.html' title='steed::convert::From'>From</a>;</code></td></tr><tr><td><code>pub use default::<a class='trait' href='../../../steed/default/trait.Default.html' title='steed::default::Default'>Default</a>;</code></td></tr><tr><td><code>pub use iter::<a class='trait' href='../../../steed/iter/trait.Iterator.html' title='steed::iter::Iterator'>Iterator</a>;</code></td></tr><tr><td><code>pub use iter::<a class='trait' href='../../../steed/iter/trait.Extend.html' title='steed::iter::Extend'>Extend</a>;</code></td></tr><tr><td><code>pub use iter::<a class='trait' href='../../../steed/iter/trait.IntoIterator.html' title='steed::iter::IntoIterator'>IntoIterator</a>;</code></td></tr><tr><td><code>pub use iter::<a class='trait' href='../../../steed/iter/trait.DoubleEndedIterator.html' title='steed::iter::DoubleEndedIterator'>DoubleEndedIterator</a>;</code></td></tr><tr><td><code>pub use iter::<a class='trait' href='../../../steed/iter/trait.ExactSizeIterator.html' title='steed::iter::ExactSizeIterator'>ExactSizeIterator</a>;</code></td></tr><tr><td><code>pub use option::<a class='enum' href='../../../steed/option/enum.Option.html' title='steed::option::Option'>Option</a>;</code></td></tr><tr><td><code>pub use option::Option::<a class='enum' href='../../../steed/option/enum.Option.html' title='steed::option::Option'>Some</a>;</code></td></tr><tr><td><code>pub use option::Option::<a class='enum' href='../../../steed/option/enum.Option.html' title='steed::option::Option'>None</a>;</code></td></tr><tr><td><code>pub use result::<a class='enum' href='../../../steed/result/enum.Result.html' title='steed::result::Result'>Result</a>;</code></td></tr><tr><td><code>pub use result::Result::<a class='enum' href='../../../steed/result/enum.Result.html' title='steed::result::Result'>Ok</a>;</code></td></tr><tr><td><code>pub use result::Result::<a class='enum' href='../../../steed/result/enum.Result.html' title='steed::result::Result'>Err</a>;</code></td></tr><tr><td><code>pub use slice::<a class='trait' href='../../../steed/slice/trait.SliceConcatExt.html' title='steed::slice::SliceConcatExt'>SliceConcatExt</a>;</code></td></tr><tr><td><code>pub use string::<a class='struct' href='../../../steed/string/struct.String.html' title='steed::string::String'>String</a>;</code></td></tr><tr><td><code>pub use string::<a class='trait' href='../../../steed/string/trait.ToString.html' title='steed::string::ToString'>ToString</a>;</code></td></tr><tr><td><code>pub use vec::<a class='struct' href='../../../steed/vec/struct.Vec.html' title='steed::vec::Vec'>Vec</a>;</code></td></tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "steed";
+    </script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

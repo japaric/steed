@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `std` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, std">
+
+    <title>std - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'></p><script>window.sidebarCurrent = {name: 'std', ty: 'mod', relpath: '../'};</script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>std</a></span><span class='out-of-band'><span class='since' title='Stable since Rust version 1.0.0'>1.0.0</span><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/std/lib.rs.html#1-194' title='goto source code'>[src]</a></span></h1>
+<h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='any/index.html'
+                                  title='std::any'>any</a></td>
+                           <td class='docblock-short'>
+                                <p>This module implements the <code>Any</code> trait, which enables dynamic typing
+of any <code>&#39;static</code> type through runtime reflection.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='ascii/index.html'
+                                  title='std::ascii'>ascii</a></td>
+                           <td class='docblock-short'>
+                                <p>Operations on ASCII strings and characters.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='borrow/index.html'
+                                  title='std::borrow'>borrow</a></td>
+                           <td class='docblock-short'>
+                                <p>A module for working with borrowed data.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='boxed/index.html'
+                                  title='std::boxed'>boxed</a></td>
+                           <td class='docblock-short'>
+                                <p>A pointer type for heap allocation.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='cell/index.html'
+                                  title='std::cell'>cell</a></td>
+                           <td class='docblock-short'>
+                                <p>Shareable mutable containers.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='char/index.html'
+                                  title='std::char'>char</a></td>
+                           <td class='docblock-short'>
+                                <p>A character type.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='clone/index.html'
+                                  title='std::clone'>clone</a></td>
+                           <td class='docblock-short'>
+                                <p>The <code>Clone</code> trait for types that cannot be &#39;implicitly copied&#39;.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='cmp/index.html'
+                                  title='std::cmp'>cmp</a></td>
+                           <td class='docblock-short'>
+                                <p>Functionality for ordering and comparison.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='collections/index.html'
+                                  title='std::collections'>collections</a></td>
+                           <td class='docblock-short'>
+                                <p>Collection types.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='convert/index.html'
+                                  title='std::convert'>convert</a></td>
+                           <td class='docblock-short'>
+                                <p>Traits for conversions between types.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='default/index.html'
+                                  title='std::default'>default</a></td>
+                           <td class='docblock-short'>
+                                <p>The <code>Default</code> trait for types which may have meaningful default values.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='error/index.html'
+                                  title='std::error'>error</a></td>
+                           <td class='docblock-short'>
+                                <p>Traits for working with Errors.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='ffi/index.html'
+                                  title='std::ffi'>ffi</a></td>
+                           <td class='docblock-short'>
+                                <p>Utilities related to FFI bindings.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='fmt/index.html'
+                                  title='std::fmt'>fmt</a></td>
+                           <td class='docblock-short'>
+                                <p>Utilities for formatting and printing <code>String</code>s</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='fs/index.html'
+                                  title='std::fs'>fs</a></td>
+                           <td class='docblock-short'>
+                                <p>Filesystem manipulation operations.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='hash/index.html'
+                                  title='std::hash'>hash</a></td>
+                           <td class='docblock-short'>
+                                <p>Generic hashing support.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='i16/index.html'
+                                  title='std::i16'>i16</a></td>
+                           <td class='docblock-short'>
+                                <p>The 16-bit signed integer type.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='i32/index.html'
+                                  title='std::i32'>i32</a></td>
+                           <td class='docblock-short'>
+                                <p>The 32-bit signed integer type.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='i64/index.html'
+                                  title='std::i64'>i64</a></td>
+                           <td class='docblock-short'>
+                                <p>The 64-bit signed integer type.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='i8/index.html'
+                                  title='std::i8'>i8</a></td>
+                           <td class='docblock-short'>
+                                <p>The 8-bit signed integer type.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='io/index.html'
+                                  title='std::io'>io</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='isize/index.html'
+                                  title='std::isize'>isize</a></td>
+                           <td class='docblock-short'>
+                                <p>The pointer-sized signed integer type.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='iter/index.html'
+                                  title='std::iter'>iter</a></td>
+                           <td class='docblock-short'>
+                                <p>Composable external iteration.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='marker/index.html'
+                                  title='std::marker'>marker</a></td>
+                           <td class='docblock-short'>
+                                <p>Primitive traits and types representing basic properties of types.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='mem/index.html'
+                                  title='std::mem'>mem</a></td>
+                           <td class='docblock-short'>
+                                <p>Basic functions for dealing with memory.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='memchr/index.html'
+                                  title='std::memchr'>memchr</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='num/index.html'
+                                  title='std::num'>num</a></td>
+                           <td class='docblock-short'>
+                                <p>Additional functionality for numerics.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='ops/index.html'
+                                  title='std::ops'>ops</a></td>
+                           <td class='docblock-short'>
+                                <p>Overloadable operators.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='option/index.html'
+                                  title='std::option'>option</a></td>
+                           <td class='docblock-short'>
+                                <p>Optional values.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='os/index.html'
+                                  title='std::os'>os</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='path/index.html'
+                                  title='std::path'>path</a></td>
+                           <td class='docblock-short'>
+                                <p>Cross-platform path manipulation.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='prelude/index.html'
+                                  title='std::prelude'>prelude</a></td>
+                           <td class='docblock-short'>
+                                <p>The Rust Prelude.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='process/index.html'
+                                  title='std::process'>process</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='ptr/index.html'
+                                  title='std::ptr'>ptr</a></td>
+                           <td class='docblock-short'>
+                                <p>Raw, unsafe pointers, <code>*const T</code>, and <code>*mut T</code>.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='rc/index.html'
+                                  title='std::rc'>rc</a></td>
+                           <td class='docblock-short'>
+                                <p>Single-threaded reference-counting pointers.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='result/index.html'
+                                  title='std::result'>result</a></td>
+                           <td class='docblock-short'>
+                                <p>Error handling with the <code>Result</code> type.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='slice/index.html'
+                                  title='std::slice'>slice</a></td>
+                           <td class='docblock-short'>
+                                <p>A dynamically-sized view into a contiguous sequence, <code>[T]</code>.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='str/index.html'
+                                  title='std::str'>str</a></td>
+                           <td class='docblock-short'>
+                                <p>Unicode string slices.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='string/index.html'
+                                  title='std::string'>string</a></td>
+                           <td class='docblock-short'>
+                                <p>A UTF-8 encoded, growable string.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='sync/index.html'
+                                  title='std::sync'>sync</a></td>
+                           <td class='docblock-short'>
+                                <p>Synchronization primitives</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='time/index.html'
+                                  title='std::time'>time</a></td>
+                           <td class='docblock-short'>
+                                <p>Temporal quantification.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='u16/index.html'
+                                  title='std::u16'>u16</a></td>
+                           <td class='docblock-short'>
+                                <p>The 16-bit unsigned integer type.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='u32/index.html'
+                                  title='std::u32'>u32</a></td>
+                           <td class='docblock-short'>
+                                <p>The 32-bit unsigned integer type.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='u64/index.html'
+                                  title='std::u64'>u64</a></td>
+                           <td class='docblock-short'>
+                                <p>The 64-bit unsigned integer type.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='u8/index.html'
+                                  title='std::u8'>u8</a></td>
+                           <td class='docblock-short'>
+                                <p>The 8-bit unsigned integer type.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='usize/index.html'
+                                  title='std::usize'>usize</a></td>
+                           <td class='docblock-short'>
+                                <p>The pointer-sized unsigned integer type.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='vec/index.html'
+                                  title='std::vec'>vec</a></td>
+                           <td class='docblock-short'>
+                                <p>A contiguous growable array type with heap-allocated contents, written
+<code>Vec&lt;T&gt;</code> but pronounced &#39;vector.&#39;</p>
+                           </td>
+                       </tr>
+                       <tr class='unstable module-item'>
+                           <td><a class='mod' href='intrinsics/index.html'
+                                  title='std::intrinsics'>intrinsics</a></td>
+                           <td class='docblock-short'>
+                               [<div class='stab unstable'>Experimental</div>] <p>rustc compiler intrinsics.</p>
+                           </td>
+                       </tr>
+                       <tr class='unstable module-item'>
+                           <td><a class='mod' href='raw/index.html'
+                                  title='std::raw'>raw</a></td>
+                           <td class='docblock-short'>
+                               [<div class='stab unstable'>Experimental</div>] <p>Contains struct definitions for the layout of compiler built-in types.</p>
+                           </td>
+                       </tr></table><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.assert.html'
+                                  title='std::assert'>assert</a></td>
+                           <td class='docblock-short'>
+                                <p>Ensure that a boolean expression is <code>true</code> at runtime.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.assert_eq.html'
+                                  title='std::assert_eq'>assert_eq</a></td>
+                           <td class='docblock-short'>
+                                <p>Asserts that two expressions are equal to each other.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.assert_ne.html'
+                                  title='std::assert_ne'>assert_ne</a></td>
+                           <td class='docblock-short'>
+                                <p>Asserts that two expressions are not equal to each other.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.debug_assert.html'
+                                  title='std::debug_assert'>debug_assert</a></td>
+                           <td class='docblock-short'>
+                                <p>Ensure that a boolean expression is <code>true</code> at runtime.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.debug_assert_eq.html'
+                                  title='std::debug_assert_eq'>debug_assert_eq</a></td>
+                           <td class='docblock-short'>
+                                <p>Asserts that two expressions are equal to each other.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.debug_assert_ne.html'
+                                  title='std::debug_assert_ne'>debug_assert_ne</a></td>
+                           <td class='docblock-short'>
+                                <p>Asserts that two expressions are not equal to each other.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.format.html'
+                                  title='std::format'>format</a></td>
+                           <td class='docblock-short'>
+                                <p>Use the syntax described in <code>std::fmt</code> to create a value of type <code>String</code>.
+See <a href="../std/fmt/index.html"><code>std::fmt</code></a> for more information.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.panic.html'
+                                  title='std::panic'>panic</a></td>
+                           <td class='docblock-short'>
+                                <p>Entry point of thread panic, for details, see std::macros</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.print.html'
+                                  title='std::print'>print</a></td>
+                           <td class='docblock-short'>
+                                <p>Macro for printing to the standard output.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.println.html'
+                                  title='std::println'>println</a></td>
+                           <td class='docblock-short'>
+                                <p>Macro for printing to the standard output, with a newline. On all
+platforms, the newline is the LINE FEED character (<code>\n</code>/<code>U+000A</code>) alone
+(no additional CARRIAGE RETURN (<code>\r</code>/<code>U+000D</code>).</p>
+                           </td>
+                       </tr>
+                       <tr class='unstable module-item'>
+                           <td><a class='macro' href='macro.select.html'
+                                  title='std::select'>select</a></td>
+                           <td class='docblock-short'>
+                               [<div class='stab unstable'>Experimental</div>] <p>A macro to select an event from a number of receivers.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.try.html'
+                                  title='std::try'>try</a></td>
+                           <td class='docblock-short'>
+                                <p>Helper macro for reducing boilerplate code for matching <code>Result</code> together
+with converting downstream errors.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.unimplemented.html'
+                                  title='std::unimplemented'>unimplemented</a></td>
+                           <td class='docblock-short'>
+                                <p>A standardized placeholder for marking unfinished code. It panics with the
+message <code>&quot;not yet implemented&quot;</code> when executed.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.unreachable.html'
+                                  title='std::unreachable'>unreachable</a></td>
+                           <td class='docblock-short'>
+                                <p>A utility macro for indicating unreachable code.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.vec.html'
+                                  title='std::vec'>vec</a></td>
+                           <td class='docblock-short'>
+                                <p>Creates a <code>Vec</code> containing the arguments.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.write.html'
+                                  title='std::write'>write</a></td>
+                           <td class='docblock-short'>
+                                <p>Write formatted data into a buffer</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.writeln.html'
+                                  title='std::writeln'>writeln</a></td>
+                           <td class='docblock-short'>
+                                <p>Write formatted data into a buffer, with a newline appended.</p>
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "std";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

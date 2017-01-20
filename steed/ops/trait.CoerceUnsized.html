@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `CoerceUnsized` trait in crate `steed`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, CoerceUnsized">
+
+    <title>steed::ops::CoerceUnsized - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../index.html'>steed</a>::<wbr><a href='index.html'>ops</a></p><script>window.sidebarCurrent = {name: 'CoerceUnsized', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content trait">
+<h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>steed</a>::<wbr><a href='index.html'>ops</a>::<wbr><a class='trait' href=''>CoerceUnsized</a></span><span class='out-of-band'><span class='since' title='Stable since Rust version '></span><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/ops.rs.html#2744-2746' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait CoerceUnsized&lt;T&gt; { }</pre><div class='stability'><div class='stab unstable'><span class=microscope>🔬</span> This is a nightly-only experimental API.  (<code>coerce_unsized</code>)</div></div><div class='docblock'><p>Trait that indicates that this is a pointer or a wrapper for one,
+where unsizing can be performed on the pointee.</p>
+
+<p>See the <a href="https://github.com/rust-lang/rfcs/blob/master/text/0982-dst-coercion.md">DST coercion RfC</a> and <a href="../../nomicon/coercions.html">the nomicon entry on coercion</a>
+for more details.</p>
+
+<p>For builtin pointer types, pointers to <code>T</code> will coerce to pointers to <code>U</code> if <code>T: Unsize&lt;U&gt;</code>
+by converting from a thin pointer to a fat pointer.</p>
+
+<p>For custom types, the coercion here works by coercing <code>Foo&lt;T&gt;</code> to <code>Foo&lt;U&gt;</code>
+provided an impl of <code>CoerceUnsized&lt;Foo&lt;U&gt;&gt; for Foo&lt;T&gt;</code> exists.
+Such an impl can only be written if <code>Foo&lt;T&gt;</code> has only a single non-phantomdata
+field involving <code>T</code>. If the type of that field is <code>Bar&lt;T&gt;</code>, an implementation
+of <code>CoerceUnsized&lt;Bar&lt;U&gt;&gt; for Bar&lt;T&gt;</code> must exist. The coercion will work by
+by coercing the <code>Bar&lt;T&gt;</code> field into <code>Bar&lt;U&gt;</code> and filling in the rest of the fields
+from <code>Foo&lt;T&gt;</code> to create a <code>Foo&lt;U&gt;</code>. This will effectively drill down to a pointer
+field and coerce that.</p>
+
+<p>Generally, for smart pointers you will implement
+<code>CoerceUnsized&lt;Ptr&lt;U&gt;&gt; for Ptr&lt;T&gt; where T: Unsize&lt;U&gt;, U: ?Sized</code>, with an
+optional <code>?Sized</code> bound on <code>T</code> itself. For wrapper types that directly embed <code>T</code>
+like <code>Cell&lt;T&gt;</code> and <code>RefCell&lt;T&gt;</code>, you
+can directly implement <code>CoerceUnsized&lt;Wrap&lt;U&gt;&gt; for Wrap&lt;T&gt; where T: CoerceUnsized&lt;U&gt;</code>.
+This will let coercions of types like <code>Cell&lt;Box&lt;T&gt;&gt;</code> work.</p>
+
+<p><a href="../marker/trait.Unsize.html"><code>Unsize</code></a> is used to mark types which can be coerced to DSTs if behind
+pointers. It is implemented automatically by the compiler.</p>
+</div>
+        <h2 id='implementors'>Implementors</h2>
+        <ul class='item-list' id='implementors-list'>
+    <li><code>impl&lt;T, U&gt; CoerceUnsized&lt;<a class='struct' href='../../steed/boxed/struct.Box.html' title='steed::boxed::Box'>Box</a>&lt;U&gt;&gt; for <a class='struct' href='../../steed/boxed/struct.Box.html' title='steed::boxed::Box'>Box</a>&lt;T&gt; <span class='where fmt-newline'>where T: <a class='trait' href='../../steed/marker/trait.Unsize.html' title='steed::marker::Unsize'>Unsize</a>&lt;U&gt; + ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U: ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a></span></code></li>
+<li><code>impl&lt;T, U&gt; CoerceUnsized&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/alloc/arc/struct.Arc.html' title='alloc::arc::Arc'>Arc</a>&lt;U&gt;&gt; for <a class='struct' href='https://doc.rust-lang.org/nightly/alloc/arc/struct.Arc.html' title='alloc::arc::Arc'>Arc</a>&lt;T&gt; <span class='where fmt-newline'>where T: <a class='trait' href='../../steed/marker/trait.Unsize.html' title='steed::marker::Unsize'>Unsize</a>&lt;U&gt; + ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U: ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a></span></code></li>
+<li><code>impl&lt;T, U&gt; CoerceUnsized&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/alloc/arc/struct.Weak.html' title='alloc::arc::Weak'>Weak</a>&lt;U&gt;&gt; for alloc::arc::<a class='struct' href='https://doc.rust-lang.org/nightly/alloc/arc/struct.Weak.html' title='alloc::arc::Weak'>Weak</a>&lt;T&gt; <span class='where fmt-newline'>where T: <a class='trait' href='../../steed/marker/trait.Unsize.html' title='steed::marker::Unsize'>Unsize</a>&lt;U&gt; + ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U: ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a></span></code></li>
+<li><code>impl&lt;T, U&gt; CoerceUnsized&lt;<a class='struct' href='../../steed/rc/struct.Rc.html' title='steed::rc::Rc'>Rc</a>&lt;U&gt;&gt; for <a class='struct' href='../../steed/rc/struct.Rc.html' title='steed::rc::Rc'>Rc</a>&lt;T&gt; <span class='where fmt-newline'>where T: <a class='trait' href='../../steed/marker/trait.Unsize.html' title='steed::marker::Unsize'>Unsize</a>&lt;U&gt; + ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U: ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a></span></code></li>
+<li><code>impl&lt;T, U&gt; CoerceUnsized&lt;<a class='struct' href='../../steed/rc/struct.Weak.html' title='steed::rc::Weak'>Weak</a>&lt;U&gt;&gt; for steed::rc::<a class='struct' href='../../steed/rc/struct.Weak.html' title='steed::rc::Weak'>Weak</a>&lt;T&gt; <span class='where fmt-newline'>where T: <a class='trait' href='../../steed/marker/trait.Unsize.html' title='steed::marker::Unsize'>Unsize</a>&lt;U&gt; + ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U: ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a></span></code></li>
+<li><code>impl&lt;T, U&gt; CoerceUnsized&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/core/nonzero/struct.NonZero.html' title='core::nonzero::NonZero'>NonZero</a>&lt;U&gt;&gt; for <a class='struct' href='https://doc.rust-lang.org/nightly/core/nonzero/struct.NonZero.html' title='core::nonzero::NonZero'>NonZero</a>&lt;T&gt; <span class='where fmt-newline'>where T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/nonzero/trait.Zeroable.html' title='core::nonzero::Zeroable'>Zeroable</a> + <a class='trait' href='../../steed/ops/trait.CoerceUnsized.html' title='steed::ops::CoerceUnsized'>CoerceUnsized</a>&lt;U&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U: <a class='trait' href='https://doc.rust-lang.org/nightly/core/nonzero/trait.Zeroable.html' title='core::nonzero::Zeroable'>Zeroable</a></span></code></li>
+<li><code>impl&lt;T, U&gt; CoerceUnsized&lt;<a class='struct' href='../../steed/ptr/struct.Unique.html' title='steed::ptr::Unique'>Unique</a>&lt;U&gt;&gt; for <a class='struct' href='../../steed/ptr/struct.Unique.html' title='steed::ptr::Unique'>Unique</a>&lt;T&gt; <span class='where fmt-newline'>where T: <a class='trait' href='../../steed/marker/trait.Unsize.html' title='steed::marker::Unsize'>Unsize</a>&lt;U&gt; + ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U: ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a></span></code></li>
+<li><code>impl&lt;T, U&gt; CoerceUnsized&lt;<a class='struct' href='../../steed/ptr/struct.Shared.html' title='steed::ptr::Shared'>Shared</a>&lt;U&gt;&gt; for <a class='struct' href='../../steed/ptr/struct.Shared.html' title='steed::ptr::Shared'>Shared</a>&lt;T&gt; <span class='where fmt-newline'>where T: <a class='trait' href='../../steed/marker/trait.Unsize.html' title='steed::marker::Unsize'>Unsize</a>&lt;U&gt; + ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U: ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a></span></code></li>
+<li><code>impl&lt;'a, T, U&gt; CoerceUnsized&lt;&amp;'a mut U&gt; for &amp;'a mut T <span class='where fmt-newline'>where T: <a class='trait' href='../../steed/marker/trait.Unsize.html' title='steed::marker::Unsize'>Unsize</a>&lt;U&gt; + ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U: ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a></span></code></li>
+<li><code>impl&lt;'a, 'b, T, U&gt; CoerceUnsized&lt;&amp;'a U&gt; for &amp;'b mut T <span class='where fmt-newline'>where 'b: 'a,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;T: <a class='trait' href='../../steed/marker/trait.Unsize.html' title='steed::marker::Unsize'>Unsize</a>&lt;U&gt; + ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U: ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a></span></code></li>
+<li><code>impl&lt;'a, T, U&gt; CoerceUnsized&lt;*mut U&gt; for &amp;'a mut T <span class='where fmt-newline'>where T: <a class='trait' href='../../steed/marker/trait.Unsize.html' title='steed::marker::Unsize'>Unsize</a>&lt;U&gt; + ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U: ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a></span></code></li>
+<li><code>impl&lt;'a, T, U&gt; CoerceUnsized&lt;*const U&gt; for &amp;'a mut T <span class='where fmt-newline'>where T: <a class='trait' href='../../steed/marker/trait.Unsize.html' title='steed::marker::Unsize'>Unsize</a>&lt;U&gt; + ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U: ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a></span></code></li>
+<li><code>impl&lt;'a, 'b, T, U&gt; CoerceUnsized&lt;&amp;'a U&gt; for &amp;'b T <span class='where fmt-newline'>where 'b: 'a,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;T: <a class='trait' href='../../steed/marker/trait.Unsize.html' title='steed::marker::Unsize'>Unsize</a>&lt;U&gt; + ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U: ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a></span></code></li>
+<li><code>impl&lt;'a, T, U&gt; CoerceUnsized&lt;*const U&gt; for &amp;'a T <span class='where fmt-newline'>where T: <a class='trait' href='../../steed/marker/trait.Unsize.html' title='steed::marker::Unsize'>Unsize</a>&lt;U&gt; + ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U: ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a></span></code></li>
+<li><code>impl&lt;T, U&gt; CoerceUnsized&lt;*mut U&gt; for *mut T <span class='where fmt-newline'>where T: <a class='trait' href='../../steed/marker/trait.Unsize.html' title='steed::marker::Unsize'>Unsize</a>&lt;U&gt; + ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U: ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a></span></code></li>
+<li><code>impl&lt;T, U&gt; CoerceUnsized&lt;*const U&gt; for *mut T <span class='where fmt-newline'>where T: <a class='trait' href='../../steed/marker/trait.Unsize.html' title='steed::marker::Unsize'>Unsize</a>&lt;U&gt; + ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U: ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a></span></code></li>
+<li><code>impl&lt;T, U&gt; CoerceUnsized&lt;*const U&gt; for *const T <span class='where fmt-newline'>where T: <a class='trait' href='../../steed/marker/trait.Unsize.html' title='steed::marker::Unsize'>Unsize</a>&lt;U&gt; + ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U: ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a></span></code></li>
+<li><code>impl&lt;T, U&gt; CoerceUnsized&lt;<a class='struct' href='../../steed/cell/struct.Cell.html' title='steed::cell::Cell'>Cell</a>&lt;U&gt;&gt; for <a class='struct' href='../../steed/cell/struct.Cell.html' title='steed::cell::Cell'>Cell</a>&lt;T&gt; <span class='where'>where T: <a class='trait' href='../../steed/ops/trait.CoerceUnsized.html' title='steed::ops::CoerceUnsized'>CoerceUnsized</a>&lt;U&gt;</span></code></li>
+<li><code>impl&lt;T, U&gt; CoerceUnsized&lt;<a class='struct' href='../../steed/cell/struct.RefCell.html' title='steed::cell::RefCell'>RefCell</a>&lt;U&gt;&gt; for <a class='struct' href='../../steed/cell/struct.RefCell.html' title='steed::cell::RefCell'>RefCell</a>&lt;T&gt; <span class='where'>where T: <a class='trait' href='../../steed/ops/trait.CoerceUnsized.html' title='steed::ops::CoerceUnsized'>CoerceUnsized</a>&lt;U&gt;</span></code></li>
+<li><code>impl&lt;'b, T, U&gt; CoerceUnsized&lt;<a class='struct' href='../../steed/cell/struct.Ref.html' title='steed::cell::Ref'>Ref</a>&lt;'b, U&gt;&gt; for <a class='struct' href='../../steed/cell/struct.Ref.html' title='steed::cell::Ref'>Ref</a>&lt;'b, T&gt; <span class='where fmt-newline'>where T: <a class='trait' href='../../steed/marker/trait.Unsize.html' title='steed::marker::Unsize'>Unsize</a>&lt;U&gt; + ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U: ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a></span></code></li>
+<li><code>impl&lt;'b, T, U&gt; CoerceUnsized&lt;<a class='struct' href='../../steed/cell/struct.RefMut.html' title='steed::cell::RefMut'>RefMut</a>&lt;'b, U&gt;&gt; for <a class='struct' href='../../steed/cell/struct.RefMut.html' title='steed::cell::RefMut'>RefMut</a>&lt;'b, T&gt; <span class='where fmt-newline'>where T: <a class='trait' href='../../steed/marker/trait.Unsize.html' title='steed::marker::Unsize'>Unsize</a>&lt;U&gt; + ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U: ?<a class='trait' href='../../steed/marker/trait.Sized.html' title='steed::marker::Sized'>Sized</a></span></code></li>
+<li><code>impl&lt;T, U&gt; CoerceUnsized&lt;<a class='struct' href='../../steed/cell/struct.UnsafeCell.html' title='steed::cell::UnsafeCell'>UnsafeCell</a>&lt;U&gt;&gt; for <a class='struct' href='../../steed/cell/struct.UnsafeCell.html' title='steed::cell::UnsafeCell'>UnsafeCell</a>&lt;T&gt; <span class='where fmt-newline'>where T: <a class='trait' href='../../steed/ops/trait.CoerceUnsized.html' title='steed::ops::CoerceUnsized'>CoerceUnsized</a>&lt;U&gt;</span></code></li>
+</ul><script type="text/javascript" async
+                         src="../../implementors/core/ops/trait.CoerceUnsized.js">
+                 </script></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "steed";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["brk","Change the data segment. See `man brk`."],["sched_yield","Voluntarily give a time slice to the scheduler."]]});

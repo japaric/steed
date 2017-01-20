@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `RangeTo` struct in crate `steed`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, RangeTo">
+
+    <title>steed::ops::RangeTo - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../index.html'>steed</a>::<wbr><a href='index.html'>ops</a></p><script>window.sidebarCurrent = {name: 'RangeTo', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>steed</a>::<wbr><a href='index.html'>ops</a>::<wbr><a class='struct' href=''>RangeTo</a></span><span class='out-of-band'><span class='since' title='Stable since Rust version 1.0.0'>1.0.0</span><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/ops.rs.html#2229-2233' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct RangeTo&lt;Idx&gt; {
+    pub end: Idx,
+}</pre><div class='docblock'><p>A range which is only bounded above: { x | x &lt; end }.
+Use <code>..end</code> (two dots) for its shorthand.</p>
+
+<p>See the <a href="#method.contains"><code>contains()</code></a> method for its characterization.</p>
+
+<p>It cannot serve as an iterator because it doesn&#39;t have a starting point.</p>
+
+<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<p>The <code>..{integer}</code> syntax is a <code>RangeTo</code>:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>((..<span class='number'>5</span>), <span class='ident'>std</span>::<span class='ident'>ops</span>::<span class='ident'>RangeTo</span>{ <span class='ident'>end</span>: <span class='number'>5</span> });</pre>
+
+<p>It does not have an <code>IntoIterator</code> implementation, so you can&#39;t use it in a
+<code>for</code> loop directly. This won&#39;t compile:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> ..<span class='number'>5</span> {
+    <span class='comment'>// ...</span>
+}</pre>
+
+<p>When used as a slicing index, <code>RangeTo</code> produces a slice of all array
+elements before the index indicated by <code>end</code>.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>arr</span> <span class='op'>=</span> [<span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>arr</span>[ .. ], [<span class='number'>0</span>,<span class='number'>1</span>,<span class='number'>2</span>,<span class='number'>3</span>]);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>arr</span>[ ..<span class='number'>3</span>], [<span class='number'>0</span>,<span class='number'>1</span>,<span class='number'>2</span>  ]);  <span class='comment'>// RangeTo</span>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>arr</span>[<span class='number'>1</span>.. ], [  <span class='number'>1</span>,<span class='number'>2</span>,<span class='number'>3</span>]);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>arr</span>[<span class='number'>1</span>..<span class='number'>3</span>], [  <span class='number'>1</span>,<span class='number'>2</span>  ]);</pre>
+</div><h2 class='fields'>Fields</h2><span id='structfield.end' class='structfield'>
+                           <span id='end.v' class='invisible'>
+                           <code>end: Idx</code>
+                           </span></span><span class='stab '></span><div class='docblock'><p>The upper bound of the range (exclusive).</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;Idx&gt; <a class='struct' href='../../steed/ops/struct.RangeTo.html' title='steed::ops::RangeTo'>RangeTo</a>&lt;Idx&gt; <span class='where'>where Idx: <a class='trait' href='../../steed/cmp/trait.PartialOrd.html' title='steed::cmp::PartialOrd'>PartialOrd</a>&lt;Idx&gt;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/ops.rs.html#2243-2257' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.contains' class='method'><span id='contains.v' class='invisible'><code>fn <a href='#method.contains' class='fnname'>contains</a>(&amp;self, item: Idx) -&gt; bool</code></span></h4>
+<div class='stability'><div class='stab unstable'><details><summary><span class=microscope>🔬</span> This is a nightly-only experimental API.  (<code>range_contains</code>)</summary><p>recently added as per RFC</p>
+</details></div></div><div class='docblock'>
+<h1 id='examples-1' class='section-header'><a href='#examples-1'>Examples</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>range_contains</span>)]</span>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='macro'>assert</span><span class='macro'>!</span>(   (..<span class='number'>5</span>).<span class='ident'>contains</span>(<span class='op'>-</span><span class='number'>1_000_000_000</span>));
+    <span class='macro'>assert</span><span class='macro'>!</span>(   (..<span class='number'>5</span>).<span class='ident'>contains</span>(<span class='number'>4</span>));
+    <span class='macro'>assert</span><span class='macro'>!</span>( <span class='op'>!</span> (..<span class='number'>5</span>).<span class='ident'>contains</span>(<span class='number'>5</span>));
+}</pre>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;Idx&gt; <a class='trait' href='../../steed/cmp/trait.PartialEq.html' title='steed::cmp::PartialEq'>PartialEq</a>&lt;<a class='struct' href='../../steed/ops/struct.RangeTo.html' title='steed::ops::RangeTo'>RangeTo</a>&lt;Idx&gt;&gt; for <a class='struct' href='../../steed/ops/struct.RangeTo.html' title='steed::ops::RangeTo'>RangeTo</a>&lt;Idx&gt; <span class='where'>where Idx: <a class='trait' href='../../steed/cmp/trait.PartialEq.html' title='steed::cmp::PartialEq'>PartialEq</a>&lt;Idx&gt;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/ops.rs.html#2227' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.eq' class='method'><span id='eq.v' class='invisible'><code>fn <a href='../../steed/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class='struct' href='../../steed/ops/struct.RangeTo.html' title='steed::ops::RangeTo'>RangeTo</a>&lt;Idx&gt;) -&gt; bool</code></span></h4>
+<div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="../../steed/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
+</div><h4 id='method.ne' class='method'><span id='ne.v' class='invisible'><code>fn <a href='../../steed/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, __arg_0: &amp;<a class='struct' href='../../steed/ops/struct.RangeTo.html' title='steed::ops::RangeTo'>RangeTo</a>&lt;Idx&gt;) -&gt; bool</code></span></h4>
+<div class='docblock'><p>This method tests for <code>!=</code>.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;Idx&gt; <a class='trait' href='../../steed/clone/trait.Clone.html' title='steed::clone::Clone'>Clone</a> for <a class='struct' href='../../steed/ops/struct.RangeTo.html' title='steed::ops::RangeTo'>RangeTo</a>&lt;Idx&gt; <span class='where'>where Idx: <a class='trait' href='../../steed/clone/trait.Clone.html' title='steed::clone::Clone'>Clone</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/ops.rs.html#2227' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='../../steed/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../../steed/ops/struct.RangeTo.html' title='steed::ops::RangeTo'>RangeTo</a>&lt;Idx&gt;</code></span></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="../../steed/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='../../steed/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></span></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="../../steed/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;Idx&gt; <a class='trait' href='../../steed/fmt/trait.Debug.html' title='steed::fmt::Debug'>Debug</a> for <a class='struct' href='../../steed/ops/struct.RangeTo.html' title='steed::ops::RangeTo'>RangeTo</a>&lt;Idx&gt; <span class='where'>where Idx: <a class='trait' href='../../steed/fmt/trait.Debug.html' title='steed::fmt::Debug'>Debug</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/ops.rs.html#2236-2240' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='../../steed/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, fmt: &amp;mut <a class='struct' href='../../steed/fmt/struct.Formatter.html' title='steed::fmt::Formatter'>Formatter</a>) -&gt; <a class='enum' href='../../steed/result/enum.Result.html' title='steed::result::Result'>Result</a>&lt;(), <a class='struct' href='../../steed/fmt/struct.Error.html' title='steed::fmt::Error'>Error</a>&gt;</code></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;Idx&gt; <a class='trait' href='../../steed/cmp/trait.Eq.html' title='steed::cmp::Eq'>Eq</a> for <a class='struct' href='../../steed/ops/struct.RangeTo.html' title='steed::ops::RangeTo'>RangeTo</a>&lt;Idx&gt; <span class='where'>where Idx: <a class='trait' href='../../steed/cmp/trait.Eq.html' title='steed::cmp::Eq'>Eq</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/ops.rs.html#2227' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl&lt;T&gt; <a class='trait' href='../../steed/slice/trait.SliceIndex.html' title='steed::slice::SliceIndex'>SliceIndex</a>&lt;T&gt; for <a class='struct' href='../../steed/ops/struct.RangeTo.html' title='steed::ops::RangeTo'>RangeTo</a>&lt;usize&gt;</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.13.0'>1.13.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/slice.rs.html#716-748' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Output' class='type'><span id='Output.t' class='invisible'><code>type <a href='../../steed/slice/trait.SliceIndex.html#associatedtype.Output' class='type'>Output</a> = [T]</code></span></h4>
+<div class='stability'><div class='stab unstable'><span class=microscope>🔬</span> This is a nightly-only experimental API.  (<code>slice_get_slice</code>)</div></div><div class='docblock'><p>The output type returned by methods.</p>
+</div><h4 id='method.get' class='method'><span id='get.v' class='invisible'><code>fn <a href='../../steed/slice/trait.SliceIndex.html#tymethod.get' class='fnname'>get</a>(self, slice: &amp;[T]) -&gt; <a class='enum' href='../../steed/option/enum.Option.html' title='steed::option::Option'>Option</a>&lt;&amp;[T]&gt;</code></span></h4>
+<div class='stability'><div class='stab unstable'><span class=microscope>🔬</span> This is a nightly-only experimental API.  (<code>slice_get_slice</code>)</div></div><div class='docblock'><p>Returns a shared reference to the output at this location, if in bounds. <a href="../../steed/slice/trait.SliceIndex.html#tymethod.get">Read more</a></p>
+</div><h4 id='method.get_mut' class='method'><span id='get_mut.v' class='invisible'><code>fn <a href='../../steed/slice/trait.SliceIndex.html#tymethod.get_mut' class='fnname'>get_mut</a>(self, slice: &amp;mut [T]) -&gt; <a class='enum' href='../../steed/option/enum.Option.html' title='steed::option::Option'>Option</a>&lt;&amp;mut [T]&gt;</code></span></h4>
+<div class='stability'><div class='stab unstable'><span class=microscope>🔬</span> This is a nightly-only experimental API.  (<code>slice_get_slice</code>)</div></div><div class='docblock'><p>Returns a mutable reference to the output at this location, if in bounds. <a href="../../steed/slice/trait.SliceIndex.html#tymethod.get_mut">Read more</a></p>
+</div><h4 id='method.get_unchecked' class='method'><span id='get_unchecked.v' class='invisible'><code>unsafe fn <a href='../../steed/slice/trait.SliceIndex.html#tymethod.get_unchecked' class='fnname'>get_unchecked</a>(self, slice: &amp;[T]) -&gt; &amp;[T]</code></span></h4>
+<div class='stability'><div class='stab unstable'><span class=microscope>🔬</span> This is a nightly-only experimental API.  (<code>slice_get_slice</code>)</div></div><div class='docblock'><p>Returns a shared reference to the output at this location, without performing any bounds checking. <a href="../../steed/slice/trait.SliceIndex.html#tymethod.get_unchecked">Read more</a></p>
+</div><h4 id='method.get_unchecked_mut' class='method'><span id='get_unchecked_mut.v' class='invisible'><code>unsafe fn <a href='../../steed/slice/trait.SliceIndex.html#tymethod.get_unchecked_mut' class='fnname'>get_unchecked_mut</a>(self, slice: &amp;mut [T]) -&gt; &amp;mut [T]</code></span></h4>
+<div class='stability'><div class='stab unstable'><span class=microscope>🔬</span> This is a nightly-only experimental API.  (<code>slice_get_slice</code>)</div></div><div class='docblock'><p>Returns a mutable reference to the output at this location, without performing any bounds checking. <a href="../../steed/slice/trait.SliceIndex.html#tymethod.get_unchecked_mut">Read more</a></p>
+</div><h4 id='method.index' class='method'><span id='index.v' class='invisible'><code>fn <a href='../../steed/slice/trait.SliceIndex.html#tymethod.index' class='fnname'>index</a>(self, slice: &amp;[T]) -&gt; &amp;[T]</code></span></h4>
+<div class='stability'><div class='stab unstable'><span class=microscope>🔬</span> This is a nightly-only experimental API.  (<code>slice_get_slice</code>)</div></div><div class='docblock'><p>Returns a shared reference to the output at this location, panicking if out of bounds. <a href="../../steed/slice/trait.SliceIndex.html#tymethod.index">Read more</a></p>
+</div><h4 id='method.index_mut' class='method'><span id='index_mut.v' class='invisible'><code>fn <a href='../../steed/slice/trait.SliceIndex.html#tymethod.index_mut' class='fnname'>index_mut</a>(self, slice: &amp;mut [T]) -&gt; &amp;mut [T]</code></span></h4>
+<div class='stability'><div class='stab unstable'><span class=microscope>🔬</span> This is a nightly-only experimental API.  (<code>slice_get_slice</code>)</div></div><div class='docblock'><p>Returns a mutable reference to the output at this location, panicking if out of bounds. <a href="../../steed/slice/trait.SliceIndex.html#tymethod.index_mut">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;Idx&gt; <a class='trait' href='../../steed/hash/trait.Hash.html' title='steed::hash::Hash'>Hash</a> for <a class='struct' href='../../steed/ops/struct.RangeTo.html' title='steed::ops::RangeTo'>RangeTo</a>&lt;Idx&gt; <span class='where'>where Idx: <a class='trait' href='../../steed/hash/trait.Hash.html' title='steed::hash::Hash'>Hash</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/ops.rs.html#2227' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.hash' class='method'><span id='hash.v' class='invisible'><code>fn <a href='../../steed/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__HIdx&gt;(&amp;self, __arg_0: &amp;mut __HIdx) <span class='where'>where __HIdx: <a class='trait' href='../../steed/hash/trait.Hasher.html' title='steed::hash::Hasher'>Hasher</a></span></code></span></h4>
+<div class='docblock'><p>Feeds this value into the state given, updating the hasher as necessary.</p>
+</div><h4 id='method.hash_slice' class='method'><span id='hash_slice.v' class='invisible'><code>fn <a href='../../steed/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: &amp;[Self], state: &amp;mut H) <span class='where'>where H: <a class='trait' href='../../steed/hash/trait.Hasher.html' title='steed::hash::Hasher'>Hasher</a></span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
+<div class='docblock'><p>Feeds a slice of this type into the state provided.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;Idx&gt; <a class='trait' href='../../steed/marker/trait.Copy.html' title='steed::marker::Copy'>Copy</a> for <a class='struct' href='../../steed/ops/struct.RangeTo.html' title='steed::ops::RangeTo'>RangeTo</a>&lt;Idx&gt; <span class='where'>where Idx: <a class='trait' href='../../steed/marker/trait.Copy.html' title='steed::marker::Copy'>Copy</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/ops.rs.html#2227' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl&lt;T&gt; <a class='trait' href='../../steed/collections/range/trait.RangeArgument.html' title='steed::collections::range::RangeArgument'>RangeArgument</a>&lt;T&gt; for <a class='struct' href='../../steed/ops/struct.RangeTo.html' title='steed::ops::RangeTo'>RangeTo</a>&lt;T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/collections/range.rs.html#79-83' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.end' class='method'><span id='end.v-1' class='invisible'><code>fn <a href='../../steed/collections/range/trait.RangeArgument.html#method.end' class='fnname'>end</a>(&amp;self) -&gt; <a class='enum' href='../../steed/option/enum.Option.html' title='steed::option::Option'>Option</a>&lt;&amp;T&gt;</code></span></h4>
+<div class='stability'><div class='stab unstable'><details><summary><span class=microscope>🔬</span> This is a nightly-only experimental API.  (<code>collections_range</code>)</summary><p>waiting for dust to settle on inclusive ranges</p>
+</details></div></div><div class='docblock'><p>End index (exclusive) <a href="../../steed/collections/range/trait.RangeArgument.html#method.end">Read more</a></p>
+</div><h4 id='method.start' class='method'><span id='start.v' class='invisible'><code>fn <a href='../../steed/collections/range/trait.RangeArgument.html#method.start' class='fnname'>start</a>(&amp;self) -&gt; <a class='enum' href='../../steed/option/enum.Option.html' title='steed::option::Option'>Option</a>&lt;&amp;T&gt;</code></span></h4>
+<div class='stability'><div class='stab unstable'><details><summary><span class=microscope>🔬</span> This is a nightly-only experimental API.  (<code>collections_range</code>)</summary><p>waiting for dust to settle on inclusive ranges</p>
+</details></div></div><div class='docblock'><p>Start index (inclusive) <a href="../../steed/collections/range/trait.RangeArgument.html#method.start">Read more</a></p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "steed";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

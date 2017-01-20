@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `FromUtf16Error` struct in crate `steed`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, FromUtf16Error">
+
+    <title>steed::string::FromUtf16Error - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../index.html'>steed</a>::<wbr><a href='index.html'>string</a></p><script>window.sidebarCurrent = {name: 'FromUtf16Error', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>steed</a>::<wbr><a href='index.html'>string</a>::<wbr><a class='struct' href=''>FromUtf16Error</a></span><span class='out-of-band'><span class='since' title='Stable since Rust version 1.0.0'>1.0.0</span><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='https://doc.rust-lang.org/nightly/src/collections/string.rs.html#328' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct FromUtf16Error(_);</pre><div class='docblock'><p>A possible error value when converting a <code>String</code> from a UTF-16 byte slice.</p>
+
+<p>This type is the error type for the <a href="struct.String.html#method.from_utf16"><code>from_utf16()</code></a> method on <a href="struct.String.html"><code>String</code></a>.</p>
+
+<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<p>Basic usage:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='comment'>// 𝄞mu&lt;invalid&gt;ic</span>
+<span class='kw'>let</span> <span class='ident'>v</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span>[<span class='number'>0xD834</span>, <span class='number'>0xDD1E</span>, <span class='number'>0x006d</span>, <span class='number'>0x0075</span>,
+          <span class='number'>0xD800</span>, <span class='number'>0x0069</span>, <span class='number'>0x0063</span>];
+
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>String</span>::<span class='ident'>from_utf16</span>(<span class='ident'>v</span>).<span class='ident'>is_err</span>());</pre>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../steed/fmt/trait.Debug.html' title='steed::fmt::Debug'>Debug</a> for <a class='struct' href='../../steed/string/struct.FromUtf16Error.html' title='steed::string::FromUtf16Error'>FromUtf16Error</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/collections/string.rs.html#327' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='../../steed/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='../../steed/fmt/struct.Formatter.html' title='steed::fmt::Formatter'>Formatter</a>) -&gt; <a class='enum' href='../../steed/result/enum.Result.html' title='steed::result::Result'>Result</a>&lt;(), <a class='struct' href='../../steed/fmt/struct.Error.html' title='steed::fmt::Error'>Error</a>&gt;</code></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../steed/fmt/trait.Display.html' title='steed::fmt::Display'>Display</a> for <a class='struct' href='../../steed/string/struct.FromUtf16Error.html' title='steed::string::FromUtf16Error'>FromUtf16Error</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/collections/string.rs.html#1453-1457' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt-1' class='method'><span id='fmt.v-1' class='invisible'><code>fn <a href='../../steed/fmt/trait.Display.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='../../steed/fmt/struct.Formatter.html' title='steed::fmt::Formatter'>Formatter</a>) -&gt; <a class='enum' href='../../steed/result/enum.Result.html' title='steed::result::Result'>Result</a>&lt;(), <a class='struct' href='../../steed/fmt/struct.Error.html' title='steed::fmt::Error'>Error</a>&gt;</code></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../steed/error/trait.Error.html' title='steed::error::Error'>Error</a> for <a class='struct' href='../../steed/string/struct.FromUtf16Error.html' title='steed::string::FromUtf16Error'>FromUtf16Error</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/steed/error.rs.html#260-264' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.description' class='method'><span id='description.v' class='invisible'><code>fn <a href='../../steed/error/trait.Error.html#tymethod.description' class='fnname'>description</a>(&amp;self) -&gt; &amp;str</code></span></h4>
+<div class='docblock'><p>A short description of the error. <a href="../../steed/error/trait.Error.html#tymethod.description">Read more</a></p>
+</div><h4 id='method.cause' class='method'><span id='cause.v' class='invisible'><code>fn <a href='../../steed/error/trait.Error.html#method.cause' class='fnname'>cause</a>(&amp;self) -&gt; <a class='enum' href='../../steed/option/enum.Option.html' title='steed::option::Option'>Option</a>&lt;&amp;<a class='trait' href='../../steed/error/trait.Error.html' title='steed::error::Error'>Error</a>&gt;</code></span></h4>
+<div class='docblock'><p>The lower-level cause of this error, if any. <a href="../../steed/error/trait.Error.html#method.cause">Read more</a></p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "steed";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

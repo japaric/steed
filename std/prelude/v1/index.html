@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `v1` mod in crate `std`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, v1">
+
+    <title>std::prelude::v1 - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../../index.html'>std</a>::<wbr><a href='../index.html'>prelude</a></p><script>window.sidebarCurrent = {name: 'v1', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Module <a href='../../index.html'>std</a>::<wbr><a href='../index.html'>prelude</a>::<wbr><a class='mod' href=''>v1</a></span><span class='out-of-band'><span class='since' title='Stable since Rust version 1.0.0'>1.0.0</span><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/std/prelude/v1.rs.html#11-53' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>The first version of the prelude of The Rust Standard Library.</p>
+
+<p>See the <a href="../index.html">module-level documentation</a> for more.</p>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
+<table><tr><td><code>pub use marker::<a class='trait' href='../../../std/marker/trait.Copy.html' title='std::marker::Copy'>Copy</a>;</code></td></tr><tr><td><code>pub use marker::<a class='trait' href='../../../std/marker/trait.Send.html' title='std::marker::Send'>Send</a>;</code></td></tr><tr><td><code>pub use marker::<a class='trait' href='../../../std/marker/trait.Sized.html' title='std::marker::Sized'>Sized</a>;</code></td></tr><tr><td><code>pub use marker::<a class='trait' href='../../../std/marker/trait.Sync.html' title='std::marker::Sync'>Sync</a>;</code></td></tr><tr><td><code>pub use ops::<a class='trait' href='../../../std/ops/trait.Drop.html' title='std::ops::Drop'>Drop</a>;</code></td></tr><tr><td><code>pub use ops::<a class='trait' href='../../../std/ops/trait.Fn.html' title='std::ops::Fn'>Fn</a>;</code></td></tr><tr><td><code>pub use ops::<a class='trait' href='../../../std/ops/trait.FnMut.html' title='std::ops::FnMut'>FnMut</a>;</code></td></tr><tr><td><code>pub use ops::<a class='trait' href='../../../std/ops/trait.FnOnce.html' title='std::ops::FnOnce'>FnOnce</a>;</code></td></tr><tr><td><code>pub use mem::<a class='fn' href='../../../std/mem/fn.drop.html' title='std::mem::drop'>drop</a>;</code></td></tr><tr><td><code>pub use boxed::<a class='struct' href='../../../std/boxed/struct.Box.html' title='std::boxed::Box'>Box</a>;</code></td></tr><tr><td><code>pub use borrow::<a class='trait' href='../../../std/borrow/trait.ToOwned.html' title='std::borrow::ToOwned'>ToOwned</a>;</code></td></tr><tr><td><code>pub use clone::<a class='trait' href='../../../std/clone/trait.Clone.html' title='std::clone::Clone'>Clone</a>;</code></td></tr><tr><td><code>pub use cmp::<a class='trait' href='../../../std/cmp/trait.PartialEq.html' title='std::cmp::PartialEq'>PartialEq</a>;</code></td></tr><tr><td><code>pub use cmp::<a class='trait' href='../../../std/cmp/trait.PartialOrd.html' title='std::cmp::PartialOrd'>PartialOrd</a>;</code></td></tr><tr><td><code>pub use cmp::<a class='trait' href='../../../std/cmp/trait.Eq.html' title='std::cmp::Eq'>Eq</a>;</code></td></tr><tr><td><code>pub use cmp::<a class='trait' href='../../../std/cmp/trait.Ord.html' title='std::cmp::Ord'>Ord</a>;</code></td></tr><tr><td><code>pub use convert::<a class='trait' href='../../../std/convert/trait.AsRef.html' title='std::convert::AsRef'>AsRef</a>;</code></td></tr><tr><td><code>pub use convert::<a class='trait' href='../../../std/convert/trait.AsMut.html' title='std::convert::AsMut'>AsMut</a>;</code></td></tr><tr><td><code>pub use convert::<a class='trait' href='../../../std/convert/trait.Into.html' title='std::convert::Into'>Into</a>;</code></td></tr><tr><td><code>pub use convert::<a class='trait' href='../../../std/convert/trait.From.html' title='std::convert::From'>From</a>;</code></td></tr><tr><td><code>pub use default::<a class='trait' href='../../../std/default/trait.Default.html' title='std::default::Default'>Default</a>;</code></td></tr><tr><td><code>pub use iter::<a class='trait' href='../../../std/iter/trait.Iterator.html' title='std::iter::Iterator'>Iterator</a>;</code></td></tr><tr><td><code>pub use iter::<a class='trait' href='../../../std/iter/trait.Extend.html' title='std::iter::Extend'>Extend</a>;</code></td></tr><tr><td><code>pub use iter::<a class='trait' href='../../../std/iter/trait.IntoIterator.html' title='std::iter::IntoIterator'>IntoIterator</a>;</code></td></tr><tr><td><code>pub use iter::<a class='trait' href='../../../std/iter/trait.DoubleEndedIterator.html' title='std::iter::DoubleEndedIterator'>DoubleEndedIterator</a>;</code></td></tr><tr><td><code>pub use iter::<a class='trait' href='../../../std/iter/trait.ExactSizeIterator.html' title='std::iter::ExactSizeIterator'>ExactSizeIterator</a>;</code></td></tr><tr><td><code>pub use option::<a class='enum' href='../../../std/option/enum.Option.html' title='std::option::Option'>Option</a>;</code></td></tr><tr><td><code>pub use option::Option::<a class='enum' href='../../../std/option/enum.Option.html' title='std::option::Option'>Some</a>;</code></td></tr><tr><td><code>pub use option::Option::<a class='enum' href='../../../std/option/enum.Option.html' title='std::option::Option'>None</a>;</code></td></tr><tr><td><code>pub use result::<a class='enum' href='../../../std/result/enum.Result.html' title='std::result::Result'>Result</a>;</code></td></tr><tr><td><code>pub use result::Result::<a class='enum' href='../../../std/result/enum.Result.html' title='std::result::Result'>Ok</a>;</code></td></tr><tr><td><code>pub use result::Result::<a class='enum' href='../../../std/result/enum.Result.html' title='std::result::Result'>Err</a>;</code></td></tr><tr><td><code>pub use slice::<a class='trait' href='../../../std/slice/trait.SliceConcatExt.html' title='std::slice::SliceConcatExt'>SliceConcatExt</a>;</code></td></tr><tr><td><code>pub use string::<a class='struct' href='../../../std/string/struct.String.html' title='std::string::String'>String</a>;</code></td></tr><tr><td><code>pub use string::<a class='trait' href='../../../std/string/trait.ToString.html' title='std::string::ToString'>ToString</a>;</code></td></tr><tr><td><code>pub use vec::<a class='struct' href='../../../std/vec/struct.Vec.html' title='std::vec::Vec'>Vec</a>;</code></td></tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "std";
+    </script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

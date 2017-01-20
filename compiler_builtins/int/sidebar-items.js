@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["mul",""],["sdiv",""],["shift",""],["udiv",""]],"trait":[["Int","Trait for some basic operations on integers"],["LargeInt","Trait to convert an integer to/from smaller parts"]]});

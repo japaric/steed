@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["__powidf2","Returns `a` raised to the power `b`"],["__powisf2","Returns `a` raised to the power `b`"]]});

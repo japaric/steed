@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="Source to the Rust file `src/collections/mod.rs`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang">
+
+    <title>mod.rs.html -- source</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+<span id="2">  2</span>
+<span id="3">  3</span>
+<span id="4">  4</span>
+<span id="5">  5</span>
+<span id="6">  6</span>
+<span id="7">  7</span>
+<span id="8">  8</span>
+<span id="9">  9</span>
+<span id="10"> 10</span>
+<span id="11"> 11</span>
+<span id="12"> 12</span>
+<span id="13"> 13</span>
+<span id="14"> 14</span>
+<span id="15"> 15</span>
+<span id="16"> 16</span>
+<span id="17"> 17</span>
+<span id="18"> 18</span>
+<span id="19"> 19</span>
+<span id="20"> 20</span>
+<span id="21"> 21</span>
+<span id="22"> 22</span>
+<span id="23"> 23</span>
+<span id="24"> 24</span>
+<span id="25"> 25</span>
+<span id="26"> 26</span>
+<span id="27"> 27</span>
+<span id="28"> 28</span>
+<span id="29"> 29</span>
+<span id="30"> 30</span>
+<span id="31"> 31</span>
+<span id="32"> 32</span>
+<span id="33"> 33</span>
+<span id="34"> 34</span>
+<span id="35"> 35</span>
+<span id="36"> 36</span>
+<span id="37"> 37</span>
+<span id="38"> 38</span>
+<span id="39"> 39</span>
+<span id="40"> 40</span>
+<span id="41"> 41</span>
+<span id="42"> 42</span>
+<span id="43"> 43</span>
+<span id="44"> 44</span>
+<span id="45"> 45</span>
+<span id="46"> 46</span>
+<span id="47"> 47</span>
+<span id="48"> 48</span>
+<span id="49"> 49</span>
+<span id="50"> 50</span>
+<span id="51"> 51</span>
+<span id="52"> 52</span>
+<span id="53"> 53</span>
+<span id="54"> 54</span>
+<span id="55"> 55</span>
+<span id="56"> 56</span>
+<span id="57"> 57</span>
+<span id="58"> 58</span>
+<span id="59"> 59</span>
+<span id="60"> 60</span>
+<span id="61"> 61</span>
+<span id="62"> 62</span>
+<span id="63"> 63</span>
+<span id="64"> 64</span>
+<span id="65"> 65</span>
+<span id="66"> 66</span>
+<span id="67"> 67</span>
+<span id="68"> 68</span>
+<span id="69"> 69</span>
+<span id="70"> 70</span>
+<span id="71"> 71</span>
+<span id="72"> 72</span>
+<span id="73"> 73</span>
+<span id="74"> 74</span>
+<span id="75"> 75</span>
+<span id="76"> 76</span>
+<span id="77"> 77</span>
+<span id="78"> 78</span>
+<span id="79"> 79</span>
+<span id="80"> 80</span>
+<span id="81"> 81</span>
+<span id="82"> 82</span>
+<span id="83"> 83</span>
+<span id="84"> 84</span>
+<span id="85"> 85</span>
+<span id="86"> 86</span>
+<span id="87"> 87</span>
+<span id="88"> 88</span>
+<span id="89"> 89</span>
+<span id="90"> 90</span>
+<span id="91"> 91</span>
+<span id="92"> 92</span>
+<span id="93"> 93</span>
+<span id="94"> 94</span>
+<span id="95"> 95</span>
+<span id="96"> 96</span>
+<span id="97"> 97</span>
+<span id="98"> 98</span>
+<span id="99"> 99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+</pre><pre class='rust '>
+<span class='comment'>// Copyright 2013-2014 The Rust Project Developers. See the COPYRIGHT</span>
+<span class='comment'>// file at the top-level directory of this distribution and at</span>
+<span class='comment'>// http://rust-lang.org/COPYRIGHT.</span>
+<span class='comment'>//</span>
+<span class='comment'>// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or</span>
+<span class='comment'>// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license</span>
+<span class='comment'>// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your</span>
+<span class='comment'>// option. This file may not be copied, modified, or distributed</span>
+<span class='comment'>// except according to those terms.</span>
+
+<span class='doccomment'>//! Collection types.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Rust&#39;s standard collection library provides efficient implementations of the</span>
+<span class='doccomment'>//! most common general purpose programming data structures. By using the</span>
+<span class='doccomment'>//! standard implementations, it should be possible for two libraries to</span>
+<span class='doccomment'>//! communicate without significant data conversion.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! To get this out of the way: you should probably just use [`Vec`] or [`HashMap`].</span>
+<span class='doccomment'>//! These two collections cover most use cases for generic data storage and</span>
+<span class='doccomment'>//! processing. They are exceptionally good at doing what they do. All the other</span>
+<span class='doccomment'>//! collections in the standard library have specific use cases where they are</span>
+<span class='doccomment'>//! the optimal choice, but these cases are borderline *niche* in comparison.</span>
+<span class='doccomment'>//! Even when `Vec` and `HashMap` are technically suboptimal, they&#39;re probably a</span>
+<span class='doccomment'>//! good enough choice to get started.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Rust&#39;s collections can be grouped into four major categories:</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! * Sequences: [`Vec`], [`VecDeque`], [`LinkedList`]</span>
+<span class='doccomment'>//! * Maps: [`HashMap`], [`BTreeMap`]</span>
+<span class='doccomment'>//! * Sets: [`HashSet`], [`BTreeSet`]</span>
+<span class='doccomment'>//! * Misc: [`BinaryHeap`]</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! # When Should You Use Which Collection?</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! These are fairly high-level and quick break-downs of when each collection</span>
+<span class='doccomment'>//! should be considered. Detailed discussions of strengths and weaknesses of</span>
+<span class='doccomment'>//! individual collections can be found on their own documentation pages.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ### Use a `Vec` when:</span>
+<span class='doccomment'>//! * You want to collect items up to be processed or sent elsewhere later, and</span>
+<span class='doccomment'>//!   don&#39;t care about any properties of the actual values being stored.</span>
+<span class='doccomment'>//! * You want a sequence of elements in a particular order, and will only be</span>
+<span class='doccomment'>//!   appending to (or near) the end.</span>
+<span class='doccomment'>//! * You want a stack.</span>
+<span class='doccomment'>//! * You want a resizable array.</span>
+<span class='doccomment'>//! * You want a heap-allocated array.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ### Use a `VecDeque` when:</span>
+<span class='doccomment'>//! * You want a [`Vec`] that supports efficient insertion at both ends of the</span>
+<span class='doccomment'>//!   sequence.</span>
+<span class='doccomment'>//! * You want a queue.</span>
+<span class='doccomment'>//! * You want a double-ended queue (deque).</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ### Use a `LinkedList` when:</span>
+<span class='doccomment'>//! * You want a [`Vec`] or [`VecDeque`] of unknown size, and can&#39;t tolerate</span>
+<span class='doccomment'>//!   amortization.</span>
+<span class='doccomment'>//! * You want to efficiently split and append lists.</span>
+<span class='doccomment'>//! * You are *absolutely* certain you *really*, *truly*, want a doubly linked</span>
+<span class='doccomment'>//!   list.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ### Use a `HashMap` when:</span>
+<span class='doccomment'>//! * You want to associate arbitrary keys with an arbitrary value.</span>
+<span class='doccomment'>//! * You want a cache.</span>
+<span class='doccomment'>//! * You want a map, with no extra functionality.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ### Use a `BTreeMap` when:</span>
+<span class='doccomment'>//! * You&#39;re interested in what the smallest or largest key-value pair is.</span>
+<span class='doccomment'>//! * You want to find the largest or smallest key that is smaller or larger</span>
+<span class='doccomment'>//!   than something.</span>
+<span class='doccomment'>//! * You want to be able to get all of the entries in order on-demand.</span>
+<span class='doccomment'>//! * You want a sorted map.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ### Use the `Set` variant of any of these `Map`s when:</span>
+<span class='doccomment'>//! * You just want to remember which keys you&#39;ve seen.</span>
+<span class='doccomment'>//! * There is no meaningful value to associate with your keys.</span>
+<span class='doccomment'>//! * You just want a set.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ### Use a `BinaryHeap` when:</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! * You want to store a bunch of elements, but only ever want to process the</span>
+<span class='doccomment'>//!   &quot;biggest&quot; or &quot;most important&quot; one at any given time.</span>
+<span class='doccomment'>//! * You want a priority queue.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! # Performance</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Choosing the right collection for the job requires an understanding of what</span>
+<span class='doccomment'>//! each collection is good at. Here we briefly summarize the performance of</span>
+<span class='doccomment'>//! different collections for certain important operations. For further details,</span>
+<span class='doccomment'>//! see each type&#39;s documentation, and note that the names of actual methods may</span>
+<span class='doccomment'>//! differ from the tables below on certain collections.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Throughout the documentation, we will follow a few conventions. For all</span>
+<span class='doccomment'>//! operations, the collection&#39;s size is denoted by n. If another collection is</span>
+<span class='doccomment'>//! involved in the operation, it contains m elements. Operations which have an</span>
+<span class='doccomment'>//! *amortized* cost are suffixed with a `*`. Operations with an *expected*</span>
+<span class='doccomment'>//! cost are suffixed with a `~`.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! All amortized costs are for the potential need to resize when capacity is</span>
+<span class='doccomment'>//! exhausted. If a resize occurs it will take O(n) time. Our collections never</span>
+<span class='doccomment'>//! automatically shrink, so removal operations aren&#39;t amortized. Over a</span>
+<span class='doccomment'>//! sufficiently large series of operations, the average cost per operation will</span>
+<span class='doccomment'>//! deterministically equal the given cost.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Only [`HashMap`] has expected costs, due to the probabilistic nature of hashing.</span>
+<span class='doccomment'>//! It is theoretically possible, though very unlikely, for [`HashMap`] to</span>
+<span class='doccomment'>//! experience worse performance.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ## Sequences</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! |                | get(i)         | insert(i)       | remove(i)      | append | split_off(i)   |</span>
+<span class='doccomment'>//! |----------------|----------------|-----------------|----------------|--------|----------------|</span>
+<span class='doccomment'>//! | [`Vec`]        | O(1)           | O(n-i)*         | O(n-i)         | O(m)*  | O(n-i)         |</span>
+<span class='doccomment'>//! | [`VecDeque`]   | O(1)           | O(min(i, n-i))* | O(min(i, n-i)) | O(m)*  | O(min(i, n-i)) |</span>
+<span class='doccomment'>//! | [`LinkedList`] | O(min(i, n-i)) | O(min(i, n-i))  | O(min(i, n-i)) | O(1)   | O(min(i, n-i)) |</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Note that where ties occur, [`Vec`] is generally going to be faster than [`VecDeque`], and</span>
+<span class='doccomment'>//! [`VecDeque`] is generally going to be faster than [`LinkedList`].</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ## Maps</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! For Sets, all operations have the cost of the equivalent Map operation.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! |              | get       | insert   | remove   | predecessor | append |</span>
+<span class='doccomment'>//! |--------------|-----------|----------|----------|-------------|--------|</span>
+<span class='doccomment'>//! | [`HashMap`]  | O(1)~     | O(1)~*   | O(1)~    | N/A         | N/A    |</span>
+<span class='doccomment'>//! | [`BTreeMap`] | O(log n)  | O(log n) | O(log n) | O(log n)    | O(n+m) |</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! # Correct and Efficient Usage of Collections</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Of course, knowing which collection is the right one for the job doesn&#39;t</span>
+<span class='doccomment'>//! instantly permit you to use it correctly. Here are some quick tips for</span>
+<span class='doccomment'>//! efficient and correct usage of the standard collections in general. If</span>
+<span class='doccomment'>//! you&#39;re interested in how to use a specific collection in particular, consult</span>
+<span class='doccomment'>//! its documentation for detailed discussion and code examples.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ## Capacity Management</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Many collections provide several constructors and methods that refer to</span>
+<span class='doccomment'>//! &quot;capacity&quot;. These collections are generally built on top of an array.</span>
+<span class='doccomment'>//! Optimally, this array would be exactly the right size to fit only the</span>
+<span class='doccomment'>//! elements stored in the collection, but for the collection to do this would</span>
+<span class='doccomment'>//! be very inefficient. If the backing array was exactly the right size at all</span>
+<span class='doccomment'>//! times, then every time an element is inserted, the collection would have to</span>
+<span class='doccomment'>//! grow the array to fit it. Due to the way memory is allocated and managed on</span>
+<span class='doccomment'>//! most computers, this would almost surely require allocating an entirely new</span>
+<span class='doccomment'>//! array and copying every single element from the old one into the new one.</span>
+<span class='doccomment'>//! Hopefully you can see that this wouldn&#39;t be very efficient to do on every</span>
+<span class='doccomment'>//! operation.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Most collections therefore use an *amortized* allocation strategy. They</span>
+<span class='doccomment'>//! generally let themselves have a fair amount of unoccupied space so that they</span>
+<span class='doccomment'>//! only have to grow on occasion. When they do grow, they allocate a</span>
+<span class='doccomment'>//! substantially larger array to move the elements into so that it will take a</span>
+<span class='doccomment'>//! while for another grow to be required. While this strategy is great in</span>
+<span class='doccomment'>//! general, it would be even better if the collection *never* had to resize its</span>
+<span class='doccomment'>//! backing array. Unfortunately, the collection itself doesn&#39;t have enough</span>
+<span class='doccomment'>//! information to do this itself. Therefore, it is up to us programmers to give</span>
+<span class='doccomment'>//! it hints.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Any `with_capacity()` constructor will instruct the collection to allocate</span>
+<span class='doccomment'>//! enough space for the specified number of elements. Ideally this will be for</span>
+<span class='doccomment'>//! exactly that many elements, but some implementation details may prevent</span>
+<span class='doccomment'>//! this. [`Vec`] and [`VecDeque`] can be relied on to allocate exactly the</span>
+<span class='doccomment'>//! requested amount, though. Use `with_capacity()` when you know exactly how many</span>
+<span class='doccomment'>//! elements will be inserted, or at least have a reasonable upper-bound on that</span>
+<span class='doccomment'>//! number.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! When anticipating a large influx of elements, the `reserve()` family of</span>
+<span class='doccomment'>//! methods can be used to hint to the collection how much room it should make</span>
+<span class='doccomment'>//! for the coming items. As with `with_capacity()`, the precise behavior of</span>
+<span class='doccomment'>//! these methods will be specific to the collection of interest.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! For optimal performance, collections will generally avoid shrinking</span>
+<span class='doccomment'>//! themselves. If you believe that a collection will not soon contain any more</span>
+<span class='doccomment'>//! elements, or just really need the memory, the `shrink_to_fit()` method prompts</span>
+<span class='doccomment'>//! the collection to shrink the backing array to the minimum size capable of</span>
+<span class='doccomment'>//! holding its elements.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Finally, if ever you&#39;re interested in what the actual capacity of the</span>
+<span class='doccomment'>//! collection is, most collections provide a `capacity()` method to query this</span>
+<span class='doccomment'>//! information on demand. This can be useful for debugging purposes, or for</span>
+<span class='doccomment'>//! use with the `reserve()` methods.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ## Iterators</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Iterators are a powerful and robust mechanism used throughout Rust&#39;s</span>
+<span class='doccomment'>//! standard libraries. Iterators provide a sequence of values in a generic,</span>
+<span class='doccomment'>//! safe, efficient and convenient way. The contents of an iterator are usually</span>
+<span class='doccomment'>//! *lazily* evaluated, so that only the values that are actually needed are</span>
+<span class='doccomment'>//! ever actually produced, and no allocation need be done to temporarily store</span>
+<span class='doccomment'>//! them. Iterators are primarily consumed using a `for` loop, although many</span>
+<span class='doccomment'>//! functions also take iterators where a collection or sequence of values is</span>
+<span class='doccomment'>//! desired.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! All of the standard collections provide several iterators for performing</span>
+<span class='doccomment'>//! bulk manipulation of their contents. The three primary iterators almost</span>
+<span class='doccomment'>//! every collection should provide are `iter()`, `iter_mut()`, and `into_iter()`.</span>
+<span class='doccomment'>//! Some of these are not provided on collections where it would be unsound or</span>
+<span class='doccomment'>//! unreasonable to provide them.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! `iter()` provides an iterator of immutable references to all the contents of a</span>
+<span class='doccomment'>//! collection in the most &quot;natural&quot; order. For sequence collections like [`Vec`],</span>
+<span class='doccomment'>//! this means the items will be yielded in increasing order of index starting</span>
+<span class='doccomment'>//! at 0. For ordered collections like [`BTreeMap`], this means that the items</span>
+<span class='doccomment'>//! will be yielded in sorted order. For unordered collections like [`HashMap`],</span>
+<span class='doccomment'>//! the items will be yielded in whatever order the internal representation made</span>
+<span class='doccomment'>//! most convenient. This is great for reading through all the contents of the</span>
+<span class='doccomment'>//! collection.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! let vec = vec![1, 2, 3, 4];</span>
+<span class='doccomment'>//! for x in vec.iter() {</span>
+<span class='doccomment'>//!    println!(&quot;vec contained {}&quot;, x);</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! `iter_mut()` provides an iterator of *mutable* references in the same order as</span>
+<span class='doccomment'>//! `iter()`. This is great for mutating all the contents of the collection.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! let mut vec = vec![1, 2, 3, 4];</span>
+<span class='doccomment'>//! for x in vec.iter_mut() {</span>
+<span class='doccomment'>//!    *x += 1;</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! `into_iter()` transforms the actual collection into an iterator over its</span>
+<span class='doccomment'>//! contents by-value. This is great when the collection itself is no longer</span>
+<span class='doccomment'>//! needed, and the values are needed elsewhere. Using `extend()` with `into_iter()`</span>
+<span class='doccomment'>//! is the main way that contents of one collection are moved into another.</span>
+<span class='doccomment'>//! `extend()` automatically calls `into_iter()`, and takes any `T: `[`IntoIterator`].</span>
+<span class='doccomment'>//! Calling `collect()` on an iterator itself is also a great way to convert one</span>
+<span class='doccomment'>//! collection into another. Both of these methods should internally use the</span>
+<span class='doccomment'>//! capacity management tools discussed in the previous section to do this as</span>
+<span class='doccomment'>//! efficiently as possible.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! let mut vec1 = vec![1, 2, 3, 4];</span>
+<span class='doccomment'>//! let vec2 = vec![10, 20, 30, 40];</span>
+<span class='doccomment'>//! vec1.extend(vec2);</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! use std::collections::VecDeque;</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! let vec = vec![1, 2, 3, 4];</span>
+<span class='doccomment'>//! let buf: VecDeque&lt;_&gt; = vec.into_iter().collect();</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Iterators also provide a series of *adapter* methods for performing common</span>
+<span class='doccomment'>//! threads to sequences. Among the adapters are functional favorites like `map()`,</span>
+<span class='doccomment'>//! `fold()`, `skip()` and `take()`. Of particular interest to collections is the</span>
+<span class='doccomment'>//! `rev()` adapter, that reverses any iterator that supports this operation. Most</span>
+<span class='doccomment'>//! collections provide reversible iterators as the way to iterate over them in</span>
+<span class='doccomment'>//! reverse order.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! let vec = vec![1, 2, 3, 4];</span>
+<span class='doccomment'>//! for x in vec.iter().rev() {</span>
+<span class='doccomment'>//!    println!(&quot;vec contained {}&quot;, x);</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Several other collection methods also return iterators to yield a sequence</span>
+<span class='doccomment'>//! of results but avoid allocating an entire collection to store the result in.</span>
+<span class='doccomment'>//! This provides maximum flexibility as `collect()` or `extend()` can be called to</span>
+<span class='doccomment'>//! &quot;pipe&quot; the sequence into any collection if desired. Otherwise, the sequence</span>
+<span class='doccomment'>//! can be looped over with a `for` loop. The iterator can also be discarded</span>
+<span class='doccomment'>//! after partial use, preventing the computation of the unused items.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ## Entries</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! The `entry()` API is intended to provide an efficient mechanism for</span>
+<span class='doccomment'>//! manipulating the contents of a map conditionally on the presence of a key or</span>
+<span class='doccomment'>//! not. The primary motivating use case for this is to provide efficient</span>
+<span class='doccomment'>//! accumulator maps. For instance, if one wishes to maintain a count of the</span>
+<span class='doccomment'>//! number of times each key has been seen, they will have to perform some</span>
+<span class='doccomment'>//! conditional logic on whether this is the first time the key has been seen or</span>
+<span class='doccomment'>//! not. Normally, this would require a `find()` followed by an `insert()`,</span>
+<span class='doccomment'>//! effectively duplicating the search effort on each insertion.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! When a user calls `map.entry(&amp;key)`, the map will search for the key and</span>
+<span class='doccomment'>//! then yield a variant of the `Entry` enum.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! If a `Vacant(entry)` is yielded, then the key *was not* found. In this case</span>
+<span class='doccomment'>//! the only valid operation is to `insert()` a value into the entry. When this is</span>
+<span class='doccomment'>//! done, the vacant entry is consumed and converted into a mutable reference to</span>
+<span class='doccomment'>//! the value that was inserted. This allows for further manipulation of the</span>
+<span class='doccomment'>//! value beyond the lifetime of the search itself. This is useful if complex</span>
+<span class='doccomment'>//! logic needs to be performed on the value regardless of whether the value was</span>
+<span class='doccomment'>//! just inserted.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! If an `Occupied(entry)` is yielded, then the key *was* found. In this case,</span>
+<span class='doccomment'>//! the user has several options: they can `get()`, `insert()` or `remove()` the</span>
+<span class='doccomment'>//! value of the occupied entry. Additionally, they can convert the occupied</span>
+<span class='doccomment'>//! entry into a mutable reference to its value, providing symmetry to the</span>
+<span class='doccomment'>//! vacant `insert()` case.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ### Examples</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Here are the two primary ways in which `entry()` is used. First, a simple</span>
+<span class='doccomment'>//! example where the logic performed on the values is trivial.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! #### Counting the number of times each character in a string occurs</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! use std::collections::btree_map::BTreeMap;</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! let mut count = BTreeMap::new();</span>
+<span class='doccomment'>//! let message = &quot;she sells sea shells by the sea shore&quot;;</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! for c in message.chars() {</span>
+<span class='doccomment'>//!     *count.entry(c).or_insert(0) += 1;</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! assert_eq!(count.get(&amp;&#39;s&#39;), Some(&amp;8));</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! println!(&quot;Number of occurrences of each character&quot;);</span>
+<span class='doccomment'>//! for (char, count) in &amp;count {</span>
+<span class='doccomment'>//!     println!(&quot;{}: {}&quot;, char, count);</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! When the logic to be performed on the value is more complex, we may simply</span>
+<span class='doccomment'>//! use the `entry()` API to ensure that the value is initialized and perform the</span>
+<span class='doccomment'>//! logic afterwards.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! #### Tracking the inebriation of customers at a bar</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! use std::collections::btree_map::BTreeMap;</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! // A client of the bar. They have a blood alcohol level.</span>
+<span class='doccomment'>//! struct Person { blood_alcohol: f32 }</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! // All the orders made to the bar, by client id.</span>
+<span class='doccomment'>//! let orders = vec![1,2,1,2,3,4,1,2,2,3,4,1,1,1];</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! // Our clients.</span>
+<span class='doccomment'>//! let mut blood_alcohol = BTreeMap::new();</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! for id in orders {</span>
+<span class='doccomment'>//!     // If this is the first time we&#39;ve seen this customer, initialize them</span>
+<span class='doccomment'>//!     // with no blood alcohol. Otherwise, just retrieve them.</span>
+<span class='doccomment'>//!     let person = blood_alcohol.entry(id).or_insert(Person { blood_alcohol: 0.0 });</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//!     // Reduce their blood alcohol level. It takes time to order and drink a beer!</span>
+<span class='doccomment'>//!     person.blood_alcohol *= 0.9;</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//!     // Check if they&#39;re sober enough to have another beer.</span>
+<span class='doccomment'>//!     if person.blood_alcohol &gt; 0.3 {</span>
+<span class='doccomment'>//!         // Too drunk... for now.</span>
+<span class='doccomment'>//!         println!(&quot;Sorry {}, I have to cut you off&quot;, id);</span>
+<span class='doccomment'>//!     } else {</span>
+<span class='doccomment'>//!         // Have another!</span>
+<span class='doccomment'>//!         person.blood_alcohol += 0.1;</span>
+<span class='doccomment'>//!     }</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! # Insert and complex keys</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! If we have a more complex key, calls to `insert()` will</span>
+<span class='doccomment'>//! not update the value of the key. For example:</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! use std::cmp::Ordering;</span>
+<span class='doccomment'>//! use std::collections::BTreeMap;</span>
+<span class='doccomment'>//! use std::hash::{Hash, Hasher};</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! #[derive(Debug)]</span>
+<span class='doccomment'>//! struct Foo {</span>
+<span class='doccomment'>//!     a: u32,</span>
+<span class='doccomment'>//!     b: &amp;&#39;static str,</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! // we will compare `Foo`s by their `a` value only.</span>
+<span class='doccomment'>//! impl PartialEq for Foo {</span>
+<span class='doccomment'>//!     fn eq(&amp;self, other: &amp;Self) -&gt; bool { self.a == other.a }</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! impl Eq for Foo {}</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! // we will hash `Foo`s by their `a` value only.</span>
+<span class='doccomment'>//! impl Hash for Foo {</span>
+<span class='doccomment'>//!     fn hash&lt;H: Hasher&gt;(&amp;self, h: &amp;mut H) { self.a.hash(h); }</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! impl PartialOrd for Foo {</span>
+<span class='doccomment'>//!     fn partial_cmp(&amp;self, other: &amp;Self) -&gt; Option&lt;Ordering&gt; { self.a.partial_cmp(&amp;other.a) }</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! impl Ord for Foo {</span>
+<span class='doccomment'>//!     fn cmp(&amp;self, other: &amp;Self) -&gt; Ordering { self.a.cmp(&amp;other.a) }</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! let mut map = BTreeMap::new();</span>
+<span class='doccomment'>//! map.insert(Foo { a: 1, b: &quot;baz&quot; }, 99);</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! // We already have a Foo with an a of 1, so this will be updating the value.</span>
+<span class='doccomment'>//! map.insert(Foo { a: 1, b: &quot;xyz&quot; }, 100);</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! // The value has been updated...</span>
+<span class='doccomment'>//! assert_eq!(map.values().next().unwrap(), &amp;100);</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! // ...but the key hasn&#39;t changed. b is still &quot;baz&quot;, not &quot;xyz&quot;.</span>
+<span class='doccomment'>//! assert_eq!(map.keys().next().unwrap().b, &quot;baz&quot;);</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! [`Vec`]: ../../std/vec/struct.Vec.html</span>
+<span class='doccomment'>//! [`HashMap`]: ../../std/collections/struct.HashMap.html</span>
+<span class='doccomment'>//! [`VecDeque`]: ../../std/collections/struct.VecDeque.html</span>
+<span class='doccomment'>//! [`LinkedList`]: ../../std/collections/struct.LinkedList.html</span>
+<span class='doccomment'>//! [`BTreeMap`]: ../../std/collections/struct.BTreeMap.html</span>
+<span class='doccomment'>//! [`HashSet`]: ../../std/collections/struct.HashSet.html</span>
+<span class='doccomment'>//! [`BTreeSet`]: ../../std/collections/struct.BTreeSet.html</span>
+<span class='doccomment'>//! [`BinaryHeap`]: ../../std/collections/struct.BinaryHeap.html</span>
+<span class='doccomment'>//! [`IntoIterator`]: ../../std/iter/trait.IntoIterator.html</span>
+
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>stable</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rust1&quot;</span>, <span class='ident'>since</span> <span class='op'>=</span> <span class='string'>&quot;1.0.0&quot;</span>)]</span>
+
+<span class='attribute'>#[<span class='ident'>stable</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rust1&quot;</span>, <span class='ident'>since</span> <span class='op'>=</span> <span class='string'>&quot;1.0.0&quot;</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>core_collections</span>::<span class='ident'>Bound</span>;
+<span class='attribute'>#[<span class='ident'>stable</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rust1&quot;</span>, <span class='ident'>since</span> <span class='op'>=</span> <span class='string'>&quot;1.0.0&quot;</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>core_collections</span>::{<span class='ident'>BinaryHeap</span>, <span class='ident'>BTreeMap</span>, <span class='ident'>BTreeSet</span>};
+<span class='attribute'>#[<span class='ident'>stable</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rust1&quot;</span>, <span class='ident'>since</span> <span class='op'>=</span> <span class='string'>&quot;1.0.0&quot;</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>core_collections</span>::{<span class='ident'>LinkedList</span>, <span class='ident'>VecDeque</span>};
+<span class='attribute'>#[<span class='ident'>stable</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rust1&quot;</span>, <span class='ident'>since</span> <span class='op'>=</span> <span class='string'>&quot;1.0.0&quot;</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>core_collections</span>::{<span class='ident'>binary_heap</span>, <span class='ident'>btree_map</span>, <span class='ident'>btree_set</span>};
+<span class='attribute'>#[<span class='ident'>stable</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rust1&quot;</span>, <span class='ident'>since</span> <span class='op'>=</span> <span class='string'>&quot;1.0.0&quot;</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>core_collections</span>::{<span class='ident'>linked_list</span>, <span class='ident'>vec_deque</span>};
+
+<span class='comment'>// TODO see src/collections/hash/mod</span>
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>issue</span> <span class='op'>=</span> <span class='string'>&quot;5&quot;</span>)]</span>
+<span class='attribute'>#[<span class='ident'>stable</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rust1&quot;</span>, <span class='ident'>since</span> <span class='op'>=</span> <span class='string'>&quot;1.0.0&quot;</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>hash_map</span>::<span class='ident'>HashMap</span>;
+<span class='comment'>// TODO see src/collections/hash/mod</span>
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>issue</span> <span class='op'>=</span> <span class='string'>&quot;5&quot;</span>)]</span>
+<span class='attribute'>#[<span class='ident'>stable</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rust1&quot;</span>, <span class='ident'>since</span> <span class='op'>=</span> <span class='string'>&quot;1.0.0&quot;</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>hash_set</span>::<span class='ident'>HashSet</span>;
+
+<span class='attribute'>#[<span class='ident'>stable</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rust1&quot;</span>, <span class='ident'>since</span> <span class='op'>=</span> <span class='string'>&quot;1.0.0&quot;</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>core_collections</span>::<span class='ident'>range</span>;
+
+<span class='kw'>mod</span> <span class='ident'>hash</span>;
+
+<span class='comment'>// TODO see src/collections/hash/mod</span>
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>issue</span> <span class='op'>=</span> <span class='string'>&quot;5&quot;</span>)]</span>
+<span class='attribute'>#[<span class='ident'>stable</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rust1&quot;</span>, <span class='ident'>since</span> <span class='op'>=</span> <span class='string'>&quot;1.0.0&quot;</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>hash_map</span> {
+    <span class='doccomment'>//! A hash map implementation which uses linear probing with Robin</span>
+    <span class='doccomment'>//! Hood bucket stealing.</span>
+    <span class='attribute'>#[<span class='ident'>stable</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rust1&quot;</span>, <span class='ident'>since</span> <span class='op'>=</span> <span class='string'>&quot;1.0.0&quot;</span>)]</span>
+    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>hash</span>::<span class='ident'>map</span>::<span class='kw-2'>*</span>;
+}
+
+<span class='comment'>// TODO see src/collections/hash/mod</span>
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>issue</span> <span class='op'>=</span> <span class='string'>&quot;5&quot;</span>)]</span>
+<span class='attribute'>#[<span class='ident'>stable</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rust1&quot;</span>, <span class='ident'>since</span> <span class='op'>=</span> <span class='string'>&quot;1.0.0&quot;</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>hash_set</span> {
+    <span class='doccomment'>//! An implementation of a hash set using the underlying representation of a</span>
+    <span class='doccomment'>//! HashMap where the value is ().</span>
+    <span class='attribute'>#[<span class='ident'>stable</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rust1&quot;</span>, <span class='ident'>since</span> <span class='op'>=</span> <span class='string'>&quot;1.0.0&quot;</span>)]</span>
+    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>hash</span>::<span class='ident'>set</span>::<span class='kw-2'>*</span>;
+}
+</pre>
+</section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "steed";
+    </script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

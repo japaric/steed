@@ -1,0 +1,2172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `nr` mod in crate `sc`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, nr">
+
+    <title>sc::platform::nr - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../../index.html'>sc</a>::<wbr><a href='../index.html'>platform</a></p><script>window.sidebarCurrent = {name: 'nr', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Module <a href='../../index.html'>sc</a>::<wbr><a href='../index.html'>platform</a>::<wbr><a class='mod' href=''>nr</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/sc/platform/linux-x86_64/nr.rs.html#5-350' title='goto source code'>[src]</a></span></h1>
+<h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ACCEPT.html'
+                                  title='sc::platform::nr::ACCEPT'>ACCEPT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ACCEPT4.html'
+                                  title='sc::platform::nr::ACCEPT4'>ACCEPT4</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ACCESS.html'
+                                  title='sc::platform::nr::ACCESS'>ACCESS</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ACCT.html'
+                                  title='sc::platform::nr::ACCT'>ACCT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ADD_KEY.html'
+                                  title='sc::platform::nr::ADD_KEY'>ADD_KEY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ADJTIMEX.html'
+                                  title='sc::platform::nr::ADJTIMEX'>ADJTIMEX</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ALARM.html'
+                                  title='sc::platform::nr::ALARM'>ALARM</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.BIND.html'
+                                  title='sc::platform::nr::BIND'>BIND</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.BRK.html'
+                                  title='sc::platform::nr::BRK'>BRK</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.CAPGET.html'
+                                  title='sc::platform::nr::CAPGET'>CAPGET</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.CAPSET.html'
+                                  title='sc::platform::nr::CAPSET'>CAPSET</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.CHDIR.html'
+                                  title='sc::platform::nr::CHDIR'>CHDIR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.CHMOD.html'
+                                  title='sc::platform::nr::CHMOD'>CHMOD</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.CHOWN.html'
+                                  title='sc::platform::nr::CHOWN'>CHOWN</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.CHROOT.html'
+                                  title='sc::platform::nr::CHROOT'>CHROOT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.CLOCK_ADJTIME.html'
+                                  title='sc::platform::nr::CLOCK_ADJTIME'>CLOCK_ADJTIME</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.CLOCK_GETRES.html'
+                                  title='sc::platform::nr::CLOCK_GETRES'>CLOCK_GETRES</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.CLOCK_GETTIME.html'
+                                  title='sc::platform::nr::CLOCK_GETTIME'>CLOCK_GETTIME</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.CLOCK_NANOSLEEP.html'
+                                  title='sc::platform::nr::CLOCK_NANOSLEEP'>CLOCK_NANOSLEEP</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.CLOCK_SETTIME.html'
+                                  title='sc::platform::nr::CLOCK_SETTIME'>CLOCK_SETTIME</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.CLONE.html'
+                                  title='sc::platform::nr::CLONE'>CLONE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.CLOSE.html'
+                                  title='sc::platform::nr::CLOSE'>CLOSE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.CONNECT.html'
+                                  title='sc::platform::nr::CONNECT'>CONNECT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.CREAT.html'
+                                  title='sc::platform::nr::CREAT'>CREAT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.DELETE_MODULE.html'
+                                  title='sc::platform::nr::DELETE_MODULE'>DELETE_MODULE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.DUP.html'
+                                  title='sc::platform::nr::DUP'>DUP</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.DUP2.html'
+                                  title='sc::platform::nr::DUP2'>DUP2</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.DUP3.html'
+                                  title='sc::platform::nr::DUP3'>DUP3</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.EPOLL_CREATE.html'
+                                  title='sc::platform::nr::EPOLL_CREATE'>EPOLL_CREATE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.EPOLL_CREATE1.html'
+                                  title='sc::platform::nr::EPOLL_CREATE1'>EPOLL_CREATE1</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.EPOLL_CTL.html'
+                                  title='sc::platform::nr::EPOLL_CTL'>EPOLL_CTL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.EPOLL_PWAIT.html'
+                                  title='sc::platform::nr::EPOLL_PWAIT'>EPOLL_PWAIT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.EPOLL_WAIT.html'
+                                  title='sc::platform::nr::EPOLL_WAIT'>EPOLL_WAIT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.EVENTFD.html'
+                                  title='sc::platform::nr::EVENTFD'>EVENTFD</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.EVENTFD2.html'
+                                  title='sc::platform::nr::EVENTFD2'>EVENTFD2</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.EXECVE.html'
+                                  title='sc::platform::nr::EXECVE'>EXECVE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.EXIT.html'
+                                  title='sc::platform::nr::EXIT'>EXIT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.EXIT_GROUP.html'
+                                  title='sc::platform::nr::EXIT_GROUP'>EXIT_GROUP</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FACCESSAT.html'
+                                  title='sc::platform::nr::FACCESSAT'>FACCESSAT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FALLOCATE.html'
+                                  title='sc::platform::nr::FALLOCATE'>FALLOCATE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FANOTIFY_INIT.html'
+                                  title='sc::platform::nr::FANOTIFY_INIT'>FANOTIFY_INIT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FANOTIFY_MARK.html'
+                                  title='sc::platform::nr::FANOTIFY_MARK'>FANOTIFY_MARK</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FCHDIR.html'
+                                  title='sc::platform::nr::FCHDIR'>FCHDIR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FCHMOD.html'
+                                  title='sc::platform::nr::FCHMOD'>FCHMOD</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FCHMODAT.html'
+                                  title='sc::platform::nr::FCHMODAT'>FCHMODAT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FCHOWN.html'
+                                  title='sc::platform::nr::FCHOWN'>FCHOWN</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FCHOWNAT.html'
+                                  title='sc::platform::nr::FCHOWNAT'>FCHOWNAT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FCNTL.html'
+                                  title='sc::platform::nr::FCNTL'>FCNTL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FDATASYNC.html'
+                                  title='sc::platform::nr::FDATASYNC'>FDATASYNC</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FGETXATTR.html'
+                                  title='sc::platform::nr::FGETXATTR'>FGETXATTR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FINIT_MODULE.html'
+                                  title='sc::platform::nr::FINIT_MODULE'>FINIT_MODULE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FLISTXATTR.html'
+                                  title='sc::platform::nr::FLISTXATTR'>FLISTXATTR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FLOCK.html'
+                                  title='sc::platform::nr::FLOCK'>FLOCK</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FORK.html'
+                                  title='sc::platform::nr::FORK'>FORK</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FREMOVEXATTR.html'
+                                  title='sc::platform::nr::FREMOVEXATTR'>FREMOVEXATTR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FSETXATTR.html'
+                                  title='sc::platform::nr::FSETXATTR'>FSETXATTR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FSTAT.html'
+                                  title='sc::platform::nr::FSTAT'>FSTAT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FSTATFS.html'
+                                  title='sc::platform::nr::FSTATFS'>FSTATFS</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FSYNC.html'
+                                  title='sc::platform::nr::FSYNC'>FSYNC</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FTRUNCATE.html'
+                                  title='sc::platform::nr::FTRUNCATE'>FTRUNCATE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FUTEX.html'
+                                  title='sc::platform::nr::FUTEX'>FUTEX</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.FUTIMESAT.html'
+                                  title='sc::platform::nr::FUTIMESAT'>FUTIMESAT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETCPU.html'
+                                  title='sc::platform::nr::GETCPU'>GETCPU</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETCWD.html'
+                                  title='sc::platform::nr::GETCWD'>GETCWD</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETDENTS.html'
+                                  title='sc::platform::nr::GETDENTS'>GETDENTS</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETDENTS64.html'
+                                  title='sc::platform::nr::GETDENTS64'>GETDENTS64</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETEGID.html'
+                                  title='sc::platform::nr::GETEGID'>GETEGID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETEUID.html'
+                                  title='sc::platform::nr::GETEUID'>GETEUID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETGID.html'
+                                  title='sc::platform::nr::GETGID'>GETGID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETGROUPS.html'
+                                  title='sc::platform::nr::GETGROUPS'>GETGROUPS</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETITIMER.html'
+                                  title='sc::platform::nr::GETITIMER'>GETITIMER</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETPEERNAME.html'
+                                  title='sc::platform::nr::GETPEERNAME'>GETPEERNAME</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETPGID.html'
+                                  title='sc::platform::nr::GETPGID'>GETPGID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETPGRP.html'
+                                  title='sc::platform::nr::GETPGRP'>GETPGRP</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETPID.html'
+                                  title='sc::platform::nr::GETPID'>GETPID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETPPID.html'
+                                  title='sc::platform::nr::GETPPID'>GETPPID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETPRIORITY.html'
+                                  title='sc::platform::nr::GETPRIORITY'>GETPRIORITY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETRESGID.html'
+                                  title='sc::platform::nr::GETRESGID'>GETRESGID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETRESUID.html'
+                                  title='sc::platform::nr::GETRESUID'>GETRESUID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETRLIMIT.html'
+                                  title='sc::platform::nr::GETRLIMIT'>GETRLIMIT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETRUSAGE.html'
+                                  title='sc::platform::nr::GETRUSAGE'>GETRUSAGE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETSID.html'
+                                  title='sc::platform::nr::GETSID'>GETSID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETSOCKNAME.html'
+                                  title='sc::platform::nr::GETSOCKNAME'>GETSOCKNAME</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETSOCKOPT.html'
+                                  title='sc::platform::nr::GETSOCKOPT'>GETSOCKOPT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETTID.html'
+                                  title='sc::platform::nr::GETTID'>GETTID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETTIMEOFDAY.html'
+                                  title='sc::platform::nr::GETTIMEOFDAY'>GETTIMEOFDAY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETUID.html'
+                                  title='sc::platform::nr::GETUID'>GETUID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GETXATTR.html'
+                                  title='sc::platform::nr::GETXATTR'>GETXATTR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GET_MEMPOLICY.html'
+                                  title='sc::platform::nr::GET_MEMPOLICY'>GET_MEMPOLICY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GET_ROBUST_LIST.html'
+                                  title='sc::platform::nr::GET_ROBUST_LIST'>GET_ROBUST_LIST</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.INIT_MODULE.html'
+                                  title='sc::platform::nr::INIT_MODULE'>INIT_MODULE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.INOTIFY_ADD_WATCH.html'
+                                  title='sc::platform::nr::INOTIFY_ADD_WATCH'>INOTIFY_ADD_WATCH</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.INOTIFY_INIT.html'
+                                  title='sc::platform::nr::INOTIFY_INIT'>INOTIFY_INIT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.INOTIFY_INIT1.html'
+                                  title='sc::platform::nr::INOTIFY_INIT1'>INOTIFY_INIT1</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.INOTIFY_RM_WATCH.html'
+                                  title='sc::platform::nr::INOTIFY_RM_WATCH'>INOTIFY_RM_WATCH</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.IOCTL.html'
+                                  title='sc::platform::nr::IOCTL'>IOCTL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.IOPRIO_GET.html'
+                                  title='sc::platform::nr::IOPRIO_GET'>IOPRIO_GET</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.IOPRIO_SET.html'
+                                  title='sc::platform::nr::IOPRIO_SET'>IOPRIO_SET</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.IO_CANCEL.html'
+                                  title='sc::platform::nr::IO_CANCEL'>IO_CANCEL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.IO_DESTROY.html'
+                                  title='sc::platform::nr::IO_DESTROY'>IO_DESTROY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.IO_GETEVENTS.html'
+                                  title='sc::platform::nr::IO_GETEVENTS'>IO_GETEVENTS</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.IO_SETUP.html'
+                                  title='sc::platform::nr::IO_SETUP'>IO_SETUP</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.IO_SUBMIT.html'
+                                  title='sc::platform::nr::IO_SUBMIT'>IO_SUBMIT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.KCMP.html'
+                                  title='sc::platform::nr::KCMP'>KCMP</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.KEXEC_LOAD.html'
+                                  title='sc::platform::nr::KEXEC_LOAD'>KEXEC_LOAD</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.KEYCTL.html'
+                                  title='sc::platform::nr::KEYCTL'>KEYCTL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.KILL.html'
+                                  title='sc::platform::nr::KILL'>KILL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.LCHOWN.html'
+                                  title='sc::platform::nr::LCHOWN'>LCHOWN</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.LGETXATTR.html'
+                                  title='sc::platform::nr::LGETXATTR'>LGETXATTR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.LINK.html'
+                                  title='sc::platform::nr::LINK'>LINK</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.LINKAT.html'
+                                  title='sc::platform::nr::LINKAT'>LINKAT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.LISTEN.html'
+                                  title='sc::platform::nr::LISTEN'>LISTEN</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.LISTXATTR.html'
+                                  title='sc::platform::nr::LISTXATTR'>LISTXATTR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.LLISTXATTR.html'
+                                  title='sc::platform::nr::LLISTXATTR'>LLISTXATTR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.LOOKUP_DCOOKIE.html'
+                                  title='sc::platform::nr::LOOKUP_DCOOKIE'>LOOKUP_DCOOKIE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.LREMOVEXATTR.html'
+                                  title='sc::platform::nr::LREMOVEXATTR'>LREMOVEXATTR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.LSEEK.html'
+                                  title='sc::platform::nr::LSEEK'>LSEEK</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.LSETXATTR.html'
+                                  title='sc::platform::nr::LSETXATTR'>LSETXATTR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.LSTAT.html'
+                                  title='sc::platform::nr::LSTAT'>LSTAT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MADVISE.html'
+                                  title='sc::platform::nr::MADVISE'>MADVISE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MBIND.html'
+                                  title='sc::platform::nr::MBIND'>MBIND</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MINCORE.html'
+                                  title='sc::platform::nr::MINCORE'>MINCORE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MKDIR.html'
+                                  title='sc::platform::nr::MKDIR'>MKDIR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MKDIRAT.html'
+                                  title='sc::platform::nr::MKDIRAT'>MKDIRAT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MKNOD.html'
+                                  title='sc::platform::nr::MKNOD'>MKNOD</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MKNODAT.html'
+                                  title='sc::platform::nr::MKNODAT'>MKNODAT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MLOCK.html'
+                                  title='sc::platform::nr::MLOCK'>MLOCK</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MLOCKALL.html'
+                                  title='sc::platform::nr::MLOCKALL'>MLOCKALL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MMAP.html'
+                                  title='sc::platform::nr::MMAP'>MMAP</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MOUNT.html'
+                                  title='sc::platform::nr::MOUNT'>MOUNT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MOVE_PAGES.html'
+                                  title='sc::platform::nr::MOVE_PAGES'>MOVE_PAGES</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MPROTECT.html'
+                                  title='sc::platform::nr::MPROTECT'>MPROTECT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MQ_GETSETATTR.html'
+                                  title='sc::platform::nr::MQ_GETSETATTR'>MQ_GETSETATTR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MQ_NOTIFY.html'
+                                  title='sc::platform::nr::MQ_NOTIFY'>MQ_NOTIFY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MQ_OPEN.html'
+                                  title='sc::platform::nr::MQ_OPEN'>MQ_OPEN</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MQ_TIMEDRECEIVE.html'
+                                  title='sc::platform::nr::MQ_TIMEDRECEIVE'>MQ_TIMEDRECEIVE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MQ_TIMEDSEND.html'
+                                  title='sc::platform::nr::MQ_TIMEDSEND'>MQ_TIMEDSEND</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MQ_UNLINK.html'
+                                  title='sc::platform::nr::MQ_UNLINK'>MQ_UNLINK</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MREMAP.html'
+                                  title='sc::platform::nr::MREMAP'>MREMAP</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MSGCTL.html'
+                                  title='sc::platform::nr::MSGCTL'>MSGCTL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MSGGET.html'
+                                  title='sc::platform::nr::MSGGET'>MSGGET</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MSGRCV.html'
+                                  title='sc::platform::nr::MSGRCV'>MSGRCV</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MSGSND.html'
+                                  title='sc::platform::nr::MSGSND'>MSGSND</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MSYNC.html'
+                                  title='sc::platform::nr::MSYNC'>MSYNC</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MUNLOCK.html'
+                                  title='sc::platform::nr::MUNLOCK'>MUNLOCK</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MUNLOCKALL.html'
+                                  title='sc::platform::nr::MUNLOCKALL'>MUNLOCKALL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MUNMAP.html'
+                                  title='sc::platform::nr::MUNMAP'>MUNMAP</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.NAME_TO_HANDLE_AT.html'
+                                  title='sc::platform::nr::NAME_TO_HANDLE_AT'>NAME_TO_HANDLE_AT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.NANOSLEEP.html'
+                                  title='sc::platform::nr::NANOSLEEP'>NANOSLEEP</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.NFSSERVCTL.html'
+                                  title='sc::platform::nr::NFSSERVCTL'>NFSSERVCTL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.OPEN.html'
+                                  title='sc::platform::nr::OPEN'>OPEN</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.OPENAT.html'
+                                  title='sc::platform::nr::OPENAT'>OPENAT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.OPEN_BY_HANDLE_AT.html'
+                                  title='sc::platform::nr::OPEN_BY_HANDLE_AT'>OPEN_BY_HANDLE_AT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.PAUSE.html'
+                                  title='sc::platform::nr::PAUSE'>PAUSE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.PERF_EVENT_OPEN.html'
+                                  title='sc::platform::nr::PERF_EVENT_OPEN'>PERF_EVENT_OPEN</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.PERSONALITY.html'
+                                  title='sc::platform::nr::PERSONALITY'>PERSONALITY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.PIPE.html'
+                                  title='sc::platform::nr::PIPE'>PIPE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.PIPE2.html'
+                                  title='sc::platform::nr::PIPE2'>PIPE2</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.PIVOT_ROOT.html'
+                                  title='sc::platform::nr::PIVOT_ROOT'>PIVOT_ROOT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.POLL.html'
+                                  title='sc::platform::nr::POLL'>POLL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.PPOLL.html'
+                                  title='sc::platform::nr::PPOLL'>PPOLL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.PRCTL.html'
+                                  title='sc::platform::nr::PRCTL'>PRCTL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.PREAD64.html'
+                                  title='sc::platform::nr::PREAD64'>PREAD64</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.PREADV.html'
+                                  title='sc::platform::nr::PREADV'>PREADV</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.PRLIMIT64.html'
+                                  title='sc::platform::nr::PRLIMIT64'>PRLIMIT64</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.PROCESS_VM_READV.html'
+                                  title='sc::platform::nr::PROCESS_VM_READV'>PROCESS_VM_READV</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.PROCESS_VM_WRITEV.html'
+                                  title='sc::platform::nr::PROCESS_VM_WRITEV'>PROCESS_VM_WRITEV</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.PSELECT6.html'
+                                  title='sc::platform::nr::PSELECT6'>PSELECT6</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.PTRACE.html'
+                                  title='sc::platform::nr::PTRACE'>PTRACE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.PWRITE64.html'
+                                  title='sc::platform::nr::PWRITE64'>PWRITE64</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.PWRITEV.html'
+                                  title='sc::platform::nr::PWRITEV'>PWRITEV</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.QUOTACTL.html'
+                                  title='sc::platform::nr::QUOTACTL'>QUOTACTL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.READ.html'
+                                  title='sc::platform::nr::READ'>READ</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.READAHEAD.html'
+                                  title='sc::platform::nr::READAHEAD'>READAHEAD</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.READLINK.html'
+                                  title='sc::platform::nr::READLINK'>READLINK</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.READLINKAT.html'
+                                  title='sc::platform::nr::READLINKAT'>READLINKAT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.READV.html'
+                                  title='sc::platform::nr::READV'>READV</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.REBOOT.html'
+                                  title='sc::platform::nr::REBOOT'>REBOOT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.RECVFROM.html'
+                                  title='sc::platform::nr::RECVFROM'>RECVFROM</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.RECVMMSG.html'
+                                  title='sc::platform::nr::RECVMMSG'>RECVMMSG</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.RECVMSG.html'
+                                  title='sc::platform::nr::RECVMSG'>RECVMSG</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.REMAP_FILE_PAGES.html'
+                                  title='sc::platform::nr::REMAP_FILE_PAGES'>REMAP_FILE_PAGES</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.REMOVEXATTR.html'
+                                  title='sc::platform::nr::REMOVEXATTR'>REMOVEXATTR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.RENAME.html'
+                                  title='sc::platform::nr::RENAME'>RENAME</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.RENAMEAT.html'
+                                  title='sc::platform::nr::RENAMEAT'>RENAMEAT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.REQUEST_KEY.html'
+                                  title='sc::platform::nr::REQUEST_KEY'>REQUEST_KEY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.RESTART_SYSCALL.html'
+                                  title='sc::platform::nr::RESTART_SYSCALL'>RESTART_SYSCALL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.RMDIR.html'
+                                  title='sc::platform::nr::RMDIR'>RMDIR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.RT_SIGACTION.html'
+                                  title='sc::platform::nr::RT_SIGACTION'>RT_SIGACTION</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.RT_SIGPENDING.html'
+                                  title='sc::platform::nr::RT_SIGPENDING'>RT_SIGPENDING</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.RT_SIGPROCMASK.html'
+                                  title='sc::platform::nr::RT_SIGPROCMASK'>RT_SIGPROCMASK</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.RT_SIGQUEUEINFO.html'
+                                  title='sc::platform::nr::RT_SIGQUEUEINFO'>RT_SIGQUEUEINFO</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.RT_SIGRETURN.html'
+                                  title='sc::platform::nr::RT_SIGRETURN'>RT_SIGRETURN</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.RT_SIGSUSPEND.html'
+                                  title='sc::platform::nr::RT_SIGSUSPEND'>RT_SIGSUSPEND</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.RT_SIGTIMEDWAIT.html'
+                                  title='sc::platform::nr::RT_SIGTIMEDWAIT'>RT_SIGTIMEDWAIT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.RT_TGSIGQUEUEINFO.html'
+                                  title='sc::platform::nr::RT_TGSIGQUEUEINFO'>RT_TGSIGQUEUEINFO</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SCHED_GETAFFINITY.html'
+                                  title='sc::platform::nr::SCHED_GETAFFINITY'>SCHED_GETAFFINITY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SCHED_GETPARAM.html'
+                                  title='sc::platform::nr::SCHED_GETPARAM'>SCHED_GETPARAM</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SCHED_GETSCHEDULER.html'
+                                  title='sc::platform::nr::SCHED_GETSCHEDULER'>SCHED_GETSCHEDULER</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SCHED_GET_PRIORITY_MAX.html'
+                                  title='sc::platform::nr::SCHED_GET_PRIORITY_MAX'>SCHED_GET_PRIORITY_MAX</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SCHED_GET_PRIORITY_MIN.html'
+                                  title='sc::platform::nr::SCHED_GET_PRIORITY_MIN'>SCHED_GET_PRIORITY_MIN</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SCHED_RR_GET_INTERVAL.html'
+                                  title='sc::platform::nr::SCHED_RR_GET_INTERVAL'>SCHED_RR_GET_INTERVAL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SCHED_SETAFFINITY.html'
+                                  title='sc::platform::nr::SCHED_SETAFFINITY'>SCHED_SETAFFINITY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SCHED_SETPARAM.html'
+                                  title='sc::platform::nr::SCHED_SETPARAM'>SCHED_SETPARAM</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SCHED_SETSCHEDULER.html'
+                                  title='sc::platform::nr::SCHED_SETSCHEDULER'>SCHED_SETSCHEDULER</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SCHED_YIELD.html'
+                                  title='sc::platform::nr::SCHED_YIELD'>SCHED_YIELD</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SELECT.html'
+                                  title='sc::platform::nr::SELECT'>SELECT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SEMCTL.html'
+                                  title='sc::platform::nr::SEMCTL'>SEMCTL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SEMGET.html'
+                                  title='sc::platform::nr::SEMGET'>SEMGET</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SEMOP.html'
+                                  title='sc::platform::nr::SEMOP'>SEMOP</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SEMTIMEDOP.html'
+                                  title='sc::platform::nr::SEMTIMEDOP'>SEMTIMEDOP</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SENDFILE.html'
+                                  title='sc::platform::nr::SENDFILE'>SENDFILE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SENDMMSG.html'
+                                  title='sc::platform::nr::SENDMMSG'>SENDMMSG</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SENDMSG.html'
+                                  title='sc::platform::nr::SENDMSG'>SENDMSG</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SENDTO.html'
+                                  title='sc::platform::nr::SENDTO'>SENDTO</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SETDOMAINNAME.html'
+                                  title='sc::platform::nr::SETDOMAINNAME'>SETDOMAINNAME</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SETFSGID.html'
+                                  title='sc::platform::nr::SETFSGID'>SETFSGID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SETFSUID.html'
+                                  title='sc::platform::nr::SETFSUID'>SETFSUID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SETGID.html'
+                                  title='sc::platform::nr::SETGID'>SETGID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SETGROUPS.html'
+                                  title='sc::platform::nr::SETGROUPS'>SETGROUPS</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SETHOSTNAME.html'
+                                  title='sc::platform::nr::SETHOSTNAME'>SETHOSTNAME</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SETITIMER.html'
+                                  title='sc::platform::nr::SETITIMER'>SETITIMER</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SETNS.html'
+                                  title='sc::platform::nr::SETNS'>SETNS</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SETPGID.html'
+                                  title='sc::platform::nr::SETPGID'>SETPGID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SETPRIORITY.html'
+                                  title='sc::platform::nr::SETPRIORITY'>SETPRIORITY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SETREGID.html'
+                                  title='sc::platform::nr::SETREGID'>SETREGID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SETRESGID.html'
+                                  title='sc::platform::nr::SETRESGID'>SETRESGID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SETRESUID.html'
+                                  title='sc::platform::nr::SETRESUID'>SETRESUID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SETREUID.html'
+                                  title='sc::platform::nr::SETREUID'>SETREUID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SETRLIMIT.html'
+                                  title='sc::platform::nr::SETRLIMIT'>SETRLIMIT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SETSID.html'
+                                  title='sc::platform::nr::SETSID'>SETSID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SETSOCKOPT.html'
+                                  title='sc::platform::nr::SETSOCKOPT'>SETSOCKOPT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SETTIMEOFDAY.html'
+                                  title='sc::platform::nr::SETTIMEOFDAY'>SETTIMEOFDAY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SETUID.html'
+                                  title='sc::platform::nr::SETUID'>SETUID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SETXATTR.html'
+                                  title='sc::platform::nr::SETXATTR'>SETXATTR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SET_MEMPOLICY.html'
+                                  title='sc::platform::nr::SET_MEMPOLICY'>SET_MEMPOLICY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SET_ROBUST_LIST.html'
+                                  title='sc::platform::nr::SET_ROBUST_LIST'>SET_ROBUST_LIST</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SET_TID_ADDRESS.html'
+                                  title='sc::platform::nr::SET_TID_ADDRESS'>SET_TID_ADDRESS</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SHMAT.html'
+                                  title='sc::platform::nr::SHMAT'>SHMAT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SHMCTL.html'
+                                  title='sc::platform::nr::SHMCTL'>SHMCTL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SHMDT.html'
+                                  title='sc::platform::nr::SHMDT'>SHMDT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SHMGET.html'
+                                  title='sc::platform::nr::SHMGET'>SHMGET</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SHUTDOWN.html'
+                                  title='sc::platform::nr::SHUTDOWN'>SHUTDOWN</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SIGALTSTACK.html'
+                                  title='sc::platform::nr::SIGALTSTACK'>SIGALTSTACK</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SIGNALFD.html'
+                                  title='sc::platform::nr::SIGNALFD'>SIGNALFD</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SIGNALFD4.html'
+                                  title='sc::platform::nr::SIGNALFD4'>SIGNALFD4</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SOCKET.html'
+                                  title='sc::platform::nr::SOCKET'>SOCKET</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SOCKETPAIR.html'
+                                  title='sc::platform::nr::SOCKETPAIR'>SOCKETPAIR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SPLICE.html'
+                                  title='sc::platform::nr::SPLICE'>SPLICE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.STAT.html'
+                                  title='sc::platform::nr::STAT'>STAT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.STATFS.html'
+                                  title='sc::platform::nr::STATFS'>STATFS</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SWAPOFF.html'
+                                  title='sc::platform::nr::SWAPOFF'>SWAPOFF</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SWAPON.html'
+                                  title='sc::platform::nr::SWAPON'>SWAPON</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYMLINK.html'
+                                  title='sc::platform::nr::SYMLINK'>SYMLINK</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYMLINKAT.html'
+                                  title='sc::platform::nr::SYMLINKAT'>SYMLINKAT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNC.html'
+                                  title='sc::platform::nr::SYNC'>SYNC</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNCFS.html'
+                                  title='sc::platform::nr::SYNCFS'>SYNCFS</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYSFS.html'
+                                  title='sc::platform::nr::SYSFS'>SYSFS</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYSINFO.html'
+                                  title='sc::platform::nr::SYSINFO'>SYSINFO</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYSLOG.html'
+                                  title='sc::platform::nr::SYSLOG'>SYSLOG</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.TEE.html'
+                                  title='sc::platform::nr::TEE'>TEE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.TGKILL.html'
+                                  title='sc::platform::nr::TGKILL'>TGKILL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.TIME.html'
+                                  title='sc::platform::nr::TIME'>TIME</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.TIMERFD_CREATE.html'
+                                  title='sc::platform::nr::TIMERFD_CREATE'>TIMERFD_CREATE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.TIMERFD_GETTIME.html'
+                                  title='sc::platform::nr::TIMERFD_GETTIME'>TIMERFD_GETTIME</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.TIMERFD_SETTIME.html'
+                                  title='sc::platform::nr::TIMERFD_SETTIME'>TIMERFD_SETTIME</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.TIMER_CREATE.html'
+                                  title='sc::platform::nr::TIMER_CREATE'>TIMER_CREATE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.TIMER_DELETE.html'
+                                  title='sc::platform::nr::TIMER_DELETE'>TIMER_DELETE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.TIMER_GETOVERRUN.html'
+                                  title='sc::platform::nr::TIMER_GETOVERRUN'>TIMER_GETOVERRUN</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.TIMER_GETTIME.html'
+                                  title='sc::platform::nr::TIMER_GETTIME'>TIMER_GETTIME</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.TIMER_SETTIME.html'
+                                  title='sc::platform::nr::TIMER_SETTIME'>TIMER_SETTIME</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.TIMES.html'
+                                  title='sc::platform::nr::TIMES'>TIMES</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.TKILL.html'
+                                  title='sc::platform::nr::TKILL'>TKILL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.TRUNCATE.html'
+                                  title='sc::platform::nr::TRUNCATE'>TRUNCATE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.UMASK.html'
+                                  title='sc::platform::nr::UMASK'>UMASK</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.UMOUNT2.html'
+                                  title='sc::platform::nr::UMOUNT2'>UMOUNT2</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.UNAME.html'
+                                  title='sc::platform::nr::UNAME'>UNAME</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.UNLINK.html'
+                                  title='sc::platform::nr::UNLINK'>UNLINK</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.UNLINKAT.html'
+                                  title='sc::platform::nr::UNLINKAT'>UNLINKAT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.UNSHARE.html'
+                                  title='sc::platform::nr::UNSHARE'>UNSHARE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.USELIB.html'
+                                  title='sc::platform::nr::USELIB'>USELIB</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.USTAT.html'
+                                  title='sc::platform::nr::USTAT'>USTAT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.UTIME.html'
+                                  title='sc::platform::nr::UTIME'>UTIME</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.UTIMENSAT.html'
+                                  title='sc::platform::nr::UTIMENSAT'>UTIMENSAT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.UTIMES.html'
+                                  title='sc::platform::nr::UTIMES'>UTIMES</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.VFORK.html'
+                                  title='sc::platform::nr::VFORK'>VFORK</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.VHANGUP.html'
+                                  title='sc::platform::nr::VHANGUP'>VHANGUP</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.VMSPLICE.html'
+                                  title='sc::platform::nr::VMSPLICE'>VMSPLICE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.VSERVER.html'
+                                  title='sc::platform::nr::VSERVER'>VSERVER</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.WAIT4.html'
+                                  title='sc::platform::nr::WAIT4'>WAIT4</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.WAITID.html'
+                                  title='sc::platform::nr::WAITID'>WAITID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.WRITE.html'
+                                  title='sc::platform::nr::WRITE'>WRITE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.WRITEV.html'
+                                  title='sc::platform::nr::WRITEV'>WRITEV</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant._SYSCTL.html'
+                                  title='sc::platform::nr::_SYSCTL'>_SYSCTL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "sc";
+    </script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>
