@@ -117,9 +117,14 @@ pub trait Write {
     fn write_all(&mut self, mut buf: &[u8]) -> Result<()> {
         while !buf.is_empty() {
             match self.write(buf) {
-                Ok(0) => return Err(Error::new(ErrorKind::WriteZero,
-                                               "failed to write whole buffer")),
-                Ok(n) => buf = &buf[n..],
+                Ok(0) => return Err(Error::from(ErrorKind::WriteZero)),
+                Ok(mut n) => {
+                    debug_assert!(n <= buf.len());
+                    if n > buf.len() {
+                        n = buf.len();
+                    }
+                    buf = &buf[n..]
+                },
                 Err(ref e) if e.kind() == ErrorKind::Interrupted => {}
                 Err(e) => return Err(e),
             }
