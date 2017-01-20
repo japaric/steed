@@ -104,6 +104,16 @@ pub unsafe fn write(fd: c_int,
     syscall!(WRITE, fd, buffer, count) as ssize_t
 }
 
+#[cfg(all(target_endian = "big", target_pointer_width = "32"))]
+fn high(v: loff_t) -> i32 { (v >> 32) as i32 }
+#[cfg(all(target_endian = "big", target_pointer_width = "32"))]
+fn low(v: loff_t) -> i32 { (v & 0xffff_ffff) as i32 }
+
+#[cfg(all(target_endian = "little", target_pointer_width = "32"))]
+fn high(v: loff_t) -> i32 { (v & 0xffff_ffff) as i32 }
+#[cfg(all(target_endian = "little", target_pointer_width = "32"))]
+fn low(v: loff_t) -> i32 { (v >> 32) as i32 }
+
 // fs/read_write.c
 #[inline(always)]
 pub unsafe fn pread64(fd: c_int,
@@ -118,7 +128,7 @@ pub unsafe fn pread64(fd: c_int,
                       count: size_t,
                       pos: loff_t)
                       -> ssize_t {
-        syscall!(PREAD64, fd, buffer, count, 0, pos >> 32, pos & 0xffff_ffff) as ssize_t
+        syscall!(PREAD64, fd, buffer, count, 0, high(pos), low(pos)) as ssize_t
     }
     #[cfg(target_arch = "x86")]
     #[inline(always)]
@@ -127,7 +137,7 @@ pub unsafe fn pread64(fd: c_int,
                       count: size_t,
                       pos: loff_t)
                       -> ssize_t {
-        syscall!(PREAD64, fd, buffer, count, pos >> 32, pos & 0xffff_ffff) as ssize_t
+        syscall!(PREAD64, fd, buffer, count, high(pos), low(pos)) as ssize_t
     }
     #[cfg(target_pointer_width = "64")]
     #[inline(always)]
@@ -155,7 +165,7 @@ pub unsafe fn pwrite64(fd: c_int,
                        count: size_t,
                        pos: loff_t)
                        -> ssize_t {
-        syscall!(PWRITE64, fd, buffer, count, 0, pos >> 32, pos & 0xffff_ffff) as ssize_t
+        syscall!(PWRITE64, fd, buffer, count, 0, high(pos), low(pos)) as ssize_t
     }
     #[cfg(target_arch = "x86")]
     #[inline(always)]
@@ -164,7 +174,7 @@ pub unsafe fn pwrite64(fd: c_int,
                        count: size_t,
                        pos: loff_t)
                        -> ssize_t {
-        syscall!(PWRITE64, fd, buffer, count, pos >> 32, pos & 0xffff_ffff) as ssize_t
+        syscall!(PWRITE64, fd, buffer, count, high(pos), low(pos)) as ssize_t
     }
     #[cfg(target_pointer_width = "64")]
     #[inline(always)]
@@ -188,14 +198,14 @@ pub unsafe fn ftruncate64(fd: c_int,
     unsafe fn ftruncate64(fd: c_int,
                           length: loff_t)
                           -> ssize_t {
-        syscall!(FTRUNCATE64, fd, 0, length >> 32, length & 0xffff_ffff) as ssize_t
+        syscall!(FTRUNCATE64, fd, 0, high(length), low(length)) as ssize_t
     }
     #[cfg(target_arch = "x86")]
     #[inline(always)]
     unsafe fn ftruncate64(fd: c_int,
                           length: loff_t)
                           -> ssize_t {
-        syscall!(FTRUNCATE64, fd, length >> 32, length & 0xffff_ffff) as ssize_t
+        syscall!(FTRUNCATE64, fd, high(length), low(length)) as ssize_t
     }
     #[cfg(target_pointer_width = "64")]
     #[inline(always)]
