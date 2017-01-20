@@ -1,6 +1,12 @@
 set -ex
 
 main() {
+    sh build-docker-image.sh $TARGET
+
+    if [ $TRAVIS_BRANCH = master ]; then
+        return
+    fi
+
     local examples=(
         create
         format
@@ -23,6 +29,4 @@ main() {
     done
 }
 
-if [ $TRAVIS_BRANCH != master ]; then
-    main
-fi
+main

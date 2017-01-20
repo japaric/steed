@@ -1,0 +1,30 @@
+{
+    "abi-blacklist": [
+        "stdcall",
+        "fastcall",
+        "vectorcall",
+        "win64",
+        "sysv64"
+    ],
+    "arch": "aarch64",
+    "data-layout": "e-m:e-i8:8:32-i16:16:32-i64:64-i128:128-n32:64-S128",
+    "env": "steed",
+    "executables": true,
+    "has-elf-tls": true,
+    "linker-is-gnu": true,
+    "llvm-target": "aarch64-unknown-linux",
+    "max-atomic-width": 128,
+    "os": "linux",
+    "panic-strategy": "abort",
+    "pre-link-args": [
+        "-Wl,--as-needed",
+        "-Wl,--build-id=none",
+        "-Wl,-z,noexecstack",
+        "-nostartfiles",
+        "-static"
+    ],
+    "target-endian": "little",
+    "target-family": "unix",
+    "target-pointer-width": "64",
+    "vendor": "unknown"
+}
