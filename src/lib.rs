@@ -39,7 +39,7 @@ extern crate core as __core;
 
 extern crate alloc;
 #[macro_use]
-#[macro_reexport(vec)]
+#[macro_reexport(vec, format)]
 extern crate collections as core_collections;
 extern crate compiler_builtins;
 extern crate ralloc;

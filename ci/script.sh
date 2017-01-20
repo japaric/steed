@@ -4,6 +4,7 @@ main() {
     local examples=(
         create
         format
+        format
         hello
         instant
         open
