@@ -6,6 +6,8 @@ use ctypes::c_int;
 use {linux, io, str};
 
 // Rust 1.14.0
+pub mod prelude;
+// Rust 1.14.0
 mod error;
 
 const STDIN: c_int = 0;
