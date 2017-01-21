@@ -11,6 +11,12 @@ pub const O_TRUNC: c_int = 0o00001000;
 
 pub const FIOCLEX: c_uint = 0x5451;
 
+// include/linux/types.h
+pub type ino_t = __kernel_ino_t;
+// include/uapi/asm-generic/posix_types.h
+type __kernel_ino_t = __kernel_long_t;
+type __kernel_long_t = c_long;
+
 #[derive(Clone, Copy)]
 #[repr(C)]
 pub struct stat64 {
