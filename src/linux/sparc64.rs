@@ -1,3 +1,8 @@
+#![allow(non_camel_case_types)]
+
+use ctypes::*;
+use linux::types::*;
+
 use ctypes::c_int;
 
 pub const O_APPEND: c_int = 0x0008;
