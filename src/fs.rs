@@ -369,7 +369,6 @@ impl IntoInner<fs_imp::File> for File {
     }
 }
 
-#[cfg(issue = "18")]
 #[stable(feature = "rust1", since = "1.0.0")]
 impl fmt::Debug for File {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -1365,7 +1364,6 @@ pub fn soft_link<P: AsRef<Path>, Q: AsRef<Path>>(src: P, dst: Q) -> io::Result<(
 /// # Ok(())
 /// # }
 /// ```
-#[cfg(issue = "21")]
 #[stable(feature = "rust1", since = "1.0.0")]
 pub fn read_link<P: AsRef<Path>>(path: P) -> io::Result<PathBuf> {
     fs_imp::readlink(path.as_ref())

@@ -12,7 +12,7 @@ pub fn main() {
     let f = file.metadata().unwrap();
     let s = fs::metadata(path).unwrap();
     let l = fs::symlink_metadata(path).unwrap();
-    println!("{} {} {} {}", size, f.len(), s.len(), l.len());
+    println!("{} {} {} {} {:?}", size, f.len(), s.len(), l.len(), file);
     if f.len() != size || s.len() != size || l.len() != size {
         process::exit(1);
     }
