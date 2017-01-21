@@ -288,7 +288,7 @@ pub unsafe fn lstat64(filename: *const c_char, statbuf: *mut stat64) -> ssize_t 
 pub unsafe fn readlink(path: *const c_char, buf: *mut c_char, bufsiz: c_int)
     -> ssize_t
 {
-    syscall!(READLINK, path, buf, bufsiz) as ssize_t
+    syscall!(READLINKAT, AT_FDCWD, path, buf, bufsiz) as ssize_t
 }
 
 // fs/fcntl.c
