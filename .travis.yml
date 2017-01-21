@@ -5,29 +5,30 @@ sudo: required
 
 rust: nightly
 
-env: TARGET=x86_64-unknown-linux-gnu
+env: TARGET=x86_64-unknown-linux-steed
 matrix:
   include:
     # Linux
-    - env: TARGET=i686-unknown-linux-gnu
-    # - env: TARGET=x86_64-unknown-linux-gnu  # this is the default job
+    - env: TARGET=i686-unknown-linux-steed
+    # - env: TARGET=x86_64-unknown-linux-steed  # this is the default job
 
     # Other architectures
-    - env: TARGET=aarch64-unknown-linux-gnu
-    - env: TARGET=armv7-unknown-linux-gnueabihf
-    # - env: TARGET=mips-unknown-linux-gnu
-    # - env: TARGET=mips64-unknown-linux-gnuabi64
-    # - env: TARGET=mips64el-unknown-linux-gnuabi64
-    # - env: TARGET=mipsel-unknown-linux-gnu
-    - env: TARGET=powerpc-unknown-linux-gnu
-    - env: TARGET=powerpc64-unknown-linux-gnu
-    - env: TARGET=powerpc64le-unknown-linux-gnu
-    # - env: TARGET=s390x-unknown-linux-gnu DISABLE_TESTS=1
-    # - env: TARGET=sparc64-unknown-linux-gnu
-
-before_install: set -e
+    - env: TARGET=aarch64-unknown-linux-steed
+    - env: TARGET=arm-unknown-linux-steedeabi
+    - env: TARGET=arm-unknown-linux-steedeabihf
+    - env: TARGET=armv7-unknown-linux-steedeabihf
+    # - env: TARGET=mips-unknown-linux-steed
+    # - env: TARGET=mips64-unknown-linux-steedabi64
+    # - env: TARGET=mips64el-unknown-linux-steedabi64
+    # - env: TARGET=mipsel-unknown-linux-steed
+    - env: TARGET=powerpc-unknown-linux-steed
+    - env: TARGET=powerpc64-unknown-linux-steed
+    - env: TARGET=powerpc64le-unknown-linux-steed
+    # - env: TARGET=s390x-unknown-linux-steed DISABLE_TESTS=1
+    # - env: TARGET=sparc64-unknown-linux-steed
 
 install:
+  - set -e
   - bash ci/install.sh
   - source ~/.cargo/env
 
@@ -39,9 +40,21 @@ after_success:
 
 after_script: set +e
 
-cache: cargo
 before_cache:
-  - chmod -R a+r $HOME/.cargo
+  - docker history -q japaric/$TARGET:latest |
+    grep -v \<missing\> |
+    xargs docker save |
+    gzip > $HOME/docker/$TARGET.tar.gz
+
+cache:
+  directories:
+    - $HOME/.cargo
+    - $HOME/.xargo
+    - $HOME/docker
+    - $TRAVIS_BUILD_DIR/target
+
+before_install:
+  - zcat $HOME/docker/$TARGET.tar.gz | docker load || true
 
 branches:
   only:

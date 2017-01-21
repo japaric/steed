@@ -17,12 +17,3 @@ git = "https://github.com/rust-lang-nursery/compiler-builtins"
 
 [dependencies.sc]
 git = "https://github.com/japaric/syscall.rs"
-
-[profile]
-
-[profile.dev]
-panic = "abort"
-
-[profile.release]
-lto = true
-panic = "abort"

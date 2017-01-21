@@ -1,0 +1,25 @@
+{
+    "arch": "x86_64",
+    "cpu": "x86-64",
+    "data-layout": "e-m:e-i64:64-f80:128-n8:16:32:64-S128",
+    "env": "steed",
+    "executables": true,
+    "has-elf-tls": true,
+    "linker-is-gnu": true,
+    "llvm-target": "x86_64-unknown-linux",
+    "max-atomic-width": 64,
+    "os": "linux",
+    "panic-strategy": "abort",
+    "pre-link-args": [
+        "-Wl,--as-needed",
+        "-Wl,--build-id=none",
+        "-Wl,-z,noexecstack",
+        "-m64",
+        "-nostartfiles",
+        "-static"
+    ],
+    "target-endian": "little",
+    "target-family": "unix",
+    "target-pointer-width": "64",
+    "vendor": "unknown"
+}

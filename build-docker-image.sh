@@ -2,7 +2,7 @@ set -ex
 
 run() {
     docker build \
-           -t japaric/$1:${TRAVIS_TAG:-latest} \
+           -t japaric/${1}:v0.1.8 \
            -f docker/${1}/Dockerfile \
            docker
 }

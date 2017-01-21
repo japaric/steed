@@ -4,10 +4,6 @@
 
 **It's very early days. Very little functionality has been ported over.**
 
-**Disclaimer** Do not use this crate for any purpose other that running the
-examples in this repository. This crate has not been audited or thoroughly
-tested.
-
 - [Goals](#goals)
 - [Non-goals](#non-goals)
 - [Features](#features)
@@ -71,7 +67,7 @@ fn main() {}
 ```
 
 ```
-# cross build --target x86_64-unknown-linux-gnu --release --example zero
+# cross build --target x86_64-unknown-linux-steed --release --example zero
 $ ./zero; echo $?
 0
 
@@ -149,67 +145,31 @@ To compile your library / application against `steed`, follow these steps:
 [issues]: https://github.com/japaric/steed/issues
 
 ```
-# if you don't have Xargo installed
-# (Xargo v0.3.4 or newer is required)
-$ cargo install xargo
+# if you don't have cross installed
+# (Cross v0.1.8 or newer is required)
+$ cargo install cross
 
 # instead of this step, just go to the crate you want to build
 $ cargo new --bin hello && cd $_
 
-# `steed` doesn't support unwinding right now, use `panic = abort`
-$ edit Cargo.toml && tail -n6 $_
-[profile.dev]
-panic = "abort"
-
-[profile.release]
-lto = true
-panic = "abort"
-
-# if building an executable
-$ edit .cargo/config && cat $_
-[build]
-rustflags = [
-    "-C", "link-arg=-Wl,--build-id=none",
-    "-C", "link-arg=-nostartfiles",
-    "-C", "link-arg=-static",
-]
-
 # this is the part that replaces `std` with `steed`
 $ edit Xargo.toml && cat $_
+```
+
+``` toml
 [dependencies.collections]  # `steed` depends on collections
 
 [dependencies.std]
 git = "https://github.com/japaric/steed"  # `path` works too
 stage = 1
+```
 
+```
 # Make sure to always pass `--target`, even if you are compiling for the HOST
-# (you could use `xargo build` here if you are not building an executable)
-$ xargo run --target x86_64-unknown-linux-gnu
-Hello, world!
-```
-
-If you want to cross compile, use `cross` instead of `xargo` (unless you have
-cross C toolchain lying around)
-
-```
-# change directories first if you have a `.cargo/config` file lying around
-# (Cross v0.1.7 or newer is required)
-$ cargo install cross
-
-$ edit Cross.toml && cat $_
-[build]
-xargo = true
-
-[target.armv7-unknown-linux-gnueabihf]
-image = "japaric/arm-linux"
-
-[target.i686-unknown-linux-gnu]
-image = "japaric/i686-linux"
-
-[target.x86_64-unknown-linux-gnu]
-image = "japaric/x86_64-linux"
-
-$ cross run --target armv7-unknown-linux-gnueabihf
+# (you could use `cross build` here if you are not building an executable)
+# NOTE `steed` uses its own set of targets; these have `steed` instead of `gnu`
+# in their triples
+$ cross run --target x86_64-unknown-linux-steed
 Hello, world!
 ```
 
@@ -224,7 +184,7 @@ summarize the functionality that interfaces with the Linux kernel:
 
 - Dynamic memory allocation (thanks to [ralloc]!)
 
-- `time::Instant` and `time::SystemTime`
+- `std::time`
 
 [ralloc]: https://github.com/redox-os/ralloc
 
