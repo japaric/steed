@@ -63,7 +63,6 @@ pub struct File {
 /// modification times, etc.
 ///
 /// [`metadata`]: fn.metadata.html
-#[cfg(issue = "21")]
 #[stable(feature = "rust1", since = "1.0.0")]
 #[derive(Clone)]
 pub struct Metadata(fs_imp::FileAttr);
@@ -156,7 +155,6 @@ pub struct OpenOptions(fs_imp::OpenOptions);
 /// `os::unix::PermissionsExt` trait.
 ///
 /// [`readonly`]: struct.Permissions.html#method.readonly
-#[cfg(issue = "21")]
 #[derive(Clone, PartialEq, Eq, Debug)]
 #[stable(feature = "rust1", since = "1.0.0")]
 pub struct Permissions(fs_imp::FilePermissions);
@@ -165,7 +163,6 @@ pub struct Permissions(fs_imp::FilePermissions);
 /// It is returned by [`Metadata::file_type`] method.
 ///
 /// [`Metadata::file_type`]: struct.Metadata.html#method.file_type
-#[cfg(issue = "21")]
 #[stable(feature = "file_type", since = "1.1.0")]
 #[derive(Copy, Clone, PartialEq, Eq, Hash, Debug)]
 pub struct FileType(fs_imp::FileType);
@@ -327,7 +324,6 @@ impl File {
     /// # Ok(())
     /// # }
     /// ```
-    #[cfg(issue = "18")]
     #[stable(feature = "rust1", since = "1.0.0")]
     pub fn metadata(&self) -> io::Result<Metadata> {
         self.inner.file_attr().map(Metadata)
@@ -623,7 +619,6 @@ impl AsInnerMut<fs_imp::OpenOptions> for OpenOptions {
     fn as_inner_mut(&mut self) -> &mut fs_imp::OpenOptions { &mut self.0 }
 }
 
-#[cfg(issue = "21")]
 impl Metadata {
     /// Returns the file type for this metadata.
     ///
@@ -812,12 +807,10 @@ impl Metadata {
     }
 }
 
-#[cfg(issue = "21")]
 impl AsInner<fs_imp::FileAttr> for Metadata {
     fn as_inner(&self) -> &fs_imp::FileAttr { &self.0 }
 }
 
-#[cfg(issue = "21")]
 impl Permissions {
     /// Returns whether these permissions describe a readonly file.
     ///
@@ -868,7 +861,6 @@ impl Permissions {
     }
 }
 
-#[cfg(issue = "21")]
 impl FileType {
     /// Test whether this file type represents a directory.
     ///
@@ -925,19 +917,16 @@ impl FileType {
     pub fn is_symlink(&self) -> bool { self.0.is_symlink() }
 }
 
-#[cfg(issue = "21")]
 impl AsInner<fs_imp::FileType> for FileType {
     fn as_inner(&self) -> &fs_imp::FileType { &self.0 }
 }
 
-#[cfg(issue = "21")]
 impl FromInner<fs_imp::FilePermissions> for Permissions {
     fn from_inner(f: fs_imp::FilePermissions) -> Permissions {
         Permissions(f)
     }
 }
 
-#[cfg(issue = "21")]
 impl AsInner<fs_imp::FilePermissions> for Permissions {
     fn as_inner(&self) -> &fs_imp::FilePermissions { &self.0 }
 }
@@ -1161,7 +1150,6 @@ pub fn remove_file<P: AsRef<Path>>(path: P) -> io::Result<()> {
 /// # Ok(())
 /// # }
 /// ```
-#[cfg(issue = "21")]
 #[stable(feature = "rust1", since = "1.0.0")]
 pub fn metadata<P: AsRef<Path>>(path: P) -> io::Result<Metadata> {
     fs_imp::stat(path.as_ref()).map(Metadata)
@@ -1195,7 +1183,6 @@ pub fn metadata<P: AsRef<Path>>(path: P) -> io::Result<Metadata> {
 /// # Ok(())
 /// # }
 /// ```
-#[cfg(issue = "21")]
 #[stable(feature = "symlink_metadata", since = "1.1.0")]
 pub fn symlink_metadata<P: AsRef<Path>>(path: P) -> io::Result<Metadata> {
     fs_imp::lstat(path.as_ref()).map(Metadata)

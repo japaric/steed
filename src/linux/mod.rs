@@ -37,15 +37,14 @@ mod arch;
 pub mod types;
 
 use core::intrinsics;
-
-use ctypes::{c_char, c_int, c_uint, c_ulong, c_longlong, size_t, ssize_t};
-use self::types::umode_t;
+use ctypes::{c_char, c_int, c_uint, c_ulong, size_t, ssize_t};
 
 pub use self::arch::*;
-pub use self::types::{clockid_t, time_t, timespec};
+pub use self::types::*;
 
 // include/uapi/linux/fcntl.h
 pub const AT_FDCWD: c_int = -100;
+pub const AT_SYMLINK_NOFOLLOW: c_int = 0x100;
 
 // include/uapi/asm-generic/fcntl.h
 pub const O_ACCMODE: c_int = 0o00000003;
@@ -53,6 +52,12 @@ pub const O_RDONLY: c_int = 0o00000000;
 pub const O_RDWR: c_int = 0o00000002;
 pub const O_WRONLY: c_int = 0o00000001;
 pub const O_LARGEFILE: c_int = 0o00100000;
+
+// include/uapi/linux/stat.h
+pub const S_IFREG: c_uint = 0o0100000;
+pub const S_IFLNK: c_uint = 0o0120000;
+pub const S_IFDIR: c_uint = 0o0040000;
+pub const S_IFMT: c_uint = 0o00170000;
 
 // include/uapi/linux/time.h
 pub const CLOCK_MONOTONIC: clockid_t = 1;
@@ -190,28 +195,20 @@ pub unsafe fn pwrite64(fd: c_int,
 
 // fs/open.c
 #[inline(always)]
-pub unsafe fn ftruncate64(fd: c_int,
-                          length: loff_t)
-                          -> ssize_t {
+pub unsafe fn ftruncate64(fd: c_int, length: loff_t) -> ssize_t {
     #[cfg(all(target_pointer_width = "32", not(target_arch = "x86")))]
     #[inline(always)]
-    unsafe fn ftruncate64(fd: c_int,
-                          length: loff_t)
-                          -> ssize_t {
+    unsafe fn ftruncate64(fd: c_int, length: loff_t) -> ssize_t {
         syscall!(FTRUNCATE64, fd, 0, high(length), low(length)) as ssize_t
     }
     #[cfg(target_arch = "x86")]
     #[inline(always)]
-    unsafe fn ftruncate64(fd: c_int,
-                          length: loff_t)
-                          -> ssize_t {
+    unsafe fn ftruncate64(fd: c_int, length: loff_t) -> ssize_t {
         syscall!(FTRUNCATE64, fd, high(length), low(length)) as ssize_t
     }
     #[cfg(target_pointer_width = "64")]
     #[inline(always)]
-    unsafe fn ftruncate64(fd: c_int,
-                          length: loff_t)
-                          -> ssize_t {
+    unsafe fn ftruncate64(fd: c_int, length: loff_t) -> ssize_t {
         syscall!(FTRUNCATE, fd, length) as ssize_t
     }
     ftruncate64(fd, length)
@@ -235,9 +232,50 @@ pub unsafe fn fdatasync(fd: c_int) -> ssize_t {
     syscall!(FDATASYNC, fd) as ssize_t
 }
 
-#[allow(non_camel_case_types)]
-pub type loff_t = c_longlong;
+// fs/stat.c
+#[inline(always)]
+pub unsafe fn fstat64(fd: c_int, statbuf: *mut stat64) -> ssize_t {
+    #[cfg(target_pointer_width = "32")]
+    #[inline(always)]
+    unsafe fn fstat64(fd: c_int, statbuf: *mut stat64) -> ssize_t {
+        syscall!(FSTAT64, fd, statbuf) as ssize_t
+    }
+    #[cfg(target_pointer_width = "64")]
+    #[inline(always)]
+    unsafe fn fstat64(fd: c_int, statbuf: *mut stat64) -> ssize_t {
+        syscall!(FSTAT, fd, statbuf) as ssize_t
+    }
+    fstat64(fd, statbuf)
+}
 
-// TODO?
-#[allow(non_camel_case_types)]
-pub type mode_t = umode_t;
+// fs/stat.c
+#[inline(always)]
+pub unsafe fn stat64(filename: *const c_char, statbuf: *mut stat64) -> ssize_t {
+    #[cfg(target_pointer_width = "32")]
+    #[inline(always)]
+    unsafe fn stat64(filename: *const c_char, statbuf: *mut stat64) -> ssize_t {
+        syscall!(FSTATAT64, AT_FDCWD, filename, statbuf, 0) as ssize_t
+    }
+    #[cfg(target_pointer_width = "64")]
+    #[inline(always)]
+    unsafe fn stat64(filename: *const c_char, statbuf: *mut stat64) -> ssize_t {
+        syscall!(NEWFSTATAT, AT_FDCWD, filename, statbuf, 0) as ssize_t
+    }
+    stat64(filename, statbuf)
+}
+
+// fs/stat.c
+#[inline(always)]
+pub unsafe fn lstat64(filename: *const c_char, statbuf: *mut stat64) -> ssize_t {
+    #[cfg(target_pointer_width = "32")]
+    #[inline(always)]
+    unsafe fn lstat64(filename: *const c_char, statbuf: *mut stat64) -> ssize_t {
+        syscall!(FSTATAT64, AT_FDCWD, filename, statbuf, AT_SYMLINK_NOFOLLOW) as ssize_t
+    }
+    #[cfg(target_pointer_width = "64")]
+    #[inline(always)]
+    unsafe fn lstat64(filename: *const c_char, statbuf: *mut stat64) -> ssize_t {
+        syscall!(NEWFSTATAT, AT_FDCWD, filename, statbuf, AT_SYMLINK_NOFOLLOW) as ssize_t
+    }
+    lstat64(filename, statbuf)
+}

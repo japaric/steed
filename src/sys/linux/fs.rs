@@ -3,10 +3,11 @@ use ctypes::c_ushort;
 use ffi::{CString, CStr, OsString, OsStr};
 use fmt;
 use io::{self, Error, SeekFrom};
-use linux::mode_t;
+use linux::types::{mode_t, stat64};
 use linux;
+use mem;
 use path::{Path, PathBuf};
-use super::cvt_r;
+use super::{cvt, cvt_r};
 use sys::errno;
 use sys::ext::ffi::OsStrExt;
 use sys::fd::FileDesc;
@@ -21,9 +22,6 @@ enum dirent64 { }
 
 pub struct File(FileDesc);
 
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-#[allow(non_camel_case_types)]
-pub enum stat64 { }
 #[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub enum ReadDir { }
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -57,13 +55,25 @@ pub struct FileType { mode: mode_t }
 pub struct DirBuilder { mode: mode_t }
 
 impl FileAttr {
-    /*
-    pub fn size(&self) -> u64 { unimplemented!(); }
-    pub fn perm(&self) -> FilePermissions { unimplemented!(); }
-    pub fn file_type(&self) -> FileType { unimplemented!(); }
-    pub fn modified(&self) -> io::Result<SystemTime> { unimplemented!(); }
-    pub fn accessed(&self) -> io::Result<SystemTime> { unimplemented!(); }
-    */
+    pub fn size(&self) -> u64 { self.stat.st_size as u64 }
+    pub fn perm(&self) -> FilePermissions {
+        FilePermissions { mode: self.stat.st_mode & 0o777 }
+    }
+    pub fn file_type(&self) -> FileType {
+        FileType { mode: self.stat.st_mode }
+    }
+    pub fn modified(&self) -> io::Result<SystemTime> {
+        Ok(SystemTime::from(linux::timespec {
+            tv_sec: self.stat.st_mtime,
+            tv_nsec: self.stat.st_mtime_nsec,
+        }))
+    }
+    pub fn accessed(&self) -> io::Result<SystemTime> {
+        Ok(SystemTime::from(linux::timespec {
+            tv_sec: self.stat.st_atime,
+            tv_nsec: self.stat.st_atime_nsec,
+        }))
+    }
     pub fn created(&self) -> io::Result<SystemTime> {
         Err(io::Error::new(io::ErrorKind::Other,
                            "creation time is not available on this platform \
@@ -75,20 +85,27 @@ impl AsInner<stat64> for FileAttr {
     fn as_inner(&self) -> &stat64 { &self.stat }
 }
 
-/*
 impl FilePermissions {
-    pub fn readonly(&self) -> bool { unimplemented!(); }
-    pub fn set_readonly(&mut self, readonly: bool) { unimplemented!(); }
-    pub fn mode(&self) -> u32 { unimplemented!(); }
+    pub fn readonly(&self) -> bool { self.mode & 0o222 == 0 }
+    pub fn set_readonly(&mut self, readonly: bool) {
+        if readonly {
+            self.mode &= !0o222;
+        } else {
+            self.mode |= 0o222;
+        }
+    }
+    pub fn mode(&self) -> u32 { self.mode as u32 }
 }
 
 impl FileType {
-    pub fn is_dir(&self) -> bool { unimplemented!(); }
-    pub fn is_file(&self) -> bool { unimplemented!(); }
-    pub fn is_symlink(&self) -> bool { unimplemented!(); }
-    pub fn is(&self, mode: mode_t) -> bool { unimplemented!(); }
+    pub fn is_dir(&self) -> bool { self.is(linux::S_IFDIR) }
+    pub fn is_file(&self) -> bool { self.is(linux::S_IFREG) }
+    pub fn is_symlink(&self) -> bool { self.is(linux::S_IFLNK) }
+
+    pub fn is(&self, mode: mode_t) -> bool { self.mode & linux::S_IFMT == mode }
 }
 
+/*
 impl FromInner<u32> for FilePermissions {
     fn from_inner(mode: u32) -> FilePermissions {
         unimplemented!();
@@ -234,11 +251,13 @@ impl File {
         Ok(File(fd))
     }
 
-    /*
     pub fn file_attr(&self) -> io::Result<FileAttr> {
-        unimplemented!();
+        let mut stat: stat64 = unsafe { mem::zeroed() };
+        cvt(unsafe {
+            linux::fstat64(self.0.raw(), &mut stat)
+        })?;
+        Ok(FileAttr { stat: stat })
     }
-    */
 
     pub fn fsync(&self) -> io::Result<()> {
         cvt_r(|| unsafe { linux::fsync(self.0.raw()) })?;
@@ -367,15 +386,27 @@ pub fn symlink(src: &Path, dst: &Path) -> io::Result<()> {
 pub fn link(src: &Path, dst: &Path) -> io::Result<()> {
     unimplemented!();
 }
+*/
 
 pub fn stat(p: &Path) -> io::Result<FileAttr> {
-    unimplemented!();
+    let p = cstr(p)?;
+    let mut stat: stat64 = unsafe { mem::zeroed() };
+    cvt(unsafe {
+        linux::stat64(p.as_ptr(), &mut stat)
+    })?;
+    Ok(FileAttr { stat: stat })
 }
 
 pub fn lstat(p: &Path) -> io::Result<FileAttr> {
-    unimplemented!();
+    let p = cstr(p)?;
+    let mut stat: stat64 = unsafe { mem::zeroed() };
+    cvt(unsafe {
+        linux::lstat64(p.as_ptr(), &mut stat)
+    })?;
+    Ok(FileAttr { stat: stat })
 }
 
+/*
 pub fn canonicalize(p: &Path) -> io::Result<PathBuf> {
     unimplemented!();
 }
