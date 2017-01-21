@@ -23,8 +23,8 @@ matrix:
     # - env: TARGET=mipsel-unknown-linux-steed
     - env: TARGET=powerpc-unknown-linux-steed
     - env: TARGET=powerpc64-unknown-linux-steed
-    - env: TARGET=powerpc64le-unknown-linux-steed
-    # - env: TARGET=s390x-unknown-linux-steed DISABLE_TESTS=1
+    # - env: TARGET=powerpc64le-unknown-linux-steed
+    # - env: TARGET=s390x-unknown-linux-steed
     # - env: TARGET=sparc64-unknown-linux-steed
 
 install:
