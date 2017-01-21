@@ -41,7 +41,7 @@ after_success:
 after_script: set +e
 
 before_cache:
-  - docker history -q japaric/$TARGET:latest |
+  - docker history -q japaric/$TARGET:v0.1.8 |
     grep -v \<missing\> |
     xargs docker save |
     gzip > $HOME/docker/$TARGET.tar.gz
