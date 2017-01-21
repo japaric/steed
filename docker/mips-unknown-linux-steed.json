@@ -1,0 +1,25 @@
+{
+    "arch": "mips",
+    "cpu": "mips32r2",
+    "data-layout": "E-m:m-p:32:32-i8:8:32-i16:16:32-i64:64-n32-S64",
+    "env": "steed",
+    "executables": true,
+    "has-elf-tls": true,
+    "linker-is-gnu": true,
+    "llvm-target": "mips-unknown-linux",
+    "max-atomic-width": 32,
+    "os": "linux",
+    "panic-strategy": "abort",
+    "pre-link-args": [
+        "-Wl,--as-needed",
+        "-Wl,--build-id=none",
+        "-Wl,-z,noexecstack",
+        "-nostartfiles",
+        "-static"
+    ],
+    "relocation-model": "static",
+    "target-endian": "big",
+    "target-family": "unix",
+    "target-pointer-width": "32",
+    "vendor": "unknown"
+}

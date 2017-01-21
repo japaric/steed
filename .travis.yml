@@ -17,10 +17,10 @@ matrix:
     - env: TARGET=arm-unknown-linux-steedeabi
     - env: TARGET=arm-unknown-linux-steedeabihf
     - env: TARGET=armv7-unknown-linux-steedeabihf
-    # - env: TARGET=mips-unknown-linux-steed
+    - env: TARGET=mips-unknown-linux-steed
     # - env: TARGET=mips64-unknown-linux-steedabi64
     # - env: TARGET=mips64el-unknown-linux-steedabi64
-    # - env: TARGET=mipsel-unknown-linux-steed
+    - env: TARGET=mipsel-unknown-linux-steed
     - env: TARGET=powerpc-unknown-linux-steed
     - env: TARGET=powerpc64-unknown-linux-steed
     # - env: TARGET=powerpc64le-unknown-linux-steed

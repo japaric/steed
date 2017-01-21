@@ -112,13 +112,13 @@ $ ls -l hello
 
 - `i686-unknown-linux-steed`
 
-<!-- - `mips-unknown-linux-steed` -->
+- `mips-unknown-linux-steed`
 
 <!-- - `mips64-unknown-linux-steed` -->
 
 <!-- - `mips64el-unknown-linux-steed` -->
 
-<!-- - `mipsel-unknown-linux-steed` -->
+- `mipsel-unknown-linux-steed`
 
 - `powerpc-unknown-linux-steed`
 
