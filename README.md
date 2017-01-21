@@ -127,7 +127,7 @@ Or in terms of existing Rust targets:
 
 - `powerpc64-unknown-linux-gnu`
 
-- `powerpc64le-unknown-linux-gnu`
+<!-- - `powerpc64le-unknown-linux-gnu` -->
 
 <!-- - `sparc64-unknown-linux-gnu` -->
 
