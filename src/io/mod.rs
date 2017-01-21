@@ -3,7 +3,7 @@
 use core::fmt;
 
 use ctypes::c_int;
-use {linux, io, str};
+use {cmp, linux, io, str};
 
 // Rust 1.14.0
 pub mod prelude;
@@ -119,9 +119,18 @@ pub trait Write {
     fn write_all(&mut self, mut buf: &[u8]) -> Result<()> {
         while !buf.is_empty() {
             match self.write(buf) {
-                Ok(0) => return Err(Error::new(ErrorKind::WriteZero,
-                                               "failed to write whole buffer")),
-                Ok(n) => buf = &buf[n..],
+                // NOTE(steed): Deviate from std here: Construct the error
+                // using `ErrorKind` instead of `Error::new`, avoiding an
+                // allocation.
+                Ok(0) => return Err(Error::from(ErrorKind::WriteZero)),
+                Ok(n) => {
+                    // NOTE(steed): Deviate from std here, in order to avoid a
+                    // panic: If a `Write` implementation returns values larger
+                    // than the size of the passed slice, then something is
+                    // wrong with it.
+                    debug_assert!(n <= buf.len());
+                    buf = &buf[cmp::min(n, buf.len())..]
+                },
                 Err(ref e) if e.kind() == ErrorKind::Interrupted => {}
                 Err(e) => return Err(e),
             }
