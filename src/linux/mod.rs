@@ -63,6 +63,9 @@ pub const S_IFMT: c_uint = 0o00170000;
 pub const CLOCK_MONOTONIC: clockid_t = 1;
 pub const CLOCK_REALTIME: clockid_t = 0;
 
+// include/uapi/asm-generic/fcntl.h
+pub const F_GETFL: c_uint = 3;
+
 // kernel/time/posix-timers.c
 #[inline(always)]
 pub unsafe fn clock_gettime(which_clock: clockid_t,
@@ -278,4 +281,18 @@ pub unsafe fn lstat64(filename: *const c_char, statbuf: *mut stat64) -> ssize_t 
         syscall!(NEWFSTATAT, AT_FDCWD, filename, statbuf, AT_SYMLINK_NOFOLLOW) as ssize_t
     }
     lstat64(filename, statbuf)
+}
+
+// fs/stat.c
+#[inline(always)]
+pub unsafe fn readlink(path: *const c_char, buf: *mut c_char, bufsiz: c_int)
+    -> ssize_t
+{
+    syscall!(READLINKAT, AT_FDCWD, path, buf, bufsiz) as ssize_t
+}
+
+// fs/fcntl.c
+#[inline(always)]
+pub unsafe fn fcntl(fd: c_int, cmd: c_uint, arg: c_ulong) -> ssize_t {
+    syscall!(FCNTL, fd, cmd, arg) as ssize_t
 }

@@ -1,3 +1,5 @@
+use os::unix::prelude::*;
+
 use ctypes::c_int;
 use ctypes::c_ushort;
 use ffi::{CString, CStr, OsString, OsStr};
@@ -340,13 +342,43 @@ impl FromInner<c_int> for File {
         unimplemented!();
     }
 }
+*/
 
 impl fmt::Debug for File {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        unimplemented!();
+        fn get_path(fd: c_int) -> Option<PathBuf> {
+            let mut p = PathBuf::from("/proc/self/fd");
+            p.push(&fd.to_string());
+            readlink(&p).ok()
+        }
+
+        fn get_mode(fd: c_int) -> Option<(bool, bool)> {
+            let mode = unsafe { linux::fcntl(fd, linux::F_GETFL, 0) };
+            if mode == -1 {
+                return None;
+            }
+            match mode as i32 & linux::O_ACCMODE {
+                linux::O_RDONLY => Some((true, false)),
+                linux::O_RDWR => Some((true, true)),
+                linux::O_WRONLY => Some((false, true)),
+                _ => None
+            }
+        }
+
+        let fd = self.0.raw();
+        let mut b = f.debug_struct("File");
+        b.field("fd", &fd);
+        if let Some(path) = get_path(fd) {
+            b.field("path", &path);
+        }
+        if let Some((read, write)) = get_mode(fd) {
+            b.field("read", &read).field("write", &write);
+        }
+        b.finish()
     }
 }
 
+/*
 pub fn readdir(p: &Path) -> io::Result<ReadDir> {
     unimplemented!();
 }
@@ -374,11 +406,35 @@ pub fn remove_dir_all(path: &Path) -> io::Result<()> {
 fn remove_dir_all_recursive(path: &Path) -> io::Result<()> {
     unimplemented!();
 }
+*/
 
 pub fn readlink(p: &Path) -> io::Result<PathBuf> {
-    unimplemented!();
+    let c_path = cstr(p)?;
+    let p = c_path.as_ptr();
+
+    let mut buf = Vec::with_capacity(256);
+
+    loop {
+        let buf_read = cvt(unsafe {
+            linux::readlink(p, buf.as_mut_ptr() as *mut _, buf.capacity() as i32)
+        })?;
+
+        unsafe { buf.set_len(buf_read); }
+
+        if buf_read != buf.capacity() {
+            buf.shrink_to_fit();
+
+            return Ok(PathBuf::from(OsString::from_vec(buf)));
+        }
+
+        // Trigger the internal buffer resizing logic of `Vec` by requiring
+        // more space than the current capacity. The length is guaranteed to be
+        // the same as the capacity due to the if statement above.
+        buf.reserve(1);
+    }
 }
 
+/*
 pub fn symlink(src: &Path, dst: &Path) -> io::Result<()> {
     unimplemented!();
 }
