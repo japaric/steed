@@ -8,6 +8,7 @@ main() {
     fi
 
     local examples=(
+        _llseek
         create
         format
         format

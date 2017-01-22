@@ -301,11 +301,20 @@ impl File {
         Ok(())
     }
 
-    /*
     pub fn seek(&self, pos: SeekFrom) -> io::Result<u64> {
-        unimplemented!();
+        let (whence, pos) = match pos {
+            // Casting to `i64` is fine, too large values will end up as
+            // negative which will cause an error in `lseek64`.
+            SeekFrom::Start(off) => (linux::SEEK_SET, off as i64),
+            SeekFrom::End(off) => (linux::SEEK_END, off),
+            SeekFrom::Current(off) => (linux::SEEK_CUR, off),
+        };
+        let mut n = 0;
+        cvt(unsafe { linux::_llseek(self.0.raw(), pos, &mut n, whence) })?;
+        Ok(n as u64)
     }
 
+    /*
     pub fn duplicate(&self) -> io::Result<File> {
         unimplemented!();
     }

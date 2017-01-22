@@ -47,11 +47,12 @@ pub const AT_FDCWD: c_int = -100;
 pub const AT_SYMLINK_NOFOLLOW: c_int = 0x100;
 
 // include/uapi/asm-generic/fcntl.h
+pub const F_GETFL: c_uint = 3;
 pub const O_ACCMODE: c_int = 0o00000003;
+pub const O_LARGEFILE: c_int = 0o00100000;
 pub const O_RDONLY: c_int = 0o00000000;
 pub const O_RDWR: c_int = 0o00000002;
 pub const O_WRONLY: c_int = 0o00000001;
-pub const O_LARGEFILE: c_int = 0o00100000;
 
 // include/uapi/linux/stat.h
 pub const S_IFREG: c_uint = 0o0100000;
@@ -63,8 +64,10 @@ pub const S_IFMT: c_uint = 0o00170000;
 pub const CLOCK_MONOTONIC: clockid_t = 1;
 pub const CLOCK_REALTIME: clockid_t = 0;
 
-// include/uapi/asm-generic/fcntl.h
-pub const F_GETFL: c_uint = 3;
+// include/uapi/linux/fs.h
+pub const SEEK_SET: c_uint = 0;
+pub const SEEK_CUR: c_uint = 1;
+pub const SEEK_END: c_uint = 2;
 
 // kernel/time/posix-timers.c
 #[inline(always)]
@@ -194,6 +197,41 @@ pub unsafe fn pwrite64(fd: c_int,
         syscall!(PWRITE64, fd, buffer, count, pos) as ssize_t
     }
     pwrite64(fd, buffer, count, pos)
+}
+
+// fs/read_write.c
+#[inline(always)]
+pub unsafe fn _llseek(fd: c_int,
+                      offset: loff_t,
+                      result: *mut loff_t,
+                      whence: c_uint)
+                      -> ssize_t {
+    #[cfg(target_pointer_width = "32")]
+    #[inline(always)]
+    unsafe fn _llseek(fd: c_int,
+                      offset: loff_t,
+                      result: *mut loff_t,
+                      whence: c_uint)
+                      -> ssize_t {
+        syscall!(_LLSEEK,
+                 fd,
+                 offset >> 32 as c_uint,
+                 offset & 0xffff_ffff as c_uint,
+                 result,
+                 whence) as ssize_t
+    }
+    #[cfg(target_pointer_width = "64")]
+    #[inline(always)]
+    unsafe fn _llseek(fd: c_int,
+                      offset: loff_t,
+                      result: *mut loff_t,
+                      whence: c_uint)
+                      -> ssize_t {
+        let res = syscall!(LSEEK, fd, offset, whence) as ssize_t;
+        *result = res as i64;
+        res
+    }
+    _llseek(fd, offset, result, whence)
 }
 
 // fs/open.c

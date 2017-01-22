@@ -392,7 +392,6 @@ impl Write for File {
     }
     fn flush(&mut self) -> io::Result<()> { self.inner.flush() }
 }
-#[cfg(issue = "18")]
 #[stable(feature = "rust1", since = "1.0.0")]
 impl Seek for File {
     fn seek(&mut self, pos: SeekFrom) -> io::Result<u64> {
@@ -415,7 +414,6 @@ impl<'a> Write for &'a File {
     }
     fn flush(&mut self) -> io::Result<()> { self.inner.flush() }
 }
-#[cfg(issue = "18")]
 #[stable(feature = "rust1", since = "1.0.0")]
 impl<'a> Seek for &'a File {
     fn seek(&mut self, pos: SeekFrom) -> io::Result<u64> {
