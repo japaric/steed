@@ -5,6 +5,7 @@
 #![feature(collections_bound)]
 #![feature(collections_range)]
 #![feature(compiler_builtins_lib)]
+#![feature(const_fn)]
 #![feature(core_intrinsics)]
 #![feature(dropck_parametricity)]
 #![feature(fused)]

@@ -45,9 +45,12 @@ pub use self::types::*;
 // include/uapi/linux/fcntl.h
 pub const AT_FDCWD: c_int = -100;
 pub const AT_SYMLINK_NOFOLLOW: c_int = 0x100;
+pub const F_DUPFD_CLOEXEC: c_uint = F_LINUX_SPECIFIC_BASE + 6;
 
 // include/uapi/asm-generic/fcntl.h
+pub const F_DUPFD: c_uint = 0;
 pub const F_GETFL: c_uint = 3;
+pub const F_LINUX_SPECIFIC_BASE: c_uint = 1024;
 pub const O_ACCMODE: c_int = 0o00000003;
 pub const O_LARGEFILE: c_int = 0o00100000;
 pub const O_RDONLY: c_int = 0o00000000;

@@ -10,12 +10,14 @@ main() {
     local examples=(
         _llseek
         create
+        dup
         format
         format
         hello
         instant
         open
         preadwrite
+        stat
         stderr
         system-time
         vec
