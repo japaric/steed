@@ -215,8 +215,8 @@ pub unsafe fn _llseek(fd: c_int,
                       -> ssize_t {
         syscall!(_LLSEEK,
                  fd,
-                 offset >> 32 as c_uint,
-                 offset & 0xffff_ffff as c_uint,
+                 offset >> 32,
+                 offset & 0xffff_ffff,
                  result,
                  whence) as ssize_t
     }
