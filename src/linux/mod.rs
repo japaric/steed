@@ -105,7 +105,7 @@ pub unsafe fn open(filename: *const c_char,
 pub unsafe fn chmod(filename: *const c_char,
                     mode: umode_t)
                    -> ssize_t {
-    syscall!(CHMOD, filename, mode) as ssize_t
+    syscall!(FCHMODAT, AT_FDCWD, filename, mode, 0) as ssize_t
 }
 
 // fs/read_write.c
