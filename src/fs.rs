@@ -346,7 +346,6 @@ impl File {
     /// # Ok(())
     /// # }
     /// ```
-    #[cfg(issue = "18")]
     #[stable(feature = "file_try_clone", since = "1.9.0")]
     pub fn try_clone(&self) -> io::Result<File> {
         Ok(File {

@@ -14,7 +14,8 @@ use ctypes::{c_int, c_char};
 use io::{self, Read};
 use linux;
 use mem;
-use sys::cvt;
+use sync::atomic::{AtomicBool, Ordering};
+use sys::{cvt, errno};
 use sys_common::AsInner;
 use sys_common::io::read_to_end_uninitialized;
 
@@ -82,11 +83,47 @@ impl FileDesc {
     pub fn set_nonblocking(&self, nonblocking: bool) -> io::Result<()> {
         unimplemented!();
     }
+    */
 
     pub fn duplicate(&self) -> io::Result<FileDesc> {
-        unimplemented!();
+        // We want to atomically duplicate this file descriptor and set the
+        // CLOEXEC flag, and currently that's done via F_DUPFD_CLOEXEC. This
+        // flag, however, isn't supported on older Linux kernels (earlier than
+        // 2.6.24).
+        //
+        // To detect this and ensure that CLOEXEC is still set, we
+        // follow a strategy similar to musl [1] where if passing
+        // F_DUPFD_CLOEXEC causes `fcntl` to return EINVAL it means it's not
+        // supported (the third parameter, 0, is always valid), so we stop
+        // trying that.
+        //
+        // Also note that Android doesn't have F_DUPFD_CLOEXEC, but get it to
+        // resolve so we at least compile this.
+        //
+        // [1]: http://comments.gmane.org/gmane.linux.lib.musl.general/2963
+        let make_filedesc = |fd| {
+            let fd = FileDesc::new(fd);
+            fd.set_cloexec()?;
+            Ok(fd)
+        };
+        static TRY_CLOEXEC: AtomicBool = AtomicBool::new(true);
+        let fd = self.raw();
+        if TRY_CLOEXEC.load(Ordering::Relaxed) {
+            match cvt(unsafe { linux::fcntl(fd, linux::F_DUPFD_CLOEXEC, 0) }) {
+                // We *still* call the `set_cloexec` method as apparently some
+                // linux kernel at some point stopped setting CLOEXEC even
+                // though it reported doing so on F_DUPFD_CLOEXEC.
+                Ok(fd) => {
+                    return Ok(make_filedesc(fd as c_int)?)
+                }
+                Err(ref e) if e.raw_os_error() == Some(errno::EINVAL) => {
+                    TRY_CLOEXEC.store(false, Ordering::Relaxed);
+                }
+                Err(e) => return Err(e),
+            }
+        }
+        make_filedesc(cvt(unsafe { linux::fcntl(fd, linux::F_DUPFD, 0) })? as c_int)
     }
-    */
 }
 
 impl<'a> Read for &'a FileDesc {
