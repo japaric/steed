@@ -100,6 +100,14 @@ pub unsafe fn open(filename: *const c_char,
     syscall!(OPENAT, AT_FDCWD, filename, flags, mode) as ssize_t
 }
 
+// fs/open.c
+#[inline(always)]
+pub unsafe fn chmod(filename: *const c_char,
+                    mode: umode_t)
+                   -> ssize_t {
+    syscall!(CHMOD, filename, mode) as ssize_t
+}
+
 // fs/read_write.c
 #[inline(always)]
 pub unsafe fn read(fd: c_int, buffer: *mut c_char, count: size_t) -> ssize_t {

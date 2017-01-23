@@ -3,12 +3,14 @@
 use core::fmt;
 
 use ctypes::c_int;
-use {cmp, linux, io, str};
+use {cmp, linux, io, memchr, str};
 
 // Rust 1.14.0
 pub mod prelude;
 // Rust 1.14.0
 mod error;
+// Rust 1.14.0
+mod util;
 
 const STDIN: c_int = 0;
 const STDOUT: c_int = 1;
@@ -16,6 +18,8 @@ const STDERR: c_int = 2;
 
 #[stable(feature = "rust1", since = "1.0.0")]
 pub use self::error::{Result, Error, ErrorKind};
+#[stable(feature = "rust1", since = "1.0.0")]
+pub use self::util::{copy, sink, Sink, empty, Empty, repeat, Repeat};
 
 const DEFAULT_BUF_SIZE: usize = ::sys_common::io::DEFAULT_BUF_SIZE;
 
@@ -174,6 +178,115 @@ pub trait Write {
     #[stable(feature = "steed", since = "1.0.0")]
     fn by_ref(&mut self) -> &mut Self where Self: Sized { self }
 }
+
+#[stable(feature = "rust1", since = "1.0.0")]
+pub trait BufRead: Read {
+    #[stable(feature = "rust1", since = "1.0.0")]
+    fn fill_buf(&mut self) -> Result<&[u8]>;
+    #[stable(feature = "rust1", since = "1.0.0")]
+    fn consume(&mut self, amt: usize);
+    #[stable(feature = "rust1", since = "1.0.0")]
+    fn read_until(&mut self, byte: u8, buf: &mut Vec<u8>) -> Result<usize> {
+        read_until(self, byte, buf)
+    }
+    #[stable(feature = "rust1", since = "1.0.0")]
+    fn read_line(&mut self, buf: &mut String) -> Result<usize> {
+        // Note that we are not calling the `.read_until` method here, but
+        // rather our hardcoded implementation. For more details as to why, see
+        // the comments in `read_to_end`.
+        append_to_string(buf, |b| read_until(self, b'\n', b))
+    }
+    #[stable(feature = "rust1", since = "1.0.0")]
+    fn split(self, byte: u8) -> Split<Self> where Self: Sized {
+        Split { buf: self, delim: byte }
+    }
+    #[stable(feature = "rust1", since = "1.0.0")]
+    fn lines(self) -> Lines<Self> where Self: Sized {
+        Lines { buf: self }
+    }
+}
+
+fn read_until<R: BufRead + ?Sized>(r: &mut R, delim: u8, buf: &mut Vec<u8>)
+                                   -> Result<usize> {
+    let mut read = 0;
+    loop {
+        let (done, used) = {
+            let available = match r.fill_buf() {
+                Ok(n) => n,
+                Err(ref e) if e.kind() == ErrorKind::Interrupted => continue,
+                Err(e) => return Err(e)
+            };
+            match memchr::memchr(delim, available) {
+                Some(i) => {
+                    buf.extend_from_slice(&available[..i + 1]);
+                    (true, i + 1)
+                }
+                None => {
+                    buf.extend_from_slice(available);
+                    (false, available.len())
+                }
+            }
+        };
+        r.consume(used);
+        read += used;
+        if done || used == 0 {
+            return Ok(read);
+        }
+    }
+}
+
+#[stable(feature = "rust1", since = "1.0.0")]
+pub struct Split<B> {
+    buf: B,
+    delim: u8,
+}
+
+#[stable(feature = "rust1", since = "1.0.0")]
+impl<B: BufRead> Iterator for Split<B> {
+    type Item = Result<Vec<u8>>;
+
+    fn next(&mut self) -> Option<Result<Vec<u8>>> {
+        let mut buf = Vec::new();
+        match self.buf.read_until(self.delim, &mut buf) {
+            Ok(0) => None,
+            Ok(_n) => {
+                if buf[buf.len() - 1] == self.delim {
+                    buf.pop();
+                }
+                Some(Ok(buf))
+            }
+            Err(e) => Some(Err(e))
+        }
+    }
+}
+
+#[stable(feature = "rust1", since = "1.0.0")]
+pub struct Lines<B> {
+    buf: B,
+}
+
+#[stable(feature = "rust1", since = "1.0.0")]
+impl<B: BufRead> Iterator for Lines<B> {
+    type Item = Result<String>;
+
+    fn next(&mut self) -> Option<Result<String>> {
+        let mut buf = String::new();
+        match self.buf.read_line(&mut buf) {
+            Ok(0) => None,
+            Ok(_n) => {
+                if buf.ends_with("\n") {
+                    buf.pop();
+                    if buf.ends_with("\r") {
+                        buf.pop();
+                    }
+                }
+                Some(Ok(buf))
+            }
+            Err(e) => Some(Err(e))
+        }
+    }
+}
+
 
 #[derive(Copy, PartialEq, Eq, Clone, Debug)]
 #[stable(feature = "steed", since = "1.0.0")]
