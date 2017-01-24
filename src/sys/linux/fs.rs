@@ -456,11 +456,14 @@ pub fn readlink(p: &Path) -> io::Result<PathBuf> {
 pub fn symlink(src: &Path, dst: &Path) -> io::Result<()> {
     unimplemented!();
 }
+*/
 
 pub fn link(src: &Path, dst: &Path) -> io::Result<()> {
-    unimplemented!();
+    let src = cstr(src)?;
+    let dst = cstr(dst)?;
+    cvt(unsafe { linux::link(src.as_ptr(), dst.as_ptr()) })?;
+    Ok(())
 }
-*/
 
 pub fn stat(p: &Path) -> io::Result<FileAttr> {
     let p = cstr(p)?;

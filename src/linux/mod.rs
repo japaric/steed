@@ -364,3 +364,9 @@ pub unsafe fn unlink(pathname: *const c_char) -> ssize_t {
 pub unsafe fn rmdir(pathname: *const c_char) -> ssize_t {
     syscall!(UNLINKAT, AT_FDCWD, pathname, AT_REMOVEDIR) as ssize_t
 }
+
+// fs/namei.c
+#[inline(always)]
+pub unsafe fn link(oldname: *const c_char, newname: *const c_char) -> ssize_t {
+    syscall!(LINKAT, AT_FDCWD, oldname, AT_FDCWD, newname, 0) as ssize_t
+}
