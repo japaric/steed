@@ -389,11 +389,13 @@ impl fmt::Debug for File {
 pub fn readdir(p: &Path) -> io::Result<ReadDir> {
     unimplemented!();
 }
+*/
 
 pub fn unlink(p: &Path) -> io::Result<()> {
-    unimplemented!();
+    let p = cstr(p)?;
+    cvt(unsafe { linux::unlink(p.as_ptr()) })?;
+    Ok(())
 }
-*/
 
 pub fn rename(old: &Path, new: &Path) -> io::Result<()> {
     let old = cstr(old)?;

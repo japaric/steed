@@ -351,3 +351,9 @@ pub unsafe fn fcntl(fd: c_int, cmd: c_uint, arg: c_ulong) -> ssize_t {
 pub unsafe fn rename(oldname: *const c_char, newname: *const c_char) -> ssize_t {
     syscall!(RENAMEAT, AT_FDCWD, oldname, AT_FDCWD, newname) as ssize_t
 }
+
+// fs/namei.c
+#[inline(always)]
+pub unsafe fn unlink(pathname: *const c_char) -> ssize_t {
+    syscall!(UNLINKAT, AT_FDCWD, pathname, 0) as ssize_t
+}
