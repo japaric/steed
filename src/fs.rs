@@ -170,7 +170,6 @@ pub struct FileType(fs_imp::FileType);
 /// A builder used to create directories in various manners.
 ///
 /// This builder also supports platform-specific options.
-#[cfg(issue = "21")]
 #[stable(feature = "dir_builder", since = "1.6.0")]
 pub struct DirBuilder {
     inner: fs_imp::DirBuilder,
@@ -1422,7 +1421,6 @@ pub fn canonicalize<P: AsRef<Path>>(path: P) -> io::Result<PathBuf> {
 /// # Ok(())
 /// # }
 /// ```
-#[cfg(issue = "21")]
 #[stable(feature = "rust1", since = "1.0.0")]
 pub fn create_dir<P: AsRef<Path>>(path: P) -> io::Result<()> {
     DirBuilder::new().create(path.as_ref())
@@ -1458,7 +1456,6 @@ pub fn create_dir<P: AsRef<Path>>(path: P) -> io::Result<()> {
 /// # Ok(())
 /// # }
 /// ```
-#[cfg(issue = "21")]
 #[stable(feature = "rust1", since = "1.0.0")]
 pub fn create_dir_all<P: AsRef<Path>>(path: P) -> io::Result<()> {
     DirBuilder::new().recursive(true).create(path.as_ref())
@@ -1618,7 +1615,6 @@ pub fn set_permissions<P: AsRef<Path>>(path: P, perm: Permissions)
     fs_imp::set_perm(path.as_ref(), perm.0)
 }
 
-#[cfg(issue = "21")]
 impl DirBuilder {
     /// Creates a new set of options with default mode/security settings for all
     /// platforms and also non-recursive.
@@ -1695,7 +1691,6 @@ impl DirBuilder {
     }
 }
 
-#[cfg(issue = "21")]
 impl AsInnerMut<fs_imp::DirBuilder> for DirBuilder {
     fn as_inner_mut(&mut self) -> &mut fs_imp::DirBuilder {
         &mut self.inner

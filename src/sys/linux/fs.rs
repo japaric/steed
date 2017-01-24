@@ -323,21 +323,21 @@ impl File {
     pub fn into_fd(self) -> FileDesc { self.0 }
 }
 
-/*
 impl DirBuilder {
     pub fn new() -> DirBuilder {
-        unimplemented!();
+        DirBuilder { mode: 0o777 }
     }
 
     pub fn mkdir(&self, p: &Path) -> io::Result<()> {
-        unimplemented!();
+        let p = cstr(p)?;
+        cvt(unsafe { linux::mkdir(p.as_ptr(), self.mode as u16) })?;
+        Ok(())
     }
 
     pub fn set_mode(&mut self, mode: u32) {
-        unimplemented!();
+        self.mode = mode as mode_t;
     }
 }
-*/
 
 fn cstr(path: &Path) -> io::Result<CString> {
     Ok(CString::new(path.as_os_str().as_bytes())?)
