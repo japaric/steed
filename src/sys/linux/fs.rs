@@ -393,11 +393,14 @@ pub fn readdir(p: &Path) -> io::Result<ReadDir> {
 pub fn unlink(p: &Path) -> io::Result<()> {
     unimplemented!();
 }
+*/
 
 pub fn rename(old: &Path, new: &Path) -> io::Result<()> {
-    unimplemented!();
+    let old = cstr(old)?;
+    let new = cstr(new)?;
+    cvt(unsafe { linux::rename(old.as_ptr(), new.as_ptr()) })?;
+    Ok(())
 }
-*/
 
 pub fn set_perm(p: &Path, perm: FilePermissions) -> io::Result<()> {
     let p = cstr(p)?;

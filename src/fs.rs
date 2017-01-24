@@ -1221,7 +1221,6 @@ pub fn symlink_metadata<P: AsRef<Path>>(path: P) -> io::Result<Metadata> {
 /// # Ok(())
 /// # }
 /// ```
-#[cfg(issue = "21")]
 #[stable(feature = "rust1", since = "1.0.0")]
 pub fn rename<P: AsRef<Path>, Q: AsRef<Path>>(from: P, to: Q) -> io::Result<()> {
     fs_imp::rename(from.as_ref(), to.as_ref())

@@ -345,3 +345,9 @@ pub unsafe fn readlink(path: *const c_char, buf: *mut c_char, bufsiz: c_int)
 pub unsafe fn fcntl(fd: c_int, cmd: c_uint, arg: c_ulong) -> ssize_t {
     syscall!(FCNTL, fd, cmd, arg) as ssize_t
 }
+
+// fs/namei.c
+#[inline(always)]
+pub unsafe fn rename(oldname: *const c_char, newname: *const c_char) -> ssize_t {
+    syscall!(RENAMEAT, AT_FDCWD, oldname, AT_FDCWD, newname) as ssize_t
+}
