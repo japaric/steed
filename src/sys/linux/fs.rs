@@ -4,7 +4,7 @@ use ctypes::c_int;
 use ctypes::c_ushort;
 use ffi::{CString, CStr, OsString, OsStr};
 use fmt;
-use io::{self, Error, SeekFrom};
+use io::{self, Error, ErrorKind, SeekFrom};
 use linux::types::{mode_t, stat64};
 use linux;
 use mem;
@@ -397,11 +397,15 @@ pub fn unlink(p: &Path) -> io::Result<()> {
 pub fn rename(old: &Path, new: &Path) -> io::Result<()> {
     unimplemented!();
 }
+*/
 
 pub fn set_perm(p: &Path, perm: FilePermissions) -> io::Result<()> {
-    unimplemented!();
+    let p = cstr(p)?;
+    cvt_r(|| unsafe { linux::chmod(p.as_ptr(), perm.mode as u16) })?;
+    Ok(())
 }
 
+/*
 pub fn rmdir(p: &Path) -> io::Result<()> {
     unimplemented!();
 }
@@ -473,8 +477,20 @@ pub fn lstat(p: &Path) -> io::Result<FileAttr> {
 pub fn canonicalize(p: &Path) -> io::Result<PathBuf> {
     unimplemented!();
 }
+*/
 
 pub fn copy(from: &Path, to: &Path) -> io::Result<u64> {
-    unimplemented!();
+    use fs::{File, set_permissions};
+    if !from.is_file() {
+        return Err(Error::new(ErrorKind::InvalidInput,
+                              "the source path is not an existing regular file"))
+    }
+
+    let mut reader = File::open(from)?;
+    let mut writer = File::create(to)?;
+    let perm = reader.metadata()?.permissions();
+
+    let ret = io::copy(&mut reader, &mut writer)?;
+    set_permissions(to, perm)?;
+    Ok(ret)
 }
-*/
