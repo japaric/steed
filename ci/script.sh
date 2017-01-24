@@ -15,6 +15,7 @@ main() {
         format
         hello
         instant
+        ls
         open
         preadwrite
         stat
