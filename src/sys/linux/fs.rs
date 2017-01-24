@@ -410,11 +410,13 @@ pub fn set_perm(p: &Path, perm: FilePermissions) -> io::Result<()> {
     Ok(())
 }
 
-/*
 pub fn rmdir(p: &Path) -> io::Result<()> {
-    unimplemented!();
+    let p = cstr(p)?;
+    cvt(unsafe { linux::rmdir(p.as_ptr()) })?;
+    Ok(())
 }
 
+/*
 pub fn remove_dir_all(path: &Path) -> io::Result<()> {
     unimplemented!();
 }

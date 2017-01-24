@@ -44,6 +44,7 @@ pub use self::types::*;
 
 // include/uapi/linux/fcntl.h
 pub const AT_FDCWD: c_int = -100;
+pub const AT_REMOVEDIR: c_int = 0x200;
 pub const AT_SYMLINK_NOFOLLOW: c_int = 0x100;
 pub const F_DUPFD_CLOEXEC: c_uint = F_LINUX_SPECIFIC_BASE + 6;
 
@@ -356,4 +357,10 @@ pub unsafe fn rename(oldname: *const c_char, newname: *const c_char) -> ssize_t 
 #[inline(always)]
 pub unsafe fn unlink(pathname: *const c_char) -> ssize_t {
     syscall!(UNLINKAT, AT_FDCWD, pathname, 0) as ssize_t
+}
+
+// fs/namei.c
+#[inline(always)]
+pub unsafe fn rmdir(pathname: *const c_char) -> ssize_t {
+    syscall!(UNLINKAT, AT_FDCWD, pathname, AT_REMOVEDIR) as ssize_t
 }
