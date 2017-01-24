@@ -452,11 +452,12 @@ pub fn readlink(p: &Path) -> io::Result<PathBuf> {
     }
 }
 
-/*
 pub fn symlink(src: &Path, dst: &Path) -> io::Result<()> {
-    unimplemented!();
+    let src = cstr(src)?;
+    let dst = cstr(dst)?;
+    cvt(unsafe { linux::symlink(src.as_ptr(), dst.as_ptr()) })?;
+    Ok(())
 }
-*/
 
 pub fn link(src: &Path, dst: &Path) -> io::Result<()> {
     let src = cstr(src)?;

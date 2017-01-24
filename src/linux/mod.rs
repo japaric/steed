@@ -370,3 +370,9 @@ pub unsafe fn rmdir(pathname: *const c_char) -> ssize_t {
 pub unsafe fn link(oldname: *const c_char, newname: *const c_char) -> ssize_t {
     syscall!(LINKAT, AT_FDCWD, oldname, AT_FDCWD, newname, 0) as ssize_t
 }
+
+// fs/namei.c
+#[inline(always)]
+pub unsafe fn symlink(oldname: *const c_char, newname: *const c_char) -> ssize_t {
+    syscall!(SYMLINKAT, oldname, AT_FDCWD, newname) as ssize_t
+}

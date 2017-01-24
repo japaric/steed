@@ -1320,7 +1320,6 @@ pub fn hard_link<P: AsRef<Path>, Q: AsRef<Path>>(src: P, dst: Q) -> io::Result<(
 /// # Ok(())
 /// # }
 /// ```
-#[cfg(issue = "21")]
 #[stable(feature = "rust1", since = "1.0.0")]
 #[rustc_deprecated(since = "1.1.0",
              reason = "replaced with std::os::unix::fs::symlink and \
