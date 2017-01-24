@@ -83,7 +83,6 @@ pub struct Metadata(fs_imp::FileAttr);
 /// IO error during iteration.
 ///
 /// [`io::Result`]: ../io/type.Result.html
-#[cfg(issue = "21")]
 #[stable(feature = "rust1", since = "1.0.0")]
 #[derive(Debug)]
 pub struct ReadDir(fs_imp::ReadDir);
@@ -95,7 +94,6 @@ pub struct ReadDir(fs_imp::ReadDir);
 /// An instance of `DirEntry` represents an entry inside of a directory on the
 /// filesystem. Each entry can be inspected via methods to learn about the full
 /// path or possibly other metadata through per-platform extension traits.
-#[cfg(issue = "21")]
 #[stable(feature = "rust1", since = "1.0.0")]
 pub struct DirEntry(fs_imp::DirEntry);
 
@@ -926,7 +924,6 @@ impl AsInner<fs_imp::FilePermissions> for Permissions {
     fn as_inner(&self) -> &fs_imp::FilePermissions { &self.0 }
 }
 
-#[cfg(issue = "21")]
 #[stable(feature = "rust1", since = "1.0.0")]
 impl Iterator for ReadDir {
     type Item = io::Result<DirEntry>;
@@ -936,7 +933,6 @@ impl Iterator for ReadDir {
     }
 }
 
-#[cfg(issue = "21")]
 impl DirEntry {
     /// Returns the full path to the file that this entry represents.
     ///
@@ -1061,7 +1057,6 @@ impl DirEntry {
     }
 }
 
-#[cfg(issue = "21")]
 #[stable(feature = "dir_entry_debug", since = "1.13.0")]
 impl fmt::Debug for DirEntry {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -1071,7 +1066,6 @@ impl fmt::Debug for DirEntry {
     }
 }
 
-#[cfg(issue = "21")]
 impl AsInner<fs_imp::DirEntry> for DirEntry {
     fn as_inner(&self) -> &fs_imp::DirEntry { &self.0 }
 }
@@ -1574,7 +1568,6 @@ pub fn remove_dir_all<P: AsRef<Path>>(path: P) -> io::Result<()> {
 ///     Ok(())
 /// }
 /// ```
-#[cfg(issue = "21")]
 #[stable(feature = "rust1", since = "1.0.0")]
 pub fn read_dir<P: AsRef<Path>>(path: P) -> io::Result<ReadDir> {
     fs_imp::readdir(path.as_ref()).map(ReadDir)
