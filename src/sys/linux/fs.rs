@@ -323,21 +323,21 @@ impl File {
     pub fn into_fd(self) -> FileDesc { self.0 }
 }
 
-/*
 impl DirBuilder {
     pub fn new() -> DirBuilder {
-        unimplemented!();
+        DirBuilder { mode: 0o777 }
     }
 
     pub fn mkdir(&self, p: &Path) -> io::Result<()> {
-        unimplemented!();
+        let p = cstr(p)?;
+        cvt(unsafe { linux::mkdir(p.as_ptr(), self.mode as u16) })?;
+        Ok(())
     }
 
     pub fn set_mode(&mut self, mode: u32) {
-        unimplemented!();
+        self.mode = mode as mode_t;
     }
 }
-*/
 
 fn cstr(path: &Path) -> io::Result<CString> {
     Ok(CString::new(path.as_os_str().as_bytes())?)
@@ -389,15 +389,20 @@ impl fmt::Debug for File {
 pub fn readdir(p: &Path) -> io::Result<ReadDir> {
     unimplemented!();
 }
+*/
 
 pub fn unlink(p: &Path) -> io::Result<()> {
-    unimplemented!();
+    let p = cstr(p)?;
+    cvt(unsafe { linux::unlink(p.as_ptr()) })?;
+    Ok(())
 }
 
 pub fn rename(old: &Path, new: &Path) -> io::Result<()> {
-    unimplemented!();
+    let old = cstr(old)?;
+    let new = cstr(new)?;
+    cvt(unsafe { linux::rename(old.as_ptr(), new.as_ptr()) })?;
+    Ok(())
 }
-*/
 
 pub fn set_perm(p: &Path, perm: FilePermissions) -> io::Result<()> {
     let p = cstr(p)?;
@@ -405,11 +410,13 @@ pub fn set_perm(p: &Path, perm: FilePermissions) -> io::Result<()> {
     Ok(())
 }
 
-/*
 pub fn rmdir(p: &Path) -> io::Result<()> {
-    unimplemented!();
+    let p = cstr(p)?;
+    cvt(unsafe { linux::rmdir(p.as_ptr()) })?;
+    Ok(())
 }
 
+/*
 pub fn remove_dir_all(path: &Path) -> io::Result<()> {
     unimplemented!();
 }
@@ -445,15 +452,19 @@ pub fn readlink(p: &Path) -> io::Result<PathBuf> {
     }
 }
 
-/*
 pub fn symlink(src: &Path, dst: &Path) -> io::Result<()> {
-    unimplemented!();
+    let src = cstr(src)?;
+    let dst = cstr(dst)?;
+    cvt(unsafe { linux::symlink(src.as_ptr(), dst.as_ptr()) })?;
+    Ok(())
 }
 
 pub fn link(src: &Path, dst: &Path) -> io::Result<()> {
-    unimplemented!();
+    let src = cstr(src)?;
+    let dst = cstr(dst)?;
+    cvt(unsafe { linux::link(src.as_ptr(), dst.as_ptr()) })?;
+    Ok(())
 }
-*/
 
 pub fn stat(p: &Path) -> io::Result<FileAttr> {
     let p = cstr(p)?;

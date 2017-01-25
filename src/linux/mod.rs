@@ -44,6 +44,7 @@ pub use self::types::*;
 
 // include/uapi/linux/fcntl.h
 pub const AT_FDCWD: c_int = -100;
+pub const AT_REMOVEDIR: c_int = 0x200;
 pub const AT_SYMLINK_NOFOLLOW: c_int = 0x100;
 pub const F_DUPFD_CLOEXEC: c_uint = F_LINUX_SPECIFIC_BASE + 6;
 
@@ -344,4 +345,40 @@ pub unsafe fn readlink(path: *const c_char, buf: *mut c_char, bufsiz: c_int)
 #[inline(always)]
 pub unsafe fn fcntl(fd: c_int, cmd: c_uint, arg: c_ulong) -> ssize_t {
     syscall!(FCNTL, fd, cmd, arg) as ssize_t
+}
+
+// fs/namei.c
+#[inline(always)]
+pub unsafe fn rename(oldname: *const c_char, newname: *const c_char) -> ssize_t {
+    syscall!(RENAMEAT, AT_FDCWD, oldname, AT_FDCWD, newname) as ssize_t
+}
+
+// fs/namei.c
+#[inline(always)]
+pub unsafe fn unlink(pathname: *const c_char) -> ssize_t {
+    syscall!(UNLINKAT, AT_FDCWD, pathname, 0) as ssize_t
+}
+
+// fs/namei.c
+#[inline(always)]
+pub unsafe fn rmdir(pathname: *const c_char) -> ssize_t {
+    syscall!(UNLINKAT, AT_FDCWD, pathname, AT_REMOVEDIR) as ssize_t
+}
+
+// fs/namei.c
+#[inline(always)]
+pub unsafe fn link(oldname: *const c_char, newname: *const c_char) -> ssize_t {
+    syscall!(LINKAT, AT_FDCWD, oldname, AT_FDCWD, newname, 0) as ssize_t
+}
+
+// fs/namei.c
+#[inline(always)]
+pub unsafe fn symlink(oldname: *const c_char, newname: *const c_char) -> ssize_t {
+    syscall!(SYMLINKAT, oldname, AT_FDCWD, newname) as ssize_t
+}
+
+// fs/namei.c
+#[inline(always)]
+pub unsafe fn mkdir(pathname: *const c_char, mode: umode_t) -> ssize_t {
+    syscall!(MKDIRAT, AT_FDCWD, pathname, mode) as ssize_t
 }
