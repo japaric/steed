@@ -6,11 +6,15 @@ name = "std"
 version = "0.1.0"
 
 [dependencies.ralloc]
+optional = true
+branch = "sc"
+default-features = false
+features = ["allocator"]
+git = "https://github.com/japaric/ralloc"
+
+[dependencies.naive_ralloc]
+optional = true
 path = "naive_ralloc"
-#branch = "sc"
-#default-features = false
-#features = ["allocator"]
-#git = "https://github.com/japaric/ralloc"
 
 [dependencies.compiler_builtins]
 features = ["mem"]
@@ -18,6 +22,9 @@ git = "https://github.com/rust-lang-nursery/compiler-builtins"
 
 [dependencies.sc]
 git = "https://github.com/japaric/syscall.rs"
+
+[features]
+default = ["ralloc"]
 
 [profile.dev]
 debug_assertions = false

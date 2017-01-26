@@ -43,7 +43,10 @@ extern crate alloc;
 #[macro_reexport(vec, format)]
 extern crate collections as core_collections;
 extern crate compiler_builtins;
+#[cfg(feature = "ralloc")]
 extern crate ralloc;
+#[cfg(feature = "naive_ralloc")]
+extern crate naive_ralloc;
 #[macro_use]
 extern crate sc;
 extern crate std_unicode;

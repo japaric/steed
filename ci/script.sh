@@ -26,11 +26,11 @@ main() {
     )
 
     for example in ${examples[@]}; do
-        cross run --target $TARGET --example $example
+        cross run --target $TARGET --no-default-features --features naive_ralloc --example $example
     done
 
     for example in ${examples[@]}; do
-        cross run --target $TARGET --example $example --release
+        cross run --target $TARGET --no-default-features --features naive_ralloc --example $example --release
     done
 }
 

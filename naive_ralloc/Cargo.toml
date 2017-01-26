@@ -1,5 +1,5 @@
 [package]
-name = "ralloc"
+name = "naive_ralloc"
 version = "0.1.0"
 authors = ["author"]
 

@@ -1,4 +1,5 @@
 #![feature(allocator)]
+#![feature(core_intrinsics)]
 #![feature(linkage)]
 #![no_std]
 #![allocator]
@@ -6,7 +7,7 @@
 #[macro_use]
 extern crate sc;
 
-use core::ptr;
+use core::intrinsics;
 
 // fs/mmap.c
 pub unsafe fn brk(brk: usize) -> usize {
@@ -22,10 +23,10 @@ fn allocate(size: usize) -> *mut u8 {
         let new = aligned + size;
         let actual = brk(new);
         if actual < new {
-            // TODO: Should an allocator actually return 0?
-            return ptr::null_mut();
+            intrinsics::abort();
+        } else {
+            aligned as *mut u8
         }
-        aligned as *mut u8
     }
 }
 
@@ -37,8 +38,7 @@ pub extern fn __rust_allocate(size: usize, _align: usize) -> *mut u8 {
 
 #[linkage = "external"]
 #[no_mangle]
-pub extern fn __rust_deallocate(ptr: *mut u8, _old_size: usize, _align: usize) {
-    let _ = ptr;
+pub extern fn __rust_deallocate(_ptr: *mut u8, _old_size: usize, _align: usize) {
 }
 
 #[linkage = "external"]
@@ -57,6 +57,7 @@ pub extern fn __rust_reallocate(ptr: *mut u8, old_size: usize, size: usize,
             *new.offset(i) = *ptr.offset(i);
         }
     }
+    __rust_deallocate(ptr, old_size, _align);
     new
 }
 
@@ -64,7 +65,7 @@ pub extern fn __rust_reallocate(ptr: *mut u8, old_size: usize, size: usize,
 #[no_mangle]
 pub extern fn __rust_reallocate_inplace(_ptr: *mut u8, old_size: usize,
                                         _size: usize, _align: usize) -> usize {
-    old_size // this api is not supported by libc
+    old_size // this api is not supported by naive_ralloc
 }
 
 #[linkage = "external"]
