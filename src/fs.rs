@@ -17,7 +17,6 @@
 
 #![stable(feature = "rust1", since = "1.0.0")]
 
-#![cfg_attr(not(issue = "21"), allow(unused_imports))]
 use fmt;
 use ffi::OsString;
 use io::{self, SeekFrom, Seek, Read, Write};
@@ -1382,7 +1381,6 @@ pub fn read_link<P: AsRef<Path>>(path: P) -> io::Result<PathBuf> {
 /// # Ok(())
 /// # }
 /// ```
-#[cfg(issue = "21")]
 #[stable(feature = "fs_canonicalize", since = "1.5.0")]
 pub fn canonicalize<P: AsRef<Path>>(path: P) -> io::Result<PathBuf> {
     fs_imp::canonicalize(path.as_ref())

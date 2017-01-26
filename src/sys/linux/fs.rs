@@ -169,7 +169,7 @@ impl Iterator for ReadDir {
                     read_dir.offset = 0;
                     read_dir.buf.clear();
                     let read;
-                    match cvt(linux::getdents64(*read_dir.fd.as_inner(),
+                    match cvt(linux::getdents64(read_dir.fd.raw(),
                                                 read_dir.buf.as_mut_ptr() as *mut _,
                                                 read_dir.buf.capacity() as u32)) {
                         Ok(n) => read = n,
@@ -313,7 +313,7 @@ impl File {
         //
         // The CLOEXEC flag, however, is supported on versions of OSX/BSD/etc
         // that we support, so we only do this on Linux currently.
-        if cfg!(target_os = "linux") {
+        if cfg!(target_os = "linux") && (flags & linux::O_PATH) != linux::O_PATH {
             fd.set_cloexec()?;
         }
 
@@ -563,11 +563,27 @@ pub fn lstat(p: &Path) -> io::Result<FileAttr> {
     Ok(FileAttr { stat: stat })
 }
 
-/*
 pub fn canonicalize(p: &Path) -> io::Result<PathBuf> {
-    unimplemented!();
+    // Adapted from musl 1.1.16.
+    let mut oo = OpenOptions::new();
+    oo.read(true); // Ignored if O_PATH is set.
+    oo.custom_flags(linux::O_PATH);
+
+    let file = File::open(p, &oo)?;
+    let fd_stat = file.file_attr()?;
+    let fd = file.into_fd();
+
+    let canonical = readlink(Path::new(&format!("/proc/self/fd/{}", fd.raw())))?;
+    let canonical_stat = stat(&canonical)?;
+
+    if fd_stat.stat.st_dev != canonical_stat.stat.st_dev ||
+        fd_stat.stat.st_ino != canonical_stat.stat.st_ino
+    {
+        return Err(io::Error::from_raw_os_error(errno::ELOOP));
+    }
+
+    Ok(canonical)
 }
-*/
 
 pub fn copy(from: &Path, to: &Path) -> io::Result<u64> {
     use fs::{File, set_permissions};
