@@ -136,13 +136,11 @@ impl FileType {
     pub fn is(&self, mode: mode_t) -> bool { self.mode & linux::S_IFMT == mode }
 }
 
-/*
 impl FromInner<u32> for FilePermissions {
     fn from_inner(mode: u32) -> FilePermissions {
-        unimplemented!();
+        FilePermissions { mode: mode as mode_t }
     }
 }
-*/
 
 impl fmt::Debug for ReadDir {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -252,7 +250,7 @@ impl OpenOptions {
     pub fn create_new(&mut self, create_new: bool) { self.create_new = create_new; }
 
     pub fn custom_flags(&mut self, flags: i32) { self.custom_flags = flags; }
-    /*pub fn mode(&mut self, mode: u32) { unimplemented!(); }*/
+    pub fn mode(&mut self, mode: u32) { self.mode = mode as mode_t; }
 
     fn get_access_mode(&self) -> io::Result<c_int> {
         match (self.read, self.write, self.append) {
@@ -410,13 +408,11 @@ fn cstr(path: &Path) -> io::Result<CString> {
     Ok(CString::new(path.as_os_str().as_bytes())?)
 }
 
-/*
 impl FromInner<c_int> for File {
     fn from_inner(fd: c_int) -> File {
-        unimplemented!();
+        File(FileDesc::new(fd))
     }
 }
-*/
 
 impl fmt::Debug for File {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

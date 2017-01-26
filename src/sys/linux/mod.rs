@@ -12,6 +12,8 @@ pub mod path;
 pub mod os;
 pub mod time;
 
+pub use os::linux as platform;
+
 use io::ErrorKind;
 use io::Error;
 use io::Result;

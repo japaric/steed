@@ -134,7 +134,6 @@ pub use std_unicode::char;
 mod macros;
 
 pub mod io;
-pub mod os;
 pub mod process;
 
 // Rust 1.14.0
@@ -151,6 +150,8 @@ pub mod fs;
 pub mod num;
 // Rust 1.14.0
 pub mod memchr;
+// Rust 1.14.0
+pub mod os;
 // Rust 1.14.0
 pub mod path;
 // Rust 1.14.0
@@ -170,6 +171,7 @@ mod sys_common {
 }
 mod libc {
     pub use ctypes::*;
+    pub use linux::*;
     pub unsafe fn strlen(cs: *const c_char) -> size_t {
         let mut cs = cs;
         let mut count = 0;
