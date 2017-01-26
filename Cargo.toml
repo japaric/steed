@@ -6,10 +6,11 @@ name = "std"
 version = "0.1.0"
 
 [dependencies.ralloc]
-branch = "sc"
-default-features = false
-features = ["allocator"]
-git = "https://github.com/japaric/ralloc"
+path = "naive_ralloc"
+#branch = "sc"
+#default-features = false
+#features = ["allocator"]
+#git = "https://github.com/japaric/ralloc"
 
 [dependencies.compiler_builtins]
 features = ["mem"]
