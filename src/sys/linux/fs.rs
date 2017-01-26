@@ -484,15 +484,26 @@ pub fn rmdir(p: &Path) -> io::Result<()> {
     Ok(())
 }
 
-/*
 pub fn remove_dir_all(path: &Path) -> io::Result<()> {
-    unimplemented!();
+    let filetype = lstat(path)?.file_type();
+    if filetype.is_symlink() {
+        unlink(path)
+    } else {
+        remove_dir_all_recursive(path)
+    }
 }
 
 fn remove_dir_all_recursive(path: &Path) -> io::Result<()> {
-    unimplemented!();
+    for child in readdir(path)? {
+        let child = child?;
+        if child.file_type()?.is_dir() {
+            remove_dir_all_recursive(&child.path())?;
+        } else {
+            unlink(&child.path())?;
+        }
+    }
+    rmdir(path)
 }
-*/
 
 pub fn readlink(p: &Path) -> io::Result<PathBuf> {
     let c_path = cstr(p)?;
