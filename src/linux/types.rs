@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types)]
 
-use ctypes::{c_int, c_long, c_longlong, c_uint, c_ushort};
+use ctypes::*;
 
 pub use super::arch::stat64;
 
@@ -30,6 +30,17 @@ type __kernel_uid_t = c_uint;
 pub struct timespec {
     pub tv_sec: time_t,
     pub tv_nsec: c_long,
+}
+
+// include/linux/dirent.h
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub struct linux_dirent64 {
+    pub d_ino: u64,
+    pub d_off: i64,
+    pub d_reclen: c_ushort,
+    pub d_type: c_uchar,
+    pub d_name: [c_char; 0],
 }
 
 // Where from?

@@ -39,6 +39,7 @@ pub type c_ulong = u32;
           target_arch = "x86_64"))]
 pub type c_ulong = u64;
 
+pub type c_uchar = u8;
 pub type c_int = i32;
 pub type c_uint = u32;
 pub type c_ushort = u16;

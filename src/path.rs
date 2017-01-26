@@ -1897,7 +1897,6 @@ impl Path {
     /// [`io::Result`]: ../io/type.Result.html
     /// [`DirEntry`]: ../fs/struct.DirEntry.html
     /// [`fs::read_dir`]: ../fs/fn.read_dir.html
-    #[cfg(issue = "21")]
     #[stable(feature = "path_ext", since = "1.5.0")]
     pub fn read_dir(&self) -> io::Result<fs::ReadDir> {
         fs::read_dir(self)

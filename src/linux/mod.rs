@@ -37,7 +37,7 @@ mod arch;
 pub mod types;
 
 use core::intrinsics;
-use ctypes::{c_char, c_int, c_uint, c_ulong, size_t, ssize_t};
+use ctypes::*;
 
 pub use self::arch::*;
 pub use self::types::*;
@@ -59,10 +59,14 @@ pub const O_RDWR: c_int = 0o00000002;
 pub const O_WRONLY: c_int = 0o00000001;
 
 // include/uapi/linux/stat.h
-pub const S_IFREG: c_uint = 0o0100000;
-pub const S_IFLNK: c_uint = 0o0120000;
-pub const S_IFDIR: c_uint = 0o0040000;
 pub const S_IFMT: c_uint = 0o00170000;
+pub const S_IFSOCK: c_uint = 0o0140000;
+pub const S_IFLNK: c_uint = 0o0120000;
+pub const S_IFREG: c_uint = 0o0100000;
+pub const S_IFBLK: c_uint = 0o0060000;
+pub const S_IFDIR: c_uint = 0o0040000;
+pub const S_IFCHR: c_uint = 0o0020000;
+pub const S_IFIFO: c_uint = 0o0010000;
 
 // include/uapi/linux/time.h
 pub const CLOCK_MONOTONIC: clockid_t = 1;
@@ -72,6 +76,15 @@ pub const CLOCK_REALTIME: clockid_t = 0;
 pub const SEEK_SET: c_uint = 0;
 pub const SEEK_CUR: c_uint = 1;
 pub const SEEK_END: c_uint = 2;
+
+// include/linux/fs.h
+pub const DT_FIFO: c_uchar = 1;
+pub const DT_CHR: c_uchar = 2;
+pub const DT_DIR: c_uchar = 4;
+pub const DT_BLK: c_uchar = 6;
+pub const DT_REG: c_uchar = 8;
+pub const DT_LNK: c_uchar = 10;
+pub const DT_SOCK: c_uchar = 12;
 
 // kernel/time/posix-timers.c
 #[inline(always)]
@@ -381,4 +394,11 @@ pub unsafe fn symlink(oldname: *const c_char, newname: *const c_char) -> ssize_t
 #[inline(always)]
 pub unsafe fn mkdir(pathname: *const c_char, mode: umode_t) -> ssize_t {
     syscall!(MKDIRAT, AT_FDCWD, pathname, mode) as ssize_t
+}
+
+// fs/readdir.c
+pub unsafe fn getdents64(fd: c_int, dirent: *mut linux_dirent64, count: c_uint)
+    -> ssize_t
+{
+    syscall!(GETDENTS64, fd, dirent, count) as ssize_t
 }

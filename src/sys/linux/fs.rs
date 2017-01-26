@@ -16,18 +16,47 @@ use sys::fd::FileDesc;
 use sys::time::SystemTime;
 use sys::{AsInner, FromInner};
 
-#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-enum Dir { }
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-#[allow(non_camel_case_types)]
-enum dirent64 { }
-
 pub struct File(FileDesc);
 
-#[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub enum ReadDir { }
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub enum DirEntry { }
+pub struct ReadDir(Option<ReadDirInner>);
+
+struct ReadDirInner {
+    fd: FileDesc,
+    root: PathBuf, // TODO: Replace by a `Arc<PathBuf>`
+    buf: Vec<u8>,
+    offset: usize,
+}
+
+impl ReadDir {
+    fn new(fd: FileDesc, root: PathBuf) -> ReadDir {
+        ReadDir(Some(ReadDirInner {
+            fd: fd,
+            root: root,
+            buf: Vec::with_capacity(32768),
+            offset: 0,
+        }))
+    }
+}
+
+pub struct DirEntry {
+    entry: linux::linux_dirent64,
+    name: OsString,
+    root: PathBuf,
+}
+
+impl DirEntry {
+    pub unsafe fn from_raw(entry: *const linux::linux_dirent64,
+                           root: PathBuf)
+        -> DirEntry
+    {
+        let name = CStr::from_ptr((*entry).d_name.as_ptr()).to_bytes();
+        DirEntry {
+            entry: *entry,
+            name: OsStr::from_bytes(name).into(),
+            root: root,
+        }
+    }
+}
 
 #[derive(Clone)]
 pub struct FileAttr {
@@ -113,52 +142,90 @@ impl FromInner<u32> for FilePermissions {
         unimplemented!();
     }
 }
+*/
 
 impl fmt::Debug for ReadDir {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        unimplemented!();
+        match self.0 {
+            Some(ref read_dir) => fmt::Debug::fmt(&read_dir.root, f),
+            None => fmt::Debug::fmt("<exhausted>", f),
+        }
     }
 }
 
 impl Iterator for ReadDir {
     type Item = io::Result<DirEntry>;
 
-    fn next(&mut self) -> Option<io::Result<DirEntry>> { unimplemented!(); }
-}
-*/
+    fn next(&mut self) -> Option<io::Result<DirEntry>> {
+        let res;
+        'empty: loop {
+            let read_dir: &mut ReadDirInner = if let Some(ref mut d) = self.0 {
+                d
+            } else {
+                return None;
+            };
+            unsafe {
+                if read_dir.offset == read_dir.buf.len() {
+                    read_dir.offset = 0;
+                    read_dir.buf.clear();
+                    let read;
+                    match cvt(linux::getdents64(*read_dir.fd.as_inner(),
+                                                read_dir.buf.as_mut_ptr() as *mut _,
+                                                read_dir.buf.capacity() as u32)) {
+                        Ok(n) => read = n,
+                        Err(e) => {
+                            res = Some(Err(e));
+                            break 'empty;
+                        }
+                    }
+                    if read == 0 {
+                        res = None;
+                        break 'empty;
+                    }
+                    assert!(read <= read_dir.buf.capacity());
+                    read_dir.buf.set_len(read);
+                }
+                let dent = &read_dir.buf[read_dir.offset]
+                    as *const u8 as *const linux::linux_dirent64;
+                read_dir.offset += (*dent).d_reclen as usize;
 
-impl Drop for Dir {
-    fn drop(&mut self) {
-        unimplemented!();
+                return Some(Ok(DirEntry::from_raw(dent, read_dir.root.clone())));
+            }
+        }
+        self.0 = None;
+        res
     }
 }
 
 impl DirEntry {
-    /*
     pub fn path(&self) -> PathBuf {
-        unimplemented!();
+        self.root.join(&self.name)
     }
 
     pub fn file_name(&self) -> OsString {
-        OsStr::from_bytes(self.name_bytes()).to_os_string()
+        self.name.clone()
     }
 
     pub fn metadata(&self) -> io::Result<FileAttr> {
-        unimplemented!();
+        lstat(&self.path())
     }
 
     pub fn file_type(&self) -> io::Result<FileType> {
-        unimplemented!();
+        match self.entry.d_type {
+            linux::DT_CHR => Ok(FileType { mode: linux::S_IFCHR }),
+            linux::DT_FIFO => Ok(FileType { mode: linux::S_IFIFO }),
+            linux::DT_LNK => Ok(FileType { mode: linux::S_IFLNK }),
+            linux::DT_REG => Ok(FileType { mode: linux::S_IFREG }),
+            linux::DT_SOCK => Ok(FileType { mode: linux::S_IFSOCK }),
+            linux::DT_DIR => Ok(FileType { mode: linux::S_IFDIR }),
+            linux::DT_BLK => Ok(FileType { mode: linux::S_IFBLK }),
+            _ => lstat(&self.path()).map(|m| m.file_type()),
+        }
     }
 
     pub fn ino(&self) -> u64 {
-        unimplemented!();
+        self.entry.d_ino as u64
     }
-
-    fn name_bytes(&self) -> &[u8] {
-        unimplemented!();
-    }
-    */
 }
 
 impl OpenOptions {
@@ -385,11 +452,12 @@ impl fmt::Debug for File {
     }
 }
 
-/*
 pub fn readdir(p: &Path) -> io::Result<ReadDir> {
-    unimplemented!();
+    let mut oo = OpenOptions::new();
+    oo.read(true);
+    oo.custom_flags(linux::O_DIRECTORY);
+    Ok(ReadDir::new(File::open(p, &oo)?.into_fd(), p.into()))
 }
-*/
 
 pub fn unlink(p: &Path) -> io::Result<()> {
     let p = cstr(p)?;
