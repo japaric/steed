@@ -1,7 +1,5 @@
 pub mod ext;
-#[cfg_attr(not(issue = "21"), allow(unused))]
 pub mod fd;
-#[cfg_attr(not(issue = "21"), allow(unused))]
 pub mod fs;
 pub mod io;
 pub mod memchr;

@@ -3,7 +3,7 @@
 use fs;
 use os::raw;
 use sys;
-use sys_common::{self, AsInner, FromInner, IntoInner};
+use sys_common::{AsInner, FromInner, IntoInner};
 
 #[stable(feature = "steed", since = "1.0.0")]
 pub type RawFd = raw::c_int;
