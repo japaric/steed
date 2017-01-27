@@ -11,5 +11,5 @@ pub fn error_string(errno: i32) -> String {
 }
 
 pub fn exit(code: i32) -> ! {
-    unsafe { linux::exit(code) }
+    unsafe { linux::exit_group(code) }
 }

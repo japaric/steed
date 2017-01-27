@@ -102,8 +102,8 @@ pub unsafe fn close(fd: c_int) -> ssize_t {
 
 // kernel/exit.c
 #[inline(always)]
-pub unsafe fn exit(code: c_int) -> ! {
-    syscall!(EXIT, code);
+pub unsafe fn exit_group(code: c_int) -> ! {
+    syscall!(EXIT_GROUP, code);
 
     intrinsics::unreachable()
 }

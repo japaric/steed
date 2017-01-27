@@ -198,7 +198,7 @@ pub extern "C" fn start(sp: &'static Stack) -> ! {
         fn main(argc: isize, argv: *const *const u8) -> isize;
     }
 
-    unsafe { ::linux::exit(main(sp.argc(), sp.argv()) as i32) }
+    unsafe { ::linux::exit_group(main(sp.argc(), sp.argv()) as i32) }
 }
 
 // This is how the `start` lang item actually works:
