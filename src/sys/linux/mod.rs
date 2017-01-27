@@ -7,6 +7,8 @@ pub mod memchr;
 pub mod os_str;
 // Rust 1.14.0
 pub mod path;
+pub mod pipe;
+pub mod process;
 pub mod os;
 pub mod time;
 
@@ -68,3 +70,5 @@ pub fn cvt_r<F: FnMut() -> isize>(mut f: F) -> Result<usize> {
         }
     }
 }
+
+pub fn cleanup() { }

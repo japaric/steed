@@ -134,7 +134,6 @@ pub use std_unicode::char;
 mod macros;
 
 pub mod io;
-pub mod process;
 
 // Rust 1.14.0
 pub mod ascii;
@@ -154,6 +153,8 @@ pub mod memchr;
 pub mod os;
 // Rust 1.14.0
 pub mod path;
+// Rust 1.14.0
+pub mod process;
 // Rust 1.14.0
 pub mod time;
 
