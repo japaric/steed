@@ -136,13 +136,11 @@ impl FileType {
     pub fn is(&self, mode: mode_t) -> bool { self.mode & linux::S_IFMT == mode }
 }
 
-/*
 impl FromInner<u32> for FilePermissions {
     fn from_inner(mode: u32) -> FilePermissions {
-        unimplemented!();
+        FilePermissions { mode: mode as mode_t }
     }
 }
-*/
 
 impl fmt::Debug for ReadDir {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -169,7 +167,7 @@ impl Iterator for ReadDir {
                     read_dir.offset = 0;
                     read_dir.buf.clear();
                     let read;
-                    match cvt(linux::getdents64(*read_dir.fd.as_inner(),
+                    match cvt(linux::getdents64(read_dir.fd.raw(),
                                                 read_dir.buf.as_mut_ptr() as *mut _,
                                                 read_dir.buf.capacity() as u32)) {
                         Ok(n) => read = n,
@@ -252,7 +250,7 @@ impl OpenOptions {
     pub fn create_new(&mut self, create_new: bool) { self.create_new = create_new; }
 
     pub fn custom_flags(&mut self, flags: i32) { self.custom_flags = flags; }
-    /*pub fn mode(&mut self, mode: u32) { unimplemented!(); }*/
+    pub fn mode(&mut self, mode: u32) { self.mode = mode as mode_t; }
 
     fn get_access_mode(&self) -> io::Result<c_int> {
         match (self.read, self.write, self.append) {
@@ -313,7 +311,7 @@ impl File {
         //
         // The CLOEXEC flag, however, is supported on versions of OSX/BSD/etc
         // that we support, so we only do this on Linux currently.
-        if cfg!(target_os = "linux") {
+        if cfg!(target_os = "linux") && (flags & linux::O_PATH) != linux::O_PATH {
             fd.set_cloexec()?;
         }
 
@@ -410,13 +408,11 @@ fn cstr(path: &Path) -> io::Result<CString> {
     Ok(CString::new(path.as_os_str().as_bytes())?)
 }
 
-/*
 impl FromInner<c_int> for File {
     fn from_inner(fd: c_int) -> File {
-        unimplemented!();
+        File(FileDesc::new(fd))
     }
 }
-*/
 
 impl fmt::Debug for File {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -563,11 +559,27 @@ pub fn lstat(p: &Path) -> io::Result<FileAttr> {
     Ok(FileAttr { stat: stat })
 }
 
-/*
 pub fn canonicalize(p: &Path) -> io::Result<PathBuf> {
-    unimplemented!();
+    // Adapted from musl 1.1.16.
+    let mut oo = OpenOptions::new();
+    oo.read(true); // Ignored if O_PATH is set.
+    oo.custom_flags(linux::O_PATH);
+
+    let file = File::open(p, &oo)?;
+    let fd_stat = file.file_attr()?;
+    let fd = file.into_fd();
+
+    let canonical = readlink(Path::new(&format!("/proc/self/fd/{}", fd.raw())))?;
+    let canonical_stat = stat(&canonical)?;
+
+    if fd_stat.stat.st_dev != canonical_stat.stat.st_dev ||
+        fd_stat.stat.st_ino != canonical_stat.stat.st_ino
+    {
+        return Err(io::Error::from_raw_os_error(errno::ELOOP));
+    }
+
+    Ok(canonical)
 }
-*/
 
 pub fn copy(from: &Path, to: &Path) -> io::Result<u64> {
     use fs::{File, set_permissions};

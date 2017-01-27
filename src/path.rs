@@ -99,7 +99,6 @@
 
 #![stable(feature = "rust1", since = "1.0.0")]
 
-#![cfg_attr(not(issue = "21"), allow(unused_imports))]
 use ascii::*;
 use borrow::{Borrow, Cow};
 use cmp;
@@ -1871,7 +1870,6 @@ impl Path {
     /// This is an alias to [`fs::canonicalize`].
     ///
     /// [`fs::canonicalize`]: ../fs/fn.canonicalize.html
-    #[cfg(issue = "21")]
     #[stable(feature = "path_ext", since = "1.5.0")]
     pub fn canonicalize(&self) -> io::Result<PathBuf> {
         fs::canonicalize(self)
