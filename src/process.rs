@@ -79,42 +79,44 @@ use sys_common::{AsInner, AsInnerMut, FromInner, IntoInner};
 /// [`Command`]: struct.Command.html
 /// [`Drop`]: ../../core/ops/trait.Drop.html
 /// [`wait`]: #method.wait
-#[cfg(issue = "11")]
 #[stable(feature = "process", since = "1.0.0")]
 pub struct Child {
     handle: imp::Process,
 
     /// The handle for writing to the child's stdin, if it has been captured
+    #[cfg(issue = "11")]
     #[stable(feature = "process", since = "1.0.0")]
     pub stdin: Option<ChildStdin>,
 
     /// The handle for reading from the child's stdout, if it has been captured
+    #[cfg(issue = "11")]
     #[stable(feature = "process", since = "1.0.0")]
     pub stdout: Option<ChildStdout>,
 
     /// The handle for reading from the child's stderr, if it has been captured
+    #[cfg(issue = "11")]
     #[stable(feature = "process", since = "1.0.0")]
     pub stderr: Option<ChildStderr>,
 }
 
-#[cfg(issue = "11")]
 impl AsInner<imp::Process> for Child {
     fn as_inner(&self) -> &imp::Process { &self.handle }
 }
 
-#[cfg(issue = "11")]
 impl FromInner<(imp::Process, imp::StdioPipes)> for Child {
+    #[cfg_attr(not(issue = "11"), allow(unused_variables))]
     fn from_inner((handle, io): (imp::Process, imp::StdioPipes)) -> Child {
         Child {
             handle: handle,
+            /*
             stdin: io.stdin.map(ChildStdin::from_inner),
             stdout: io.stdout.map(ChildStdout::from_inner),
             stderr: io.stderr.map(ChildStderr::from_inner),
+            */
         }
     }
 }
 
-#[cfg(issue = "11")]
 impl IntoInner<imp::Process> for Child {
     fn into_inner(self) -> imp::Process { self.handle }
 }
@@ -256,13 +258,11 @@ impl FromInner<AnonPipe> for ChildStderr {
 ///
 /// let hello = output.stdout;
 /// ```
-#[cfg(issue = "11")]
 #[stable(feature = "process", since = "1.0.0")]
 pub struct Command {
     inner: imp::Command,
 }
 
-#[cfg(issue = "11")]
 impl Command {
     /// Constructs a new `Command` for launching the program at
     /// path `program`, with the following default configuration:
@@ -351,6 +351,7 @@ impl Command {
     ///         .spawn()
     ///         .expect("ls command failed to start");
     /// ```
+    #[cfg(issue = "11")]
     #[stable(feature = "process", since = "1.0.0")]
     pub fn env<K, V>(&mut self, key: K, val: V) -> &mut Command
         where K: AsRef<OsStr>, V: AsRef<OsStr>
@@ -373,6 +374,7 @@ impl Command {
     ///         .spawn()
     ///         .expect("ls command failed to start");
     /// ```
+    #[cfg(issue = "11")]
     #[stable(feature = "process", since = "1.0.0")]
     pub fn env_remove<K: AsRef<OsStr>>(&mut self, key: K) -> &mut Command {
         self.inner.env_remove(key.as_ref());
@@ -393,6 +395,7 @@ impl Command {
     ///         .spawn()
     ///         .expect("ls command failed to start");
     /// ```
+    #[cfg(issue = "11")]
     #[stable(feature = "process", since = "1.0.0")]
     pub fn env_clear(&mut self) -> &mut Command {
         self.inner.env_clear();
@@ -413,6 +416,7 @@ impl Command {
     ///         .spawn()
     ///         .expect("ls command failed to start");
     /// ```
+    #[cfg(issue = "11")]
     #[stable(feature = "process", since = "1.0.0")]
     pub fn current_dir<P: AsRef<Path>>(&mut self, dir: P) -> &mut Command {
         self.inner.cwd(dir.as_ref().as_ref());
@@ -433,6 +437,7 @@ impl Command {
     ///         .spawn()
     ///         .expect("ls command failed to start");
     /// ```
+    #[cfg(issue = "11")]
     #[stable(feature = "process", since = "1.0.0")]
     pub fn stdin(&mut self, cfg: Stdio) -> &mut Command {
         self.inner.stdin(cfg.0);
@@ -453,6 +458,7 @@ impl Command {
     ///         .spawn()
     ///         .expect("ls command failed to start");
     /// ```
+    #[cfg(issue = "11")]
     #[stable(feature = "process", since = "1.0.0")]
     pub fn stdout(&mut self, cfg: Stdio) -> &mut Command {
         self.inner.stdout(cfg.0);
@@ -473,6 +479,7 @@ impl Command {
     ///         .spawn()
     ///         .expect("ls command failed to start");
     /// ```
+    #[cfg(issue = "11")]
     #[stable(feature = "process", since = "1.0.0")]
     pub fn stderr(&mut self, cfg: Stdio) -> &mut Command {
         self.inner.stderr(cfg.0);
@@ -520,6 +527,7 @@ impl Command {
     ///
     /// assert!(output.status.success());
     /// ```
+    #[cfg(issue = "11")]
     #[stable(feature = "process", since = "1.0.0")]
     pub fn output(&mut self) -> io::Result<Output> {
         self.inner.spawn(imp::Stdio::MakePipe, false).map(Child::from_inner)
@@ -552,7 +560,6 @@ impl Command {
     }
 }
 
-#[cfg(issue = "11")]
 #[stable(feature = "rust1", since = "1.0.0")]
 impl fmt::Debug for Command {
     /// Format the program and arguments of a Command for display. Any
@@ -563,12 +570,10 @@ impl fmt::Debug for Command {
     }
 }
 
-#[cfg(issue = "11")]
 impl AsInner<imp::Command> for Command {
     fn as_inner(&self) -> &imp::Command { &self.inner }
 }
 
-#[cfg(issue = "11")]
 impl AsInnerMut<imp::Command> for Command {
     fn as_inner_mut(&mut self) -> &mut imp::Command { &mut self.inner }
 }
@@ -645,12 +650,10 @@ impl FromInner<imp::Stdio> for Stdio {
 }
 
 /// Describes the result of a process after it has terminated.
-#[cfg(issue = "11")]
 #[derive(PartialEq, Eq, Clone, Copy, Debug)]
 #[stable(feature = "process", since = "1.0.0")]
 pub struct ExitStatus(imp::ExitStatus);
 
-#[cfg(issue = "11")]
 impl ExitStatus {
     /// Was termination successful? Signal termination not considered a success,
     /// and success is defined as a zero exit status.
@@ -687,19 +690,16 @@ impl ExitStatus {
     }
 }
 
-#[cfg(issue = "11")]
 impl AsInner<imp::ExitStatus> for ExitStatus {
     fn as_inner(&self) -> &imp::ExitStatus { &self.0 }
 }
 
-#[cfg(issue = "11")]
 impl FromInner<imp::ExitStatus> for ExitStatus {
     fn from_inner(s: imp::ExitStatus) -> ExitStatus {
         ExitStatus(s)
     }
 }
 
-#[cfg(issue = "11")]
 #[stable(feature = "process", since = "1.0.0")]
 impl fmt::Display for ExitStatus {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -707,7 +707,6 @@ impl fmt::Display for ExitStatus {
     }
 }
 
-#[cfg(issue = "11")]
 impl Child {
     /// Forces the child to exit. This is equivalent to sending a
     /// SIGKILL on unix platforms.
@@ -726,6 +725,7 @@ impl Child {
     ///     println!("yes command didn't start");
     /// }
     /// ```
+    #[cfg(issue = "11")]
     #[stable(feature = "process", since = "1.0.0")]
     pub fn kill(&mut self) -> io::Result<()> {
         self.handle.kill()
@@ -778,7 +778,9 @@ impl Child {
     /// ```
     #[stable(feature = "process", since = "1.0.0")]
     pub fn wait(&mut self) -> io::Result<ExitStatus> {
+        /*
         drop(self.stdin.take());
+        */
         self.handle.wait().map(ExitStatus)
     }
 
@@ -814,6 +816,7 @@ impl Child {
     /// assert!(output.status.success());
     /// ```
     ///
+    #[cfg(issue = "11")]
     #[stable(feature = "process", since = "1.0.0")]
     pub fn wait_with_output(mut self) -> io::Result<Output> {
         drop(self.stdin.take());

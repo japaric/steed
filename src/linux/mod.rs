@@ -34,12 +34,15 @@ mod arch;
 #[path = "x86_64.rs"]
 mod arch;
 
-pub mod types;
+mod libc;
+mod types;
 
 use core::intrinsics;
 use ctypes::*;
+use ptr;
 
 pub use self::arch::*;
+pub use self::libc::*;
 pub use self::types::*;
 
 // include/uapi/linux/fcntl.h
@@ -397,8 +400,98 @@ pub unsafe fn mkdir(pathname: *const c_char, mode: umode_t) -> ssize_t {
 }
 
 // fs/readdir.c
+#[inline(always)]
 pub unsafe fn getdents64(fd: c_int, dirent: *mut linux_dirent64, count: c_uint)
     -> ssize_t
 {
     syscall!(GETDENTS64, fd, dirent, count) as ssize_t
+}
+
+// kernel/fork.c
+#[inline(always)]
+pub unsafe fn clone(clone_flags: c_ulong,
+                    newsp: c_ulong,
+                    parent_tidptr: *mut c_int,
+                    tls: c_ulong,
+                    child_tidptr: *mut c_int)
+    -> ssize_t
+{
+    #[cfg(any(target_arch = "aarch64",
+              target_arch = "arm",
+              target_arch = "mips",
+              target_arch = "mips64",
+              target_arch = "powerpc",
+              target_arch = "powerpc64",
+              target_arch = "x86"))]
+    #[inline(always)]
+    unsafe fn clone(clone_flags: c_ulong,
+                    newsp: c_ulong,
+                    parent_tidptr: *mut c_int,
+                    tls: c_ulong,
+                    child_tidptr: *mut c_int)
+        -> ssize_t
+    {
+        syscall!(CLONE, clone_flags, newsp, parent_tidptr, tls, child_tidptr) as ssize_t
+    }
+    #[cfg(any(target_arch = "x86_64"))]
+    #[inline(always)]
+    unsafe fn clone(clone_flags: c_ulong,
+                    newsp: c_ulong,
+                    parent_tidptr: *mut c_int,
+                    tls: c_ulong,
+                    child_tidptr: *mut c_int)
+        -> ssize_t
+    {
+        syscall!(CLONE, clone_flags, newsp, parent_tidptr, child_tidptr, tls) as ssize_t
+    }
+    clone(clone_flags, newsp, parent_tidptr, tls, child_tidptr)
+}
+
+// kernel/fork.c
+#[inline(always)]
+pub unsafe fn fork() -> ssize_t {
+    clone(SIGCHLD, 0, ptr::null_mut(), 0, ptr::null_mut())
+}
+
+// fs/exec.c
+#[inline(always)]
+pub unsafe fn execve(filename: *const c_char,
+                     argv: *const *const c_char,
+                     envp: *const *const c_char)
+    -> ssize_t
+{
+    syscall!(EXECVE, filename, argv, envp) as ssize_t
+}
+
+// fs/pipe.c
+#[inline(always)]
+pub unsafe fn pipe2(filedes: *mut c_int, flags: c_int) -> ssize_t {
+    syscall!(PIPE2, filedes, flags) as ssize_t
+}
+
+// fs/pipe.c
+#[inline(always)]
+pub unsafe fn pipe(filedes: *mut c_int) -> ssize_t {
+    #[inline(always)]
+    #[cfg(not(target_arch = "aarch64"))]
+    unsafe fn pipe(filedes: *mut c_int) -> ssize_t {
+        syscall!(PIPE, filedes) as ssize_t
+    }
+    #[inline(always)]
+    #[cfg(target_arch = "aarch64")]
+    unsafe fn pipe(filedes: *mut c_int) -> ssize_t {
+        pipe2(filedes, 0)
+    }
+    pipe(filedes)
+}
+
+// kernel/exit.c
+#[inline(always)]
+pub unsafe fn wait4(upid: pid_t,
+                    stat_addr: *mut c_int,
+                    options: c_int,
+                    ru: *mut rusage)
+    -> ssize_t
+{
+    syscall!(WAIT4, upid, stat_addr, options, ru) as ssize_t
 }

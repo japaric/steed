@@ -10,6 +10,7 @@ pub type clockid_t = __kernel_clockid_t;
 pub type loff_t = __kernel_loff_t;
 pub type mode_t = __kernel_mode_t;
 pub type nlink_t = u32;
+pub type pid_t = __kernel_pid_t;
 pub type time_t = __kernel_time_t;
 pub type umode_t = c_ushort;
 
@@ -21,6 +22,7 @@ type __kernel_loff_t = c_longlong;
 type __kernel_long_t = c_long;
 type __kernel_mode_t = c_uint;
 type __kernel_off64_t = c_longlong;
+type __kernel_pid_t = c_int;
 type __kernel_time_t = __kernel_long_t;
 type __kernel_uid_t = c_uint;
 
@@ -41,6 +43,10 @@ pub struct linux_dirent64 {
     pub d_reclen: c_ushort,
     pub d_type: c_uchar,
     pub d_name: [c_char; 0],
+}
+
+pub struct rusage {
+    _unimplemented: (),
 }
 
 // Where from?
