@@ -13,8 +13,22 @@ pub const O_PATH: c_int = 0o010000000;
 pub const O_TRUNC: c_int = 0o00001000;
 
 pub const FIOCLEX: c_uint = 0x5451;
+pub const FIONBIO: c_uint = 0x5421;
+
+// include/uapi/asm-generic/socket.h
+pub const SO_RCVTIMEO: c_int = 20;
+pub const SO_SNDTIMEO: c_int = 21;
+pub const SO_ERROR: c_int = 4;
+pub const SO_REUSEADDR: c_int = 2;
+pub const SO_BROADCAST: c_int = 6;
 
 pub const SIGCHLD: c_ulong = 17;
+
+// include/linux/net.h
+pub const SOCK_STREAM: c_int = 1;
+pub const SOCK_DGRAM: c_int = 2;
+
+pub const SOL_SOCKET: c_int = 1;
 
 // include/linux/types.h
 pub type ino_t = __kernel_ino_t;

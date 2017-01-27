@@ -12,8 +12,21 @@ pub const O_PATH: c_int = 0o010000000;
 pub const O_TRUNC: c_int = 0x0200;
 
 pub const FIOCLEX: c_uint = 0x6601;
+pub const FIONBIO: c_uint = 0x667e;
+
+pub const SO_RCVTIMEO: c_int = 0x1006;
+pub const SO_SNDTIMEO: c_int = 0x1005;
+pub const SO_ERROR: c_int = 0x1007;
+pub const SO_REUSEADDR: c_int = 0x0004;
+pub const SO_BROADCAST: c_int = 0x0020;
 
 pub const SIGCHLD: c_ulong = 18;
+
+// arch/mips/include/asm/socket.h
+pub const SOCK_DGRAM: c_int = 1;
+pub const SOCK_STREAM: c_int = 2;
+
+pub const SOL_SOCKET: c_int = 0xffff;
 
 #[derive(Clone, Copy)]
 #[repr(C)]

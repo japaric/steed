@@ -13,8 +13,44 @@ pub const O_PATH: c_int = 0o010000000;
 pub const O_TRUNC: c_int = 0o00001000;
 
 pub const FIOCLEX: c_uint = 0x5451;
+pub const FIONBIO: c_uint = 0x5421;
+
+// include/uapi/asm-generic/socket.h
+pub const SO_RCVTIMEO: c_int = 20;
+pub const SO_SNDTIMEO: c_int = 21;
+pub const SO_ERROR: c_int = 4;
+pub const SO_REUSEADDR: c_int = 2;
+pub const SO_BROADCAST: c_int = 6;
 
 pub const SIGCHLD: c_ulong = 17;
+
+// include/linux/net.h
+pub const SOCK_STREAM: c_int = 1;
+pub const SOCK_DGRAM: c_int = 2;
+
+pub const SOL_SOCKET: c_int = 1;
+
+// include/uapi/linux/net.h
+pub const SYS_SOCKET: c_ulong = 1;
+pub const SYS_BIND: c_ulong = 2;
+pub const SYS_CONNECT: c_ulong = 3;
+pub const SYS_LISTEN: c_ulong = 4;
+pub const SYS_ACCEPT: c_ulong = 5;
+pub const SYS_GETSOCKNAME: c_ulong = 6;
+pub const SYS_GETPEERNAME: c_ulong = 7;
+pub const SYS_SOCKETPAIR: c_ulong = 8;
+// pub const SYS_SEND: c_ulong =        9;
+// pub const SYS_RECV: c_ulong =        10;
+pub const SYS_SENDTO: c_ulong = 11;
+pub const SYS_RECVFROM: c_ulong = 12;
+pub const SYS_SHUTDOWN: c_ulong = 13;
+pub const SYS_SETSOCKOPT: c_ulong = 14;
+pub const SYS_GETSOCKOPT: c_ulong = 15;
+// pub const SYS_SENDMSG: c_ulong =     16;
+// pub const SYS_RECVMSG: c_ulong =     17;
+pub const SYS_ACCEPT4: c_ulong = 18;
+// pub const SYS_RECVMMSG: c_ulong =    19;
+// pub const SYS_SENDMMSG: c_ulong =    20;
 
 // include/linux/types.h
 pub type ino_t = __kernel_ino_t;
