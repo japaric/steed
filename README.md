@@ -9,6 +9,8 @@
 - [Features](#features)
 - [Supported architectures](#supported-architectures)
 - [Usage](#usage)
+  - [On x86_64 Linux](#on-x86_64-linux)
+  - [On other systems](#on-other-systems)
 - [Current functionality](#current-functionality)
 - [Contributing](#contributing)
 - [License](#license)
@@ -67,21 +69,21 @@ fn main() {}
 ```
 
 ```
-# cross build --target x86_64-unknown-linux-steed --release --example zero
-$ ./zero; echo $?
-0
+# xargo build --target x86_64-unknown-linux-steed --release --example zero
+$ ./hello
+Hello, world!
 
-$ strip -s zero
+$ strip -s hello
 
-$ file zero
-zero: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, stripped
+$ file hello
+hello: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, stripped
 
 $ size zero
    text    data     bss     dec     hex filename
-     21       0       0      21      15 zero
+    192       0      16     208      d0 hello
 
-$ ls -l zero
--rwxr-xr-x 1 japaric japaric 408 Jan 01 00:00 zero
+$ ls -l hello
+-rwxr-xr-x 1 japaric japaric 784 Jan  1 00:00 hello
 ```
 
 **Disclaimer** The binary size will inevitably go up after we add missing
@@ -95,43 +97,31 @@ $ ls -l zero
 
 [ci]: https://travis-ci.org/japaric/steed
 
-- ARM
+- `aarch64-unknown-linux-steed`
 
-<!-- - MIPS -->
+- `arm-unknown-linux-steedeabi`
 
-- PowerPC
+- `armv7-unknown-linux-steedeabihf`
 
-<!-- - SPARC -->
+- `i686-unknown-linux-steed`
 
-- x86
+<!-- - `mips-unknown-linux-steed` -->
 
-Or in terms of existing Rust targets:
+<!-- - `mips64-unknown-linux-steed` -->
 
-- `aarch64-unknown-linux-gnu`
+<!-- - `mips64el-unknown-linux-steed` -->
 
-- `arm-unknown-linux-gnueabi`
+<!-- - `mipsel-unknown-linux-steed` -->
 
-- `armv7-unknown-linux-gnueabihf`
+- `powerpc-unknown-linux-steed`
 
-- `i686-unknown-linux-gnu`
+- `powerpc64-unknown-linux-steed`
 
-<!-- - `mips-unknown-linux-gnu` -->
+<!-- - `powerpc64le-unknown-linux-steed` -->
 
-<!-- - `mips64-unknown-linux-gnu` -->
+<!-- - `sparc64-unknown-linux-steed` -->
 
-<!-- - `mips64el-unknown-linux-gnu` -->
-
-<!-- - `mipsel-unknown-linux-gnu` -->
-
-- `powerpc-unknown-linux-gnu`
-
-- `powerpc64-unknown-linux-gnu`
-
-<!-- - `powerpc64le-unknown-linux-gnu` -->
-
-<!-- - `sparc64-unknown-linux-gnu` -->
-
-- `x86_64-unknown-linux-gnu`
+- `x86_64-unknown-linux-steed`
 
 ## Usage
 
@@ -143,6 +133,12 @@ To compile your library / application against `steed`, follow these steps:
 > runtime, that's a bug and we would appreciate a [bug report][issues].
 
 [issues]: https://github.com/japaric/steed/issues
+
+### On x86_64 Linux
+
+To easiest way to use `steed` is to use the `cross` tool:
+
+> **NOTE** `cross` depends on Docker and only works on x86_64 Linux
 
 ```
 # if you don't have cross installed
@@ -171,6 +167,100 @@ stage = 1
 # in their triples
 $ cross run --target x86_64-unknown-linux-steed
 Hello, world!
+
+$ file target/x86_64-unknown-linux-steed/debug/hello
+hello: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, not stripped
+```
+
+You can use `cross` to cross compile your crate to other architectures as well.
+
+```
+# continuation from the previous example
+$ cross build --target aarch64-unknown-linux-steed
+
+$ file target/aarch64-unknown-linux-steed/debug/hello
+hello: ELF 64-bit LSB executable, ARM aarch64, version 1 (SYSV),statically linked, not stripped
+```
+
+`cross` can even transparently execute those cross compiled binaries using QEMU.
+
+```
+$ cross run --target aarch64-unknown-linux-steed -v
+       Fresh hello v0.1.0 (file:///project)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.0 secs
+     Running `/target/aarch64-unknown-linux-steed/debug/hello`
+Hello, world!
+```
+
+### On other systems
+
+If you are not using a x86_64 Linux system or don't want to use/install Docker,
+then you can use Xargo to compile your program against `steed`.
+
+```
+# if you don't have Xargo installed
+# (Xargo v0.3.4 or newer is required)
+$ cargo install xargo 
+
+# grab the target specification file for the `steed` target
+$ curl -OL https://github.com/japaric/steed/raw/master/docker/x86_64-unknown-linux-steed.json
+
+# required to compile some of `steed` dependencies
+$ export RUST_TARGET_PATH=$(pwd)
+
+# this is the part that replaces `std` with `steed`
+$ edit Xargo.toml && cat $_
+```
+
+``` toml
+[dependencies.collections]  # `steed` depends on collections
+
+[dependencies.std]
+git = "https://github.com/japaric/steed"  # `path` works too
+stage = 1
+```
+
+```
+$ xargo run --target x86_64-unknown-linux-steed
+    Finished dev [unoptimized + debuginfo] target(s) in 0.0 secs
+     Running `target/x86_64-unknown-linux-steed/debug/hello`
+Hello, world!
+
+$ file target/x86_64-unknown-linux-steed/debug/hello
+hello: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, not stripped
+```
+
+You can cross compile as well but you'll have to install a cross linker on your
+host system:
+
+```
+# assuming Ubuntu
+$ sudo apt-get install gcc-aarch64-linux-gnu
+
+# point Cargo to the right linker
+$ export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_STEED_LINKER=aarch64-linux-gnu-gcc
+
+# grab the target specification file for the `steed` target
+$ curl -OL https://github.com/japaric/steed/raw/master/docker/aarch64-unknown-linux-steed.json
+
+# required to compile some of `steed` dependencies
+$ export RUST_TARGET_PATH=$(pwd)
+
+$ xargo build --target aarch64-unknown-linux-steed
+
+$ file target/aarch64-unknown-linux-steed/debug/hello
+hello: ELF 64-bit LSB executable, ARM aarch64, version 1 (SYSV),statically linked, not stripped
+```
+
+You can execute the cross compiled binaries too but you'll have to install and
+explicitly call QEMU:
+
+```
+# assuming Ubuntu
+$ sudo apt-get install qemu-user
+
+$ qemu-aarch64 target/aarch64-unknown-linux-steed/debug/hello
+Hello, world!
 ```
 
 ## Current functionality
@@ -181,6 +271,8 @@ summarize the functionality that interfaces with the Linux kernel:
 - Standard I/O (stdin, stdout, stderr)
 
 - File I/O
+
+- Filesystem operations (`std::fs`)
 
 - Dynamic memory allocation (thanks to [ralloc]!)
 
