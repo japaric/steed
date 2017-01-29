@@ -161,8 +161,6 @@ stage = 1
 ```
 
 ```
-# Make sure to always pass `--target`, even if you are compiling for the HOST
-# (you could use `cross build` here if you are not building an executable)
 # NOTE `steed` uses its own set of targets; these have `steed` instead of `gnu`
 # in their triples
 $ cross run --target x86_64-unknown-linux-steed
@@ -175,7 +173,7 @@ hello: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, n
 You can use `cross` to cross compile your crate to other architectures as well.
 
 ```
-# continuation from the previous example
+# (continuation from the previous example)
 $ cross build --target aarch64-unknown-linux-steed
 
 $ file target/aarch64-unknown-linux-steed/debug/hello
