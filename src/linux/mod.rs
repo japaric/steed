@@ -89,6 +89,9 @@ pub const DT_REG: c_uchar = 8;
 pub const DT_LNK: c_uchar = 10;
 pub const DT_SOCK: c_uchar = 12;
 
+// include/uapi/linux/random.h
+pub const GRND_NONBLOCK: c_uint = 0x0001;
+
 // kernel/time/posix-timers.c
 #[inline(always)]
 pub unsafe fn clock_gettime(which_clock: clockid_t,
@@ -494,4 +497,9 @@ pub unsafe fn wait4(upid: pid_t,
     -> ssize_t
 {
     syscall!(WAIT4, upid, stat_addr, options, ru) as ssize_t
+}
+
+// drivers/char/random.c
+pub unsafe fn getrandom(buf: *mut c_char, count: size_t, flags: c_uint) -> ssize_t {
+    syscall!(GETRANDOM, buf, count, flags) as ssize_t
 }
