@@ -8,7 +8,13 @@ use {cmp, linux, io, memchr, str};
 // Rust 1.14.0
 pub mod prelude;
 // Rust 1.14.0
+mod buffered;
+// Rust 1.14.0
+mod cursor;
+// Rust 1.14.0
 mod error;
+// Rust 1.14.0
+mod impls;
 // Rust 1.14.0
 mod util;
 
@@ -16,6 +22,12 @@ const STDIN: c_int = 0;
 const STDOUT: c_int = 1;
 const STDERR: c_int = 2;
 
+#[stable(feature = "rust1", since = "1.0.0")]
+pub use self::buffered::{BufReader, BufWriter, LineWriter};
+#[stable(feature = "rust1", since = "1.0.0")]
+pub use self::buffered::IntoInnerError;
+#[stable(feature = "rust1", since = "1.0.0")]
+pub use self::cursor::Cursor;
 #[stable(feature = "rust1", since = "1.0.0")]
 pub use self::error::{Result, Error, ErrorKind};
 #[stable(feature = "rust1", since = "1.0.0")]
