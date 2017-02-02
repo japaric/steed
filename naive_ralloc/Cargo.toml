@@ -4,4 +4,4 @@ version = "0.1.0"
 authors = ["author"]
 
 [dependencies.sc]
-git = "https://github.com/japaric/syscall.rs"
+version = "0.1.0"
