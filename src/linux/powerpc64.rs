@@ -13,6 +13,8 @@ pub const O_TRUNC: c_int = 0o00001000;
 
 pub const FIOCLEX: c_uint = 0x20006601;
 
+pub const SIGCHLD: c_ulong = 17;
+
 #[derive(Clone, Copy)]
 #[repr(C)]
 pub struct stat64 {

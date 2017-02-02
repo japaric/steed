@@ -1,3 +1,4 @@
+use ctypes::c_char;
 use linux;
 
 pub fn errno() -> i32 {
@@ -12,4 +13,12 @@ pub fn error_string(errno: i32) -> String {
 
 pub fn exit(code: i32) -> ! {
     unsafe { linux::exit_group(code) }
+}
+
+// TODO(steed): Fix this unsafety, should be *const c_char elements.
+static ENVIRON: [usize; 1] = [0];
+
+pub unsafe fn environ() -> *const *const c_char {
+    let env: *const usize = ENVIRON.as_ptr();
+    env as *const *const c_char
 }

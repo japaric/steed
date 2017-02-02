@@ -8,6 +8,8 @@ pub mod os_str;
 // Rust 1.14.0
 pub mod path;
 pub mod pipe;
+#[cfg_attr(not(issue = "11"), allow(unused_imports))]
+#[cfg_attr(not(issue = "11"), allow(unused_variables))]
 pub mod process;
 pub mod os;
 pub mod time;

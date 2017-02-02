@@ -5,7 +5,7 @@ use ctypes::c_ushort;
 use ffi::{CString, CStr, OsString, OsStr};
 use fmt;
 use io::{self, Error, ErrorKind, SeekFrom};
-use linux::types::{mode_t, stat64};
+use linux::{mode_t, stat64};
 use linux;
 use mem;
 use path::{Path, PathBuf};

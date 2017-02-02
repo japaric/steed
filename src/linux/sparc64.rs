@@ -12,3 +12,5 @@ pub const O_DIRECTORY: c_int = 0o00200000;
 pub const O_EXCL: c_int = 0x0800;
 pub const O_PATH: c_int = 0x1000000;
 pub const O_TRUNC: c_int = 0x0400;
+
+pub const SIGCHLD: c_ulong = 17;
