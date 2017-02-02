@@ -11,6 +11,7 @@
 use self::Entry::*;
 use self::VacantEntryState::*;
 
+#[cfg(issue = "87")]
 use cell::Cell;
 use borrow::Borrow;
 use cmp::max;
@@ -2038,6 +2039,15 @@ impl RandomState {
     ///
     /// let s = RandomState::new();
     /// ```
+    #[cfg(not(issue = "87"))]
+    #[inline]
+    // rand
+    #[stable(feature = "hashmap_build_hasher", since = "1.7.0")]
+    pub fn new() -> RandomState {
+        let mut r = rand::thread_rng();
+        RandomState { k0: r.gen(), k1: r.gen() }
+    }
+    #[cfg(issue = "87")]
     #[inline]
     #[allow(deprecated)]
     // rand
@@ -2054,15 +2064,17 @@ impl RandomState {
         // iteration order allows a form of DOS attack. To counter that we
         // increment one of the seeds on every RandomState creation, giving
         // every corresponding HashMap a different iteration order.
-        let keys: Cell<(u64, u64)> = {
+        thread_local!(static KEYS: Cell<(u64, u64)> = {
             let r = rand::OsRng::new();
             let mut r = r.expect("failed to create an OS RNG");
             Cell::new((r.gen(), r.gen()))
-        };
+        });
 
-        let (k0, k1) = keys.get();
-        keys.set((k0.wrapping_add(1), k1));
-        RandomState { k0: k0, k1: k1 }
+        KEYS.with(|keys| {
+            let (k0, k1) = keys.get();
+            keys.set((k0.wrapping_add(1), k1));
+            RandomState { k0: k0, k1: k1 }
+        })
     }
 }
 

@@ -154,6 +154,7 @@ pub struct ThreadRng {
 /// if the operating system random number generator is rigged to give
 /// the same sequence always. If absolute consistency is required,
 /// explicitly select an RNG, e.g. `IsaacRng` or `Isaac64Rng`.
+#[cfg(not(issue = "87"))]
 pub fn thread_rng() -> ThreadRng {
     // used to make space in TLS for a random number generator
     let thread_rng: Rc<RefCell<ThreadRngInner>> = {
@@ -168,6 +169,23 @@ pub fn thread_rng() -> ThreadRng {
     };
 
     ThreadRng { rng: thread_rng }
+}
+
+#[cfg(issue = "87")]
+pub fn thread_rng() -> ThreadRng {
+    // used to make space in TLS for a random number generator
+    thread_local!(static THREAD_RNG_KEY: Rc<RefCell<ThreadRngInner>> = {
+        let r = match StdRng::new() {
+            Ok(r) => r,
+            Err(e) => panic!("could not initialize thread_rng: {}", e)
+        };
+        let rng = reseeding::ReseedingRng::new(r,
+                                               THREAD_RNG_RESEED_THRESHOLD,
+                                               ThreadRngReseeder);
+        Rc::new(RefCell::new(rng))
+    });
+
+    ThreadRng { rng: THREAD_RNG_KEY.with(|t| t.clone()) }
 }
 
 impl Rng for ThreadRng {
