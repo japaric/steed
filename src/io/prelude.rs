@@ -20,6 +20,5 @@
 
 #![stable(feature = "rust1", since = "1.0.0")]
 
-// TODO re-export BufRead
 #[stable(feature = "rust1", since = "1.0.0")]
-pub use super::{Read, Write, Seek};
+pub use super::{Read, Write, BufRead, Seek};
