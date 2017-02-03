@@ -21,7 +21,7 @@ features = ["mem"]
 git = "https://github.com/rust-lang-nursery/compiler-builtins"
 
 [dependencies.sc]
-version = "0.1.4"
+git = "https://github.com/japaric/syscall.rs"
 
 [features]
 default = ["ralloc"]
