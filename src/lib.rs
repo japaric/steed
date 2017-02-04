@@ -57,10 +57,9 @@ extern crate naive_ralloc;
 #[macro_use]
 extern crate sc;
 extern crate std_unicode;
-// Rust 1.14.0
 extern crate rand as core_rand;
 
-// Rust 1.14.0
+// Rust 1.15.0
 // The Rust prelude
 pub mod prelude;
 
@@ -138,36 +137,36 @@ pub use core_collections::vec;
 #[stable(feature = "rust1", since = "1.0.0")]
 pub use std_unicode::char;
 
-// Rust 1.14.0
+// Rust 1.15.0
 #[macro_use]
 mod macros;
 
 pub mod io;
 
-// Rust 1.14.0
+// Rust 1.15.0
 pub mod ascii;
-// Rust 1.14.0
+// Rust 1.15.0
 pub mod collections;
-// Rust 1.14.0
+// Rust 1.15.0
 pub mod error;
-// Rust 1.14.0
+// Rust 1.15.0
 pub mod ffi;
-// Rust 1.14.0
+// Rust 1.15.0
 pub mod fs;
-// Rust 1.14.0
+// Rust 1.15.0
 pub mod num;
-// Rust 1.14.0
+// Rust 1.15.0
 pub mod memchr;
-// Rust 1.14.0
+// Rust 1.15.0
 pub mod os;
-// Rust 1.14.0
+// Rust 1.15.0
 pub mod path;
-// Rust 1.14.0
+// Rust 1.15.0
 pub mod process;
-// Rust 1.14.0
+// Rust 1.15.0
 pub mod time;
 
-// Rust 1.14.0
+// Rust 1.15.0
 // The runtime entry point and a few unstable public functions used by the
 // compiler
 pub mod rt;

@@ -5,17 +5,17 @@ use core::fmt;
 use ctypes::c_int;
 use {cmp, linux, io, memchr, str};
 
-// Rust 1.14.0
+// Rust 1.15.0
 pub mod prelude;
-// Rust 1.14.0
+// Rust 1.15.0
 mod buffered;
-// Rust 1.14.0
+// Rust 1.15.0
 mod cursor;
-// Rust 1.14.0
+// Rust 1.15.0
 mod error;
-// Rust 1.14.0
+// Rust 1.15.0
 mod impls;
-// Rust 1.14.0
+// Rust 1.15.0
 mod util;
 
 const STDIN: c_int = 0;

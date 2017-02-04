@@ -25,11 +25,18 @@
 //!
 //! ```rust
 //! use std::path::Path;
+//! use std::ffi::OsStr;
 //!
 //! let path = Path::new("/tmp/foo/bar.txt");
-//! let file = path.file_name();
+//!
+//! let parent = path.parent();
+//! assert_eq!(parent, Some(Path::new("/tmp/foo")));
+//!
+//! let file_stem = path.file_stem();
+//! assert_eq!(file_stem, Some(OsStr::new("bar")));
+//!
 //! let extension = path.extension();
-//! let parent_dir = path.parent();
+//! assert_eq!(extension, Some(OsStr::new("txt")));
 //! ```
 //!
 //! To build or modify paths, use `PathBuf`:
@@ -247,7 +254,9 @@ pub fn is_separator(c: char) -> bool {
     c.is_ascii() && is_sep_byte(c as u8)
 }
 
-/// The primary separator for the current platform
+/// The primary separator of path components for the current platform.
+///
+/// For example, `/` on Unix and `\` on Windows.
 #[stable(feature = "rust1", since = "1.0.0")]
 pub const MAIN_SEPARATOR: char = ::sys::path::MAIN_SEP;
 
@@ -448,7 +457,17 @@ pub enum Component<'a> {
 }
 
 impl<'a> Component<'a> {
-    /// Extracts the underlying `OsStr` slice
+    /// Extracts the underlying `OsStr` slice.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use std::path::Path;
+    ///
+    /// let path = Path::new("./tmp/foo/bar.txt");
+    /// let components: Vec<_> = path.components().map(|comp| comp.as_os_str()).collect();
+    /// assert_eq!(&components, &[".", "tmp", "foo", "bar.txt"]);
+    /// ```
     #[stable(feature = "rust1", since = "1.0.0")]
     pub fn as_os_str(self) -> &'a OsStr {
         match self {
@@ -983,17 +1002,24 @@ impl PathBuf {
     ///
     /// # Examples
     ///
+    /// Pushing a relative path extends the existing path:
+    ///
     /// ```
     /// use std::path::PathBuf;
     ///
-    /// let mut path = PathBuf::new();
-    /// path.push("/tmp");
+    /// let mut path = PathBuf::from("/tmp");
     /// path.push("file.bk");
     /// assert_eq!(path, PathBuf::from("/tmp/file.bk"));
+    /// ```
     ///
-    /// // Pushing an absolute path replaces the current path
-    /// path.push("/etc/passwd");
-    /// assert_eq!(path, PathBuf::from("/etc/passwd"));
+    /// Pushing an absolute path replaces the existing path:
+    ///
+    /// ```
+    /// use std::path::PathBuf;
+    ///
+    /// let mut path = PathBuf::from("/tmp");
+    /// path.push("/etc");
+    /// assert_eq!(path, PathBuf::from("/etc"));
     /// ```
     #[stable(feature = "rust1", since = "1.0.0")]
     pub fn push<P: AsRef<Path>>(&mut self, path: P) {
@@ -1312,13 +1338,19 @@ impl AsRef<OsStr> for PathBuf {
 ///
 /// ```
 /// use std::path::Path;
+/// use std::ffi::OsStr;
 ///
 /// let path = Path::new("/tmp/foo/bar.txt");
-/// let file = path.file_name();
-/// let extension = path.extension();
-/// let parent_dir = path.parent();
-/// ```
 ///
+/// let parent = path.parent();
+/// assert_eq!(parent, Some(Path::new("/tmp/foo")));
+///
+/// let file_stem = path.file_stem();
+/// assert_eq!(file_stem, Some(OsStr::new("bar")));
+///
+/// let extension = path.extension();
+/// assert_eq!(extension, Some(OsStr::new("txt")));
+/// ```
 #[stable(feature = "rust1", since = "1.0.0")]
 pub struct Path {
     inner: OsStr,
