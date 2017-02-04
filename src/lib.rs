@@ -7,18 +7,25 @@
 #![feature(compiler_builtins_lib)]
 #![feature(const_fn)]
 #![feature(core_intrinsics)]
+#![feature(custom_attribute)]
 #![feature(dropck_parametricity)]
 #![feature(fused)]
+#![feature(heap_api)]
 #![feature(int_error_internals)]
 #![feature(lang_items)]
 #![feature(macro_reexport)]
 #![feature(naked_functions)]
+#![feature(oom)]
 #![feature(prelude_import)]
 #![feature(raw)]
+#![feature(rand)]
+#![feature(shared)]
+#![feature(sip_hash_13)]
 #![feature(slice_concat_ext)]
 #![feature(staged_api)]
 #![feature(try_from)]
 #![feature(unicode)]
+#![feature(unique)]
 #![feature(zero_one)]
 #![no_std]
 
@@ -50,6 +57,8 @@ extern crate naive_ralloc;
 #[macro_use]
 extern crate sc;
 extern crate std_unicode;
+// Rust 1.14.0
+extern crate rand as core_rand;
 
 // Rust 1.14.0
 // The Rust prelude
@@ -166,6 +175,7 @@ pub mod rt;
 mod ctypes;
 mod linux;
 mod panicking;
+mod rand;
 mod sys;
 mod sys_common {
     pub use sys::*;

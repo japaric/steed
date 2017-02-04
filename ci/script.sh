@@ -13,6 +13,7 @@ main() {
         dup
         format
         format
+        hashmap
         hello
         instant
         ls

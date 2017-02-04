@@ -430,12 +430,8 @@ pub use core_collections::{binary_heap, btree_map, btree_set};
 #[stable(feature = "rust1", since = "1.0.0")]
 pub use core_collections::{linked_list, vec_deque};
 
-// TODO see src/collections/hash/mod
-#[cfg(issue = "5")]
 #[stable(feature = "rust1", since = "1.0.0")]
 pub use self::hash_map::HashMap;
-// TODO see src/collections/hash/mod
-#[cfg(issue = "5")]
 #[stable(feature = "rust1", since = "1.0.0")]
 pub use self::hash_set::HashSet;
 
@@ -444,8 +440,6 @@ pub use core_collections::range;
 
 mod hash;
 
-// TODO see src/collections/hash/mod
-#[cfg(issue = "5")]
 #[stable(feature = "rust1", since = "1.0.0")]
 pub mod hash_map {
     //! A hash map implementation which uses linear probing with Robin
@@ -454,8 +448,6 @@ pub mod hash_map {
     pub use super::hash::map::*;
 }
 
-// TODO see src/collections/hash/mod
-#[cfg(issue = "5")]
 #[stable(feature = "rust1", since = "1.0.0")]
 pub mod hash_set {
     //! An implementation of a hash set using the underlying representation of a

@@ -11,6 +11,7 @@
 use self::Entry::*;
 use self::VacantEntryState::*;
 
+#[cfg(issue = "87")]
 use cell::Cell;
 use borrow::Borrow;
 use cmp::max;
@@ -2038,6 +2039,15 @@ impl RandomState {
     ///
     /// let s = RandomState::new();
     /// ```
+    #[cfg(not(issue = "87"))]
+    #[inline]
+    // rand
+    #[stable(feature = "hashmap_build_hasher", since = "1.7.0")]
+    pub fn new() -> RandomState {
+        let mut r = rand::thread_rng();
+        RandomState { k0: r.gen(), k1: r.gen() }
+    }
+    #[cfg(issue = "87")]
     #[inline]
     #[allow(deprecated)]
     // rand

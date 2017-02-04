@@ -12,6 +12,7 @@ pub mod pipe;
 #[cfg_attr(not(issue = "11"), allow(unused_variables))]
 pub mod process;
 pub mod os;
+pub mod rand;
 pub mod time;
 
 pub use os::linux as platform;
