@@ -56,7 +56,6 @@ pub const F_DUPFD: c_uint = 0;
 pub const F_GETFL: c_uint = 3;
 pub const F_LINUX_SPECIFIC_BASE: c_uint = 1024;
 pub const O_ACCMODE: c_int = 0o00000003;
-pub const O_LARGEFILE: c_int = 0o00100000;
 pub const O_RDONLY: c_int = 0o00000000;
 pub const O_RDWR: c_int = 0o00000002;
 pub const O_WRONLY: c_int = 0o00000001;
