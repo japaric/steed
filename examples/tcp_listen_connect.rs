@@ -1,7 +1,7 @@
-fn main () {
-    use std::net::{SocketAddr, IpAddr, Ipv4Addr, TcpStream, TcpListener};
-    use std::io::{Read, Write};
+use std::io::{Read, Write};
+use std::net::{SocketAddr, IpAddr, Ipv4Addr, TcpStream, TcpListener};
 
+fn main () {
     let localhost = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
     let addr = SocketAddr::new(localhost, 12345);
     let listener = TcpListener::bind(addr).expect("bind");
