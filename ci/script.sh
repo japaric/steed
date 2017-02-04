@@ -33,6 +33,11 @@ main() {
     for example in ${examples[@]}; do
         cross run --target $TARGET --no-default-features --features naive_ralloc --example $example --release
     done
+
+    set +x
+    pushd target/$TARGET/release/examples
+    size ${examples[@]}
+    popd
 }
 
 main
