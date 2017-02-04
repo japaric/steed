@@ -26,8 +26,5 @@ git = "https://github.com/japaric/syscall.rs"
 [features]
 default = ["ralloc"]
 
-[profile.dev]
-debug_assertions = false
-
 [profile.release]
 lto = true
