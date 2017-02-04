@@ -64,12 +64,19 @@ statically linked.
 - Small, statically linked binaries:
 
 ``` rust
-// examples/zero.rs
-fn main() {}
+// examples/hello.rs
+use std::{io, process};
+use std::io::Write;
+
+fn main() {
+    if io::stdout().write_all(b"Hello, world!\n").is_err() {
+        process::exit(1)
+    }
+}
 ```
 
 ```
-# xargo build --target x86_64-unknown-linux-steed --release --example zero
+# xargo build --target x86_64-unknown-linux-steed --release --example hello
 $ ./hello
 Hello, world!
 
@@ -78,12 +85,12 @@ $ strip -s hello
 $ file hello
 hello: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, stripped
 
-$ size zero
+$ size hello
    text    data     bss     dec     hex filename
-    192       0      16     208      d0 hello
+    173       0       0     173      bd hello
 
 $ ls -l hello
--rwxr-xr-x 1 japaric japaric 784 Jan  1 00:00 hello
+-rwxr-xr-x 1 japaric japaric 632 Feb  1 00:00 hello
 ```
 
 **Disclaimer** The binary size will inevitably go up after we add missing
