@@ -13,7 +13,6 @@
 mod bench;
 mod table;
 pub mod map;
-// TODO HashSet implementation depends on HashMap
 pub mod set;
 
 trait Recover<Q: ?Sized> {

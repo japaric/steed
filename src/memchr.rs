@@ -50,7 +50,6 @@ pub fn memchr(needle: u8, haystack: &[u8]) -> Option<usize> {
 /// let haystack = b"the quick brown fox";
 /// assert_eq!(memrchr(b'o', haystack), Some(17));
 /// ```
-#[stable(feature = "memrchr", since = "1.7.0")]
 #[inline]
 pub fn memrchr(needle: u8, haystack: &[u8]) -> Option<usize> {
     ::sys::memchr::memrchr(needle, haystack)

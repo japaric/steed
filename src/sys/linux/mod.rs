@@ -3,9 +3,9 @@ pub mod fd;
 pub mod fs;
 pub mod io;
 pub mod memchr;
-// Rust 1.14.0
+// Rust 1.15.0
 pub mod os_str;
-// Rust 1.14.0
+// Rust 1.15.0
 pub mod path;
 pub mod pipe;
 #[cfg_attr(not(issue = "11"), allow(unused_imports))]
@@ -17,8 +17,9 @@ pub mod time;
 
 pub use os::linux as platform;
 
-use io::ErrorKind;
+use intrinsics;
 use io::Error;
+use io::ErrorKind;
 use io::Result;
 
 // Generated from the Linux source tree using generate/errno.py
@@ -29,7 +30,7 @@ mod libc {
     pub use super::errno::*;
 }
 
-// Rust 1.14.0
+// Rust 1.15.0: src/libstd/sys/unix/mod.rs
 pub fn decode_error_kind(errno: i32) -> ErrorKind {
     match errno as libc::c_int {
         libc::ECONNREFUSED => ErrorKind::ConnectionRefused,
@@ -75,3 +76,7 @@ pub fn cvt_r<F: FnMut() -> isize>(mut f: F) -> Result<usize> {
 }
 
 pub fn cleanup() { }
+
+pub unsafe fn abort_internal() -> ! {
+    intrinsics::abort()
+}

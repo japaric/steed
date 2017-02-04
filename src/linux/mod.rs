@@ -124,10 +124,14 @@ pub unsafe fn open(filename: *const c_char,
 
 // fs/open.c
 #[inline(always)]
-pub unsafe fn chmod(filename: *const c_char,
-                    mode: umode_t)
-                   -> ssize_t {
+pub unsafe fn chmod(filename: *const c_char, mode: umode_t) -> ssize_t {
     syscall!(FCHMODAT, AT_FDCWD, filename, mode, 0) as ssize_t
+}
+
+// fs/open.c
+#[inline(always)]
+pub unsafe fn fchmod(fd: c_int, mode: umode_t) -> ssize_t {
+    syscall!(FCHMOD, fd, mode) as ssize_t
 }
 
 // fs/read_write.c
