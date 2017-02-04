@@ -34,15 +34,16 @@ mod arch;
 #[path = "x86_64.rs"]
 mod arch;
 
-mod libc;
 mod types;
+
+// Generated from the Linux source tree using generate/errno.py
+pub mod errno;
 
 use core::intrinsics;
 use ctypes::*;
 use ptr;
 
 pub use self::arch::*;
-pub use self::libc::*;
 pub use self::types::*;
 
 // include/uapi/linux/fcntl.h
@@ -54,6 +55,7 @@ pub const F_DUPFD_CLOEXEC: c_uint = F_LINUX_SPECIFIC_BASE + 6;
 // include/uapi/asm-generic/fcntl.h
 pub const F_DUPFD: c_uint = 0;
 pub const F_GETFL: c_uint = 3;
+pub const F_SETFL: c_uint = 4;
 pub const F_LINUX_SPECIFIC_BASE: c_uint = 1024;
 pub const O_ACCMODE: c_int = 0o00000003;
 pub const O_RDONLY: c_int = 0o00000000;

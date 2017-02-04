@@ -181,19 +181,7 @@ mod panicking;
 mod rand;
 mod sys;
 mod sys_common;
-mod libc {
-    pub use ctypes::*;
-    pub use linux::*;
-    pub unsafe fn strlen(cs: *const c_char) -> size_t {
-        let mut cs = cs;
-        let mut count = 0;
-        while *cs != 0 {
-            cs = cs.offset(1);
-            count += 1;
-        }
-        count
-    }
-}
+mod libc;
 
 // NOTE These two are "undefined" symbols that LLVM emits but that, AFAIK, we
 // never use

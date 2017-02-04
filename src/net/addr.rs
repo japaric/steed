@@ -21,7 +21,7 @@ use sys_common::{FromInner, AsInner, IntoInner};
 use vec;
 use iter;
 use slice;
-use libc;
+use linux as libc;
 
 /// Representation of a socket address for networking applications.
 ///

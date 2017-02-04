@@ -14,7 +14,8 @@ use cmp;
 use ffi::CString;
 use fmt;
 use io::{self, Error, ErrorKind};
-use libc::{self, c_int, size_t};
+use libc::{c_int, size_t};
+use linux as libc;
 use mem;
 use net::{SocketAddr, Shutdown, Ipv4Addr, Ipv6Addr};
 #[cfg(issue = "22")]

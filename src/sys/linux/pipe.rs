@@ -5,10 +5,11 @@ pub enum read2 { }
 use sync::atomic::{AtomicBool, Ordering};
 use cmp;
 use io;
+use linux::errno;
 use linux;
 use mem;
 use ptr;
-use sys::{cvt, errno};
+use sys::cvt;
 use sys::fd::FileDesc;
 
 ////////////////////////////////////////////////////////////////////////////////

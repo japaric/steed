@@ -23,14 +23,7 @@ use intrinsics;
 use io::Error;
 use io::ErrorKind;
 use io::Result;
-
-// Generated from the Linux source tree using generate/errno.py
-pub mod errno;
-
-mod libc {
-    pub use ctypes::c_int;
-    pub use super::errno::*;
-}
+use libc;
 
 // Rust 1.15.0: src/libstd/sys/unix/mod.rs
 pub fn decode_error_kind(errno: i32) -> ErrorKind {
@@ -59,16 +52,34 @@ pub fn decode_error_kind(errno: i32) -> ErrorKind {
     }
 }
 
-pub fn cvt(ret: isize) -> Result<usize> {
-    if ret < 0 {
-        assert!(ret >= -0x7fff_ffff);
-        Err(Error::from_raw_os_error(-ret as i32))
-    } else {
-        Ok(ret as usize)
-    }
+pub trait Cvt: Copy {
+    fn cvt(self) -> Result<Self>;
 }
 
-pub fn cvt_r<F: FnMut() -> isize>(mut f: F) -> Result<usize> {
+macro_rules! impl_cvt {
+    ($($t:ident)*) => ($(impl Cvt for $t {
+        fn cvt(self) -> Result<$t> {
+            if self < 0 {
+                assert!(self >= -0x7fff_ffff);
+                Err(Error::from_raw_os_error(-(self as i32)))
+            } else {
+                Ok(self)
+            }
+        }
+    })*)
+}
+
+impl_cvt! { i32 isize }
+
+pub fn cvt<I: Cvt>(ret: I) -> Result<I> {
+    ret.cvt()
+}
+
+pub fn cvtu(ret: isize) -> Result<usize> {
+    cvt(ret).map(|r| r as usize)
+}
+
+pub fn cvt_r<I: Cvt, F: FnMut() -> I>(mut f: F) -> Result<I> {
     loop {
         match cvt(f()) {
             Err(ref e) if e.kind() == ErrorKind::Interrupted => {}

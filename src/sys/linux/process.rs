@@ -14,13 +14,13 @@ use ffi::{OsString, OsStr, CString, CStr};
 use fmt;
 use io::{self, Error, ErrorKind};
 use libc::{self, pid_t, c_int, gid_t, uid_t, c_char, ssize_t};
-use linux;
+use linux::{self, errno};
 use mem;
 use ptr;
 use sys::fd::FileDesc;
 use sys::fs::{File, OpenOptions};
 use sys::pipe::{self, AnonPipe};
-use sys::{self, cvt, cvt_r, errno};
+use sys::{self, cvt, cvt_r};
 
 struct ChildPipes;
 pub struct StdioPipes;
@@ -245,7 +245,7 @@ impl Command {
         let (input, output) = sys::pipe::anon_pipe()?;
 
         let pid = unsafe {
-            match cvt(libc::fork())? {
+            match cvt(linux::fork())? {
                 0 => {
                     drop(input);
                     let err = self.do_exec(theirs);
@@ -625,7 +625,7 @@ impl Process {
             return Ok(status)
         }
         let mut status = 0 as c_int;
-        cvt_r(|| unsafe { libc::wait4(self.pid, &mut status, 0, ptr::null_mut()) })?;
+        cvt_r(|| unsafe { linux::wait4(self.pid, &mut status, 0, ptr::null_mut()) })?;
         self.status = Some(ExitStatus(status));
         Ok(ExitStatus(status))
     }

@@ -6,7 +6,7 @@ pub fn errno() -> i32 {
 }
 
 pub fn error_string(errno: i32) -> String {
-    super::errno::error_string(errno).map(|s| s.into()).unwrap_or_else(|| {
+    linux::errno::error_string(errno).map(|s| s.into()).unwrap_or_else(|| {
         format!("Unknown OS error ({})", errno)
     })
 }

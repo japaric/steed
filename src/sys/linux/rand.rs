@@ -31,10 +31,10 @@ mod imp {
     use ctypes::{c_char, ssize_t};
     use fs::File;
     use io::{self, ErrorKind};
-    use linux;
+    use linux::{self, errno};
     use rand::Rng;
     use rand::reader::ReaderRng;
-    use sys::{cvt, errno};
+    use sys::cvtu;
 
     fn getrandom(buf: &mut [u8]) -> ssize_t {
         unsafe {
@@ -47,7 +47,7 @@ mod imp {
     fn getrandom_fill_bytes(v: &mut [u8]) {
         let mut read = 0;
         while read < v.len() {
-            match cvt(getrandom(&mut v[read..])) {
+            match cvtu(getrandom(&mut v[read..])) {
                 Err(e) => {
                     let kind = e.kind();
                     if kind == ErrorKind::Interrupted {
@@ -90,7 +90,7 @@ mod imp {
         }
 
         let mut buf: [u8; 0] = [];
-        let result = cvt(getrandom(&mut buf));
+        let result = cvtu(getrandom(&mut buf));
         let available = match result {
             Ok(_) => true,
             Err(e) => e.raw_os_error() != Some(errno::ENOSYS),

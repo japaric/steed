@@ -5,12 +5,12 @@ use ctypes::c_ushort;
 use ffi::{CString, CStr, OsString, OsStr};
 use fmt;
 use io::{self, Error, ErrorKind, SeekFrom};
+use linux::errno;
 use linux::{mode_t, stat64};
 use linux;
 use mem;
 use path::{Path, PathBuf};
-use super::{cvt, cvt_r};
-use sys::errno;
+use super::{cvt, cvtu, cvt_r};
 use sys::ext::ffi::OsStrExt;
 use sys::fd::FileDesc;
 use sys::time::SystemTime;
@@ -167,9 +167,9 @@ impl Iterator for ReadDir {
                     read_dir.offset = 0;
                     read_dir.buf.clear();
                     let read;
-                    match cvt(linux::getdents64(read_dir.fd.raw(),
-                                                read_dir.buf.as_mut_ptr() as *mut _,
-                                                read_dir.buf.capacity() as u32)) {
+                    match cvtu(linux::getdents64(read_dir.fd.raw(),
+                                                 read_dir.buf.as_mut_ptr() as *mut _,
+                                                 read_dir.buf.capacity() as u32)) {
                         Ok(n) => read = n,
                         Err(e) => {
                             res = Some(Err(e));
@@ -513,7 +513,7 @@ pub fn readlink(p: &Path) -> io::Result<PathBuf> {
     let mut buf = Vec::with_capacity(256);
 
     loop {
-        let buf_read = cvt(unsafe {
+        let buf_read = cvtu(unsafe {
             linux::readlink(p, buf.as_mut_ptr() as *mut _, buf.capacity() as i32)
         })?;
 

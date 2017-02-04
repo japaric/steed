@@ -9,6 +9,7 @@ pub const O_CREAT: c_int = 0o00000100;
 pub const O_DIRECTORY: c_int = 0o0100000;
 pub const O_EXCL: c_int = 0o00000200;
 pub const O_LARGEFILE: c_int = 0;
+pub const O_NONBLOCK: c_int = 0o00004000;
 pub const O_PATH: c_int = 0o010000000;
 pub const O_TRUNC: c_int = 0o00001000;
 

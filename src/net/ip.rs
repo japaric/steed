@@ -19,7 +19,7 @@ use hash;
 use mem;
 use net::{hton, ntoh};
 use sys_common::{AsInner, FromInner};
-use libc;
+use linux as libc;
 
 /// An IP address, either an IPv4 or IPv6 address.
 ///

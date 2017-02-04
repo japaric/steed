@@ -9,14 +9,15 @@
 // except according to those terms.
 
 use io;
-use libc::{self, c_int, c_ulong};
+use libc::{c_int, c_ulong};
+use linux as libc;
+use linux::errno::{EINVAL, ENOSYS};
 use net::{SocketAddr, Shutdown};
 #[cfg(issue = "22")]
 use str;
 use sys::fd::FileDesc;
 use sys_common::{AsInner, FromInner, IntoInner};
 use time::Duration;
-use sys::errno::{EINVAL, ENOSYS};
 use sys_common::net::{setsockopt, getsockopt};
 
 pub use sys::{cvt, cvt_r};
