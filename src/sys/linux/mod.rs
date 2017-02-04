@@ -14,6 +14,8 @@ pub mod process;
 pub mod os;
 pub mod rand;
 pub mod time;
+// Rust 1.14.0
+pub mod net;
 
 pub use os::linux as platform;
 

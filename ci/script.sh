@@ -21,6 +21,7 @@ main() {
         stat
         stderr
         system-time
+        tcp_listen_connect
         vec
         zero
     )

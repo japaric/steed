@@ -91,6 +91,46 @@ pub const DT_SOCK: c_uchar = 12;
 // include/uapi/linux/random.h
 pub const GRND_NONBLOCK: c_uint = 0x0001;
 
+// include/uapi/linux/in.h
+pub const IPPROTO_IP: c_int = 0;
+pub const IPPROTO_TCP: c_int = 6;
+pub const IPPROTO_IPV6: c_int = 41;
+
+// include/uapi/linux/in.h
+pub const IP_TTL: c_int = 2;
+
+// include/uapi/linux/in.h
+pub const IP_MULTICAST_TTL: c_int = 33;
+pub const IP_MULTICAST_LOOP: c_int = 34;
+pub const IP_ADD_MEMBERSHIP: c_int = 35;
+pub const IP_DROP_MEMBERSHIP: c_int = 36;
+
+// include/uapi/linux/in6.h
+pub const IPV6_V6ONLY: c_int = 26;
+pub const IPV6_MULTICAST_LOOP: c_int = 19;
+
+// include/uapi/linux/in6.h
+pub const IPV6_ADD_MEMBERSHIP: c_int = 20;
+pub const IPV6_DROP_MEMBERSHIP: c_int = 21;
+
+// include/linux/socket.h
+pub const AF_INET: c_int = 2;
+pub const AF_INET6: c_int = 10;
+
+// include/linux/net.h
+pub const SOCK_CLOEXEC: c_int = O_CLOEXEC;
+
+// include/linux/net.h
+pub const SHUT_RD: c_int = 0;
+pub const SHUT_WR: c_int = 1;
+pub const SHUT_RDWR: c_int = 2;
+
+// include/uapi/linux/tcp.h
+pub const TCP_NODELAY: c_int = 1;
+
+// include/linux/socket.h
+pub const MSG_NOSIGNAL: c_int = 0x4000;
+
 // kernel/time/posix-timers.c
 #[inline(always)]
 pub unsafe fn clock_gettime(which_clock: clockid_t,
@@ -150,14 +190,22 @@ pub unsafe fn write(fd: c_int,
 }
 
 #[cfg(all(target_endian = "big", target_pointer_width = "32"))]
-fn high(v: loff_t) -> i32 { (v >> 32) as i32 }
+fn high(v: loff_t) -> i32 {
+    (v >> 32) as i32
+}
 #[cfg(all(target_endian = "big", target_pointer_width = "32"))]
-fn low(v: loff_t) -> i32 { (v & 0xffff_ffff) as i32 }
+fn low(v: loff_t) -> i32 {
+    (v & 0xffff_ffff) as i32
+}
 
 #[cfg(all(target_endian = "little", target_pointer_width = "32"))]
-fn high(v: loff_t) -> i32 { (v & 0xffff_ffff) as i32 }
+fn high(v: loff_t) -> i32 {
+    (v & 0xffff_ffff) as i32
+}
 #[cfg(all(target_endian = "little", target_pointer_width = "32"))]
-fn low(v: loff_t) -> i32 { (v >> 32) as i32 }
+fn low(v: loff_t) -> i32 {
+    (v >> 32) as i32
+}
 
 // fs/read_write.c
 #[inline(always)]
@@ -341,25 +389,40 @@ pub unsafe fn stat64(filename: *const c_char, statbuf: *mut stat64) -> ssize_t {
 
 // fs/stat.c
 #[inline(always)]
-pub unsafe fn lstat64(filename: *const c_char, statbuf: *mut stat64) -> ssize_t {
+pub unsafe fn lstat64(filename: *const c_char,
+                      statbuf: *mut stat64)
+                      -> ssize_t {
     #[cfg(target_pointer_width = "32")]
     #[inline(always)]
-    unsafe fn lstat64(filename: *const c_char, statbuf: *mut stat64) -> ssize_t {
-        syscall!(FSTATAT64, AT_FDCWD, filename, statbuf, AT_SYMLINK_NOFOLLOW) as ssize_t
+    unsafe fn lstat64(filename: *const c_char,
+                      statbuf: *mut stat64)
+                      -> ssize_t {
+        syscall!(FSTATAT64,
+                 AT_FDCWD,
+                 filename,
+                 statbuf,
+                 AT_SYMLINK_NOFOLLOW) as ssize_t
     }
     #[cfg(target_pointer_width = "64")]
     #[inline(always)]
-    unsafe fn lstat64(filename: *const c_char, statbuf: *mut stat64) -> ssize_t {
-        syscall!(NEWFSTATAT, AT_FDCWD, filename, statbuf, AT_SYMLINK_NOFOLLOW) as ssize_t
+    unsafe fn lstat64(filename: *const c_char,
+                      statbuf: *mut stat64)
+                      -> ssize_t {
+        syscall!(NEWFSTATAT,
+                 AT_FDCWD,
+                 filename,
+                 statbuf,
+                 AT_SYMLINK_NOFOLLOW) as ssize_t
     }
     lstat64(filename, statbuf)
 }
 
 // fs/stat.c
 #[inline(always)]
-pub unsafe fn readlink(path: *const c_char, buf: *mut c_char, bufsiz: c_int)
-    -> ssize_t
-{
+pub unsafe fn readlink(path: *const c_char,
+                       buf: *mut c_char,
+                       bufsiz: c_int)
+                       -> ssize_t {
     syscall!(READLINKAT, AT_FDCWD, path, buf, bufsiz) as ssize_t
 }
 
@@ -371,7 +434,9 @@ pub unsafe fn fcntl(fd: c_int, cmd: c_uint, arg: c_ulong) -> ssize_t {
 
 // fs/namei.c
 #[inline(always)]
-pub unsafe fn rename(oldname: *const c_char, newname: *const c_char) -> ssize_t {
+pub unsafe fn rename(oldname: *const c_char,
+                     newname: *const c_char)
+                     -> ssize_t {
     syscall!(RENAMEAT, AT_FDCWD, oldname, AT_FDCWD, newname) as ssize_t
 }
 
@@ -395,7 +460,9 @@ pub unsafe fn link(oldname: *const c_char, newname: *const c_char) -> ssize_t {
 
 // fs/namei.c
 #[inline(always)]
-pub unsafe fn symlink(oldname: *const c_char, newname: *const c_char) -> ssize_t {
+pub unsafe fn symlink(oldname: *const c_char,
+                      newname: *const c_char)
+                      -> ssize_t {
     syscall!(SYMLINKAT, oldname, AT_FDCWD, newname) as ssize_t
 }
 
@@ -407,9 +474,10 @@ pub unsafe fn mkdir(pathname: *const c_char, mode: umode_t) -> ssize_t {
 
 // fs/readdir.c
 #[inline(always)]
-pub unsafe fn getdents64(fd: c_int, dirent: *mut linux_dirent64, count: c_uint)
-    -> ssize_t
-{
+pub unsafe fn getdents64(fd: c_int,
+                         dirent: *mut linux_dirent64,
+                         count: c_uint)
+                         -> ssize_t {
     syscall!(GETDENTS64, fd, dirent, count) as ssize_t
 }
 
@@ -420,8 +488,7 @@ pub unsafe fn clone(clone_flags: c_ulong,
                     parent_tidptr: *mut c_int,
                     tls: c_ulong,
                     child_tidptr: *mut c_int)
-    -> ssize_t
-{
+                    -> ssize_t {
     #[cfg(any(target_arch = "aarch64",
               target_arch = "arm",
               target_arch = "mips",
@@ -435,9 +502,13 @@ pub unsafe fn clone(clone_flags: c_ulong,
                     parent_tidptr: *mut c_int,
                     tls: c_ulong,
                     child_tidptr: *mut c_int)
-        -> ssize_t
-    {
-        syscall!(CLONE, clone_flags, newsp, parent_tidptr, tls, child_tidptr) as ssize_t
+                    -> ssize_t {
+        syscall!(CLONE,
+                 clone_flags,
+                 newsp,
+                 parent_tidptr,
+                 tls,
+                 child_tidptr) as ssize_t
     }
     #[cfg(any(target_arch = "x86_64"))]
     #[inline(always)]
@@ -446,9 +517,13 @@ pub unsafe fn clone(clone_flags: c_ulong,
                     parent_tidptr: *mut c_int,
                     tls: c_ulong,
                     child_tidptr: *mut c_int)
-        -> ssize_t
-    {
-        syscall!(CLONE, clone_flags, newsp, parent_tidptr, child_tidptr, tls) as ssize_t
+                    -> ssize_t {
+        syscall!(CLONE,
+                 clone_flags,
+                 newsp,
+                 parent_tidptr,
+                 child_tidptr,
+                 tls) as ssize_t
     }
     clone(clone_flags, newsp, parent_tidptr, tls, child_tidptr)
 }
@@ -464,8 +539,7 @@ pub unsafe fn fork() -> ssize_t {
 pub unsafe fn execve(filename: *const c_char,
                      argv: *const *const c_char,
                      envp: *const *const c_char)
-    -> ssize_t
-{
+                     -> ssize_t {
     syscall!(EXECVE, filename, argv, envp) as ssize_t
 }
 
@@ -497,12 +571,479 @@ pub unsafe fn wait4(upid: pid_t,
                     stat_addr: *mut c_int,
                     options: c_int,
                     ru: *mut rusage)
-    -> ssize_t
-{
+                    -> ssize_t {
     syscall!(WAIT4, upid, stat_addr, options, ru) as ssize_t
 }
 
 // drivers/char/random.c
 pub unsafe fn getrandom(buf: *mut c_char, count: size_t, flags: c_uint) -> ssize_t {
     syscall!(GETRANDOM, buf, count, flags) as ssize_t
+}
+
+// net/socket.c
+#[inline(always)]
+pub unsafe fn socket(family: c_int, typ: c_int, protocol: c_int) -> ssize_t {
+    #[cfg(not(target_arch = "x86"))]
+    #[inline(always)]
+    unsafe fn socket(family: c_int, typ: c_int, protocol: c_int) -> ssize_t {
+        syscall!(SOCKET, family, typ, protocol) as ssize_t
+    }
+    #[cfg(target_arch = "x86")]
+    #[inline(always)]
+    unsafe fn socket(family: c_int, typ: c_int, protocol: c_int) -> ssize_t {
+        syscall!(SOCKETCALL,
+                 SYS_SOCKET,
+                 &[family as c_long,
+                   typ,
+                   protocol,
+                   0,
+                   0,
+                   0] as *const _) as ssize_t
+    }
+    socket(family, typ, protocol)
+}
+
+// net/socket.c
+#[inline(always)]
+pub unsafe fn socketpair(family: c_int,
+                         typ: c_int,
+                         protocol: c_int,
+                         fds: *mut c_int)
+                         -> ssize_t {
+    #[cfg(not(target_arch = "x86"))]
+    #[inline(always)]
+    unsafe fn socketpair(family: c_int,
+                         typ: c_int,
+                         protocol: c_int,
+                         fds: *mut c_int)
+                         -> ssize_t {
+        syscall!(SOCKETPAIR, family, typ, protocol, fds) as ssize_t
+    }
+    #[cfg(target_arch = "x86")]
+    #[inline(always)]
+    unsafe fn socketpair(family: c_int,
+                         typ: c_int,
+                         protocol: c_int,
+                         fds: *mut c_int)
+                         -> ssize_t {
+        syscall!(SOCKETCALL,
+                 SYS_SOCKETPAIR,
+                 &[family as c_long,
+                   typ,
+                   protocol,
+                   fds as c_long,
+                   0,
+                   0] as *const _) as ssize_t
+    }
+    socketpair(family, typ, protocol, fds)
+}
+
+// net/socket.c
+#[inline(always)]
+pub unsafe fn accept(fd: c_int,
+                     addr: *mut sockaddr,
+                     addrlen: *mut socklen_t)
+                     -> ssize_t {
+    #[cfg(not(target_arch = "x86"))]
+    #[inline(always)]
+    unsafe fn accept(fd: c_int,
+                     addr: *mut sockaddr,
+                     addrlen: *mut socklen_t)
+                     -> ssize_t {
+        syscall!(ACCEPT, fd, addr, addrlen) as ssize_t
+    }
+    #[cfg(target_arch = "x86")]
+    #[inline(always)]
+    unsafe fn accept(fd: c_int,
+                     addr: *mut sockaddr,
+                     addrlen: *mut socklen_t)
+                     -> ssize_t {
+        syscall!(SOCKETCALL,
+                 SYS_ACCEPT,
+                 &[fd as c_long,
+                   addr as c_long,
+                   addrlen as c_long,
+                   0,
+                   0,
+                   0] as *const _) as ssize_t
+    }
+    accept(fd, addr, addrlen)
+}
+
+// net/socket.c
+#[inline(always)]
+pub unsafe fn accept4(fd: c_int,
+                      addr: *mut sockaddr,
+                      addrlen: *mut socklen_t,
+                      flags: c_int)
+                      -> ssize_t {
+    #[cfg(not(target_arch = "x86"))]
+    #[inline(always)]
+    unsafe fn accept4(fd: c_int,
+                      addr: *mut sockaddr,
+                      addrlen: *mut socklen_t,
+                      flags: c_int)
+                      -> ssize_t {
+        syscall!(ACCEPT4, fd, addr, addrlen, flags) as ssize_t
+    }
+    #[cfg(target_arch = "x86")]
+    #[inline(always)]
+    unsafe fn accept4(fd: c_int,
+                      addr: *mut sockaddr,
+                      addrlen: *mut socklen_t,
+                      flags: c_int)
+                      -> ssize_t {
+        syscall!(SOCKETCALL,
+                 SYS_ACCEPT4,
+                 &[fd as c_long,
+                   addr as c_long,
+                   addrlen as c_long,
+                   flags,
+                   0,
+                   0] as *const _) as ssize_t
+    }
+    accept4(fd, addr, addrlen, flags)
+}
+
+// net/socket.c
+#[inline(always)]
+pub unsafe fn setsockopt(fd: c_int,
+                         level: c_int,
+                         name: c_int,
+                         value: *const c_uchar,
+                         optlen: socklen_t)
+                         -> ssize_t {
+    #[cfg(not(target_arch = "x86"))]
+    #[inline(always)]
+    unsafe fn setsockopt(fd: c_int,
+                         level: c_int,
+                         name: c_int,
+                         value: *const c_uchar,
+                         optlen: socklen_t)
+                         -> ssize_t {
+        syscall!(SETSOCKOPT, fd, level, name, value, optlen) as ssize_t
+    }
+    #[cfg(target_arch = "x86")]
+    #[inline(always)]
+    unsafe fn setsockopt(fd: c_int,
+                         level: c_int,
+                         name: c_int,
+                         value: *const c_uchar,
+                         optlen: socklen_t)
+                         -> ssize_t {
+        syscall!(SOCKETCALL,
+                 SYS_SETSOCKOPT,
+                 &[fd as c_long,
+                   level,
+                   name,
+                   value as c_long,
+                   optlen,
+                   0] as *const _) as ssize_t
+    }
+    setsockopt(fd, level, name, value, optlen)
+}
+
+// net/socket.c
+#[inline(always)]
+pub unsafe fn getsockopt(fd: c_int,
+                         level: c_int,
+                         name: c_int,
+                         value: *mut c_uchar,
+                         optlen: *mut socklen_t)
+                         -> ssize_t {
+    #[cfg(not(target_arch = "x86"))]
+    #[inline(always)]
+    unsafe fn getsockopt(fd: c_int,
+                         level: c_int,
+                         name: c_int,
+                         value: *mut c_uchar,
+                         optlen: *mut socklen_t)
+                         -> ssize_t {
+        syscall!(GETSOCKOPT, fd, level, name, value, optlen) as ssize_t
+    }
+    #[cfg(target_arch = "x86")]
+    #[inline(always)]
+    unsafe fn getsockopt(fd: c_int,
+                         level: c_int,
+                         name: c_int,
+                         value: *mut c_uchar,
+                         optlen: *mut socklen_t)
+                         -> ssize_t {
+        syscall!(SOCKETCALL,
+                 SYS_GETSOCKOPT,
+                 &[fd as c_long,
+                   level,
+                   name,
+                   value as c_long,
+                   optlen as c_long,
+                   0] as *const _) as ssize_t
+    }
+    getsockopt(fd, level, name, value, optlen)
+}
+
+// net/socket.c
+#[inline(always)]
+pub unsafe fn shutdown(fd: c_int, how: c_int) -> ssize_t {
+    #[cfg(not(target_arch = "x86"))]
+    #[inline(always)]
+    unsafe fn shutdown(fd: c_int, how: c_int) -> ssize_t {
+        syscall!(SHUTDOWN, fd, how) as ssize_t
+    }
+    #[cfg(target_arch = "x86")]
+    #[inline(always)]
+    unsafe fn shutdown(fd: c_int, how: c_int) -> ssize_t {
+        syscall!(SOCKETCALL,
+                 SYS_SHUTDOWN,
+                 &[fd as c_long,
+                   how,
+                   0,
+                   0,
+                   0,
+                   0] as *const _) as ssize_t
+    }
+    shutdown(fd, how)
+}
+
+// net/socket.c
+#[inline(always)]
+pub unsafe fn connect(fd: c_int,
+                      addr: *const sockaddr,
+                      addrlen: socklen_t)
+                      -> ssize_t {
+    #[cfg(not(target_arch = "x86"))]
+    #[inline(always)]
+    unsafe fn connect(fd: c_int,
+                      addr: *const sockaddr,
+                      addrlen: socklen_t)
+                      -> ssize_t {
+        syscall!(CONNECT, fd, addr, addrlen) as ssize_t
+    }
+    #[cfg(target_arch = "x86")]
+    #[inline(always)]
+    unsafe fn connect(fd: c_int,
+                      addr: *const sockaddr,
+                      addrlen: socklen_t)
+                      -> ssize_t {
+        syscall!(SOCKETCALL,
+                 SYS_CONNECT,
+                 &[fd as c_long,
+                   addr as c_long,
+                   addrlen,
+                   0,
+                   0,
+                   0] as *const _) as ssize_t
+    }
+    connect(fd, addr, addrlen)
+}
+
+// net/socket.c
+#[inline(always)]
+pub unsafe fn send(fd: c_int,
+                   buf: *const c_uchar,
+                   len: size_t,
+                   flags: c_int)
+                   -> ssize_t {
+    sendto(fd, buf, len, flags, 0 as *const _, 0)
+}
+
+// net/socket.c
+#[inline(always)]
+pub unsafe fn sendto(fd: c_int,
+                     buf: *const c_uchar,
+                     len: size_t,
+                     flags: c_int,
+                     addr: *const sockaddr,
+                     addrlen: socklen_t)
+                     -> ssize_t {
+    #[cfg(not(target_arch = "x86"))]
+    #[inline(always)]
+    unsafe fn sendto(fd: c_int,
+                     buf: *const c_uchar,
+                     len: size_t,
+                     flags: c_int,
+                     addr: *const sockaddr,
+                     addrlen: socklen_t)
+                     -> ssize_t {
+        syscall!(SENDTO, fd, buf, len, flags, addr, addrlen) as ssize_t
+    }
+    #[cfg(target_arch = "x86")]
+    #[inline(always)]
+    unsafe fn sendto(fd: c_int,
+                     buf: *const c_uchar,
+                     len: size_t,
+                     flags: c_int,
+                     addr: *const sockaddr,
+                     addrlen: socklen_t)
+                     -> ssize_t {
+        syscall!(SOCKETCALL,
+                 SYS_SENDTO,
+                 &[fd as c_long,
+                   buf as c_long,
+                   len as c_long,
+                   flags,
+                   addr as c_long,
+                   addrlen] as *const _) as ssize_t
+    }
+    sendto(fd, buf, len, flags, addr, addrlen)
+}
+
+// net/socket.c
+#[inline(always)]
+pub unsafe fn getpeername(fd: c_int,
+                          addr: *mut sockaddr,
+                          addrlen: *mut socklen_t)
+                          -> ssize_t {
+    #[cfg(not(target_arch = "x86"))]
+    #[inline(always)]
+    unsafe fn getpeername(fd: c_int,
+                          addr: *mut sockaddr,
+                          addrlen: *mut socklen_t)
+                          -> ssize_t {
+        syscall!(GETPEERNAME, fd, addr, addrlen) as ssize_t
+    }
+    #[cfg(target_arch = "x86")]
+    #[inline(always)]
+    unsafe fn getpeername(fd: c_int,
+                          addr: *mut sockaddr,
+                          addrlen: *mut socklen_t)
+                          -> ssize_t {
+        syscall!(SOCKETCALL,
+                 SYS_GETPEERNAME,
+                 &[fd as c_long,
+                   addr as c_long,
+                   addrlen as c_long,
+                   0,
+                   0,
+                   0] as *const _) as ssize_t
+
+    }
+    getpeername(fd, addr, addrlen)
+}
+
+// net/socket.c
+#[inline(always)]
+pub unsafe fn getsockname(fd: c_int,
+                          addr: *mut sockaddr,
+                          addrlen: *mut socklen_t)
+                          -> ssize_t {
+    #[cfg(not(target_arch = "x86"))]
+    #[inline(always)]
+    unsafe fn getsockname(fd: c_int,
+                          addr: *mut sockaddr,
+                          addrlen: *mut socklen_t)
+                          -> ssize_t {
+        syscall!(GETSOCKNAME, fd, addr, addrlen) as ssize_t
+    }
+    #[cfg(target_arch = "x86")]
+    #[inline(always)]
+    unsafe fn getsockname(fd: c_int,
+                          addr: *mut sockaddr,
+                          addrlen: *mut socklen_t)
+                          -> ssize_t {
+        syscall!(SOCKETCALL,
+                 SYS_GETSOCKNAME,
+                 &[fd as c_long,
+                   addr as c_long,
+                   addrlen as c_long,
+                   0,
+                   0,
+                   0] as *const _) as ssize_t
+    }
+    getsockname(fd, addr, addrlen)
+}
+
+// net/socket.c
+#[inline(always)]
+pub unsafe fn bind(fd: c_int,
+                   addr: *const sockaddr,
+                   addrlen: socklen_t)
+                   -> ssize_t {
+    #[cfg(not(target_arch = "x86"))]
+    #[inline(always)]
+    unsafe fn bind(fd: c_int,
+                   addr: *const sockaddr,
+                   addrlen: socklen_t)
+                   -> ssize_t {
+        syscall!(BIND, fd, addr, addrlen) as ssize_t
+    }
+    #[cfg(target_arch = "x86")]
+    #[inline(always)]
+    unsafe fn bind(fd: c_int,
+                   addr: *const sockaddr,
+                   addrlen: socklen_t)
+                   -> ssize_t {
+        syscall!(SOCKETCALL,
+                 SYS_BIND,
+                 &[fd as c_long,
+                   addr as c_long,
+                   addrlen,
+                   0,
+                   0,
+                   0] as *const _) as ssize_t
+    }
+    bind(fd, addr, addrlen)
+}
+
+// net/socket.c
+#[inline(always)]
+pub unsafe fn listen(fd: c_int, backlog: c_int) -> ssize_t {
+    #[cfg(not(target_arch = "x86"))]
+    #[inline(always)]
+    unsafe fn listen(fd: c_int, backlog: c_int) -> ssize_t {
+        syscall!(LISTEN, fd, backlog) as ssize_t
+    }
+    #[cfg(target_arch = "x86")]
+    #[inline(always)]
+    unsafe fn listen(fd: c_int, backlog: c_int) -> ssize_t {
+        syscall!(SOCKETCALL,
+                 SYS_LISTEN,
+                 &[fd as c_long,
+                   backlog,
+                   0,
+                   0,
+                   0,
+                   0] as *const _) as ssize_t
+    }
+    listen(fd, backlog)
+}
+
+// net/socket.c
+#[inline(always)]
+pub unsafe fn recvfrom(fd: c_int,
+                       buf: *mut c_uchar,
+                       size: size_t,
+                       flags: c_int,
+                       addr: *mut sockaddr,
+                       addrlen: *mut socklen_t)
+                       -> ssize_t {
+    #[cfg(not(target_arch = "x86"))]
+    #[inline(always)]
+    unsafe fn recvfrom(fd: c_int,
+                       buf: *mut c_uchar,
+                       size: size_t,
+                       flags: c_int,
+                       addr: *mut sockaddr,
+                       addrlen: *mut socklen_t)
+                       -> ssize_t {
+        syscall!(RECVFROM, fd, buf, size, flags, addr, addrlen) as ssize_t
+    }
+    #[cfg(target_arch = "x86")]
+    #[inline(always)]
+    unsafe fn recvfrom(fd: c_int,
+                       buf: *mut c_uchar,
+                       size: size_t,
+                       flags: c_int,
+                       addr: *mut sockaddr,
+                       addrlen: *mut socklen_t)
+                       -> ssize_t {
+        syscall!(SOCKETCALL,
+                 SYS_RECVFROM,
+                 &[fd as c_long,
+                   buf as c_long,
+                   size as c_long,
+                   flags,
+                   addr as c_long,
+                   addrlen as c_long] as *const _) as ssize_t
+    }
+    recvfrom(fd, buf, size, flags, addr, addrlen)
 }

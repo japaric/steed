@@ -27,6 +27,8 @@
 #![feature(unicode)]
 #![feature(unique)]
 #![feature(zero_one)]
+#![feature(slice_patterns)]
+#![feature(cfg_target_vendor)]
 #![no_std]
 
 #![stable(feature = "rust1", since = "1.0.0")]
@@ -165,6 +167,8 @@ pub mod path;
 pub mod process;
 // Rust 1.15.0
 pub mod time;
+// Rust 1.14.0
+pub mod net;
 
 // Rust 1.15.0
 // The runtime entry point and a few unstable public functions used by the
@@ -176,9 +180,7 @@ mod linux;
 mod panicking;
 mod rand;
 mod sys;
-mod sys_common {
-    pub use sys::*;
-}
+mod sys_common;
 mod libc {
     pub use ctypes::*;
     pub use linux::*;
