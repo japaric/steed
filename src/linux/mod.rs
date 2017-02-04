@@ -143,8 +143,8 @@ pub unsafe fn clock_gettime(which_clock: clockid_t,
 
 // fs/open.c
 #[inline(always)]
-pub unsafe fn close(fd: c_int) -> ssize_t {
-    syscall!(CLOSE, fd) as ssize_t
+pub unsafe fn close(fd: c_int) -> c_int {
+    syscall!(CLOSE, fd) as c_int
 }
 
 // kernel/exit.c
@@ -160,20 +160,20 @@ pub unsafe fn exit_group(code: c_int) -> ! {
 pub unsafe fn open(filename: *const c_char,
                    flags: c_int,
                    mode: umode_t)
-                   -> ssize_t {
-    syscall!(OPENAT, AT_FDCWD, filename, flags, mode) as ssize_t
+                   -> c_int {
+    syscall!(OPENAT, AT_FDCWD, filename, flags, mode) as c_int
 }
 
 // fs/open.c
 #[inline(always)]
-pub unsafe fn chmod(filename: *const c_char, mode: umode_t) -> ssize_t {
-    syscall!(FCHMODAT, AT_FDCWD, filename, mode, 0) as ssize_t
+pub unsafe fn chmod(filename: *const c_char, mode: umode_t) -> c_int {
+    syscall!(FCHMODAT, AT_FDCWD, filename, mode, 0) as c_int
 }
 
 // fs/open.c
 #[inline(always)]
-pub unsafe fn fchmod(fd: c_int, mode: umode_t) -> ssize_t {
-    syscall!(FCHMOD, fd, mode) as ssize_t
+pub unsafe fn fchmod(fd: c_int, mode: umode_t) -> c_int {
+    syscall!(FCHMOD, fd, mode) as c_int
 }
 
 // fs/read_write.c
@@ -320,21 +320,21 @@ pub unsafe fn _llseek(fd: c_int,
 
 // fs/open.c
 #[inline(always)]
-pub unsafe fn ftruncate64(fd: c_int, length: loff_t) -> ssize_t {
+pub unsafe fn ftruncate64(fd: c_int, length: loff_t) -> c_int {
     #[cfg(all(target_pointer_width = "32", not(target_arch = "x86")))]
     #[inline(always)]
-    unsafe fn ftruncate64(fd: c_int, length: loff_t) -> ssize_t {
-        syscall!(FTRUNCATE64, fd, 0, high(length), low(length)) as ssize_t
+    unsafe fn ftruncate64(fd: c_int, length: loff_t) -> c_int {
+        syscall!(FTRUNCATE64, fd, 0, high(length), low(length)) as c_int
     }
     #[cfg(target_arch = "x86")]
     #[inline(always)]
-    unsafe fn ftruncate64(fd: c_int, length: loff_t) -> ssize_t {
-        syscall!(FTRUNCATE64, fd, high(length), low(length)) as ssize_t
+    unsafe fn ftruncate64(fd: c_int, length: loff_t) -> c_int {
+        syscall!(FTRUNCATE64, fd, high(length), low(length)) as c_int
     }
     #[cfg(target_pointer_width = "64")]
     #[inline(always)]
-    unsafe fn ftruncate64(fd: c_int, length: loff_t) -> ssize_t {
-        syscall!(FTRUNCATE, fd, length) as ssize_t
+    unsafe fn ftruncate64(fd: c_int, length: loff_t) -> c_int {
+        syscall!(FTRUNCATE, fd, length) as c_int
     }
     ftruncate64(fd, length)
 }
@@ -347,14 +347,14 @@ pub unsafe fn ioctl(fd: c_int, cmd: c_uint, arg: c_ulong) -> ssize_t {
 
 // fs/sync.c
 #[inline(always)]
-pub unsafe fn fsync(fd: c_int) -> ssize_t {
-    syscall!(FSYNC, fd) as ssize_t
+pub unsafe fn fsync(fd: c_int) -> c_int {
+    syscall!(FSYNC, fd) as c_int
 }
 
 // fs/sync.c
 #[inline(always)]
-pub unsafe fn fdatasync(fd: c_int) -> ssize_t {
-    syscall!(FDATASYNC, fd) as ssize_t
+pub unsafe fn fdatasync(fd: c_int) -> c_int {
+    syscall!(FDATASYNC, fd) as c_int
 }
 
 // fs/stat.c
@@ -470,8 +470,8 @@ pub unsafe fn symlink(oldname: *const c_char,
 
 // fs/namei.c
 #[inline(always)]
-pub unsafe fn mkdir(pathname: *const c_char, mode: umode_t) -> ssize_t {
-    syscall!(MKDIRAT, AT_FDCWD, pathname, mode) as ssize_t
+pub unsafe fn mkdir(pathname: *const c_char, mode: umode_t) -> c_int {
+    syscall!(MKDIRAT, AT_FDCWD, pathname, mode) as c_int
 }
 
 // fs/readdir.c
