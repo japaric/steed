@@ -161,6 +161,7 @@ $ edit Xargo.toml && cat $_
 
 ``` toml
 [dependencies.collections]  # `steed` depends on collections
+[dependencies.rand]  # and rand
 
 [dependencies.std]
 git = "https://github.com/japaric/steed"  # `path` works too
@@ -219,6 +220,7 @@ $ edit Xargo.toml && cat $_
 
 ``` toml
 [dependencies.collections]  # `steed` depends on collections
+[dependencies.rand]  # and rand
 
 [dependencies.std]
 git = "https://github.com/japaric/steed"  # `path` works too
