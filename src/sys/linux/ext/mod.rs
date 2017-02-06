@@ -2,9 +2,9 @@
 pub mod ffi;
 // Rust 1.15.0
 pub mod fs;
-// Rust 1.14.0
+// Rust 1.15.0
 pub mod io;
-// Rust 1.14.0
+// Rust 1.15.0
 pub mod net;
 
 #[stable(feature = "steed", since = "1.0.0")]
