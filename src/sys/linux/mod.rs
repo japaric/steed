@@ -1,5 +1,7 @@
 pub mod ext;
+// Rust 1.15.0
 pub mod fd;
+// Rust 1.15.0 (close...)
 pub mod fs;
 pub mod io;
 pub mod memchr;
@@ -69,7 +71,7 @@ macro_rules! impl_cvt {
     })*)
 }
 
-impl_cvt! { i32 isize }
+impl_cvt! { i32 isize i64 }
 
 pub fn cvt<I: Cvt>(ret: I) -> Result<I> {
     ret.cvt()

@@ -1,6 +1,7 @@
 #![feature(alloc)]
 #![feature(allow_internal_unstable)]
 #![feature(asm)]
+#![feature(cfg_target_vendor)]
 #![feature(collections)]
 #![feature(collections_bound)]
 #![feature(collections_range)]
@@ -17,18 +18,17 @@
 #![feature(naked_functions)]
 #![feature(oom)]
 #![feature(prelude_import)]
-#![feature(raw)]
 #![feature(rand)]
+#![feature(raw)]
 #![feature(shared)]
 #![feature(sip_hash_13)]
 #![feature(slice_concat_ext)]
+#![feature(slice_patterns)]
 #![feature(staged_api)]
 #![feature(try_from)]
 #![feature(unicode)]
 #![feature(unique)]
 #![feature(zero_one)]
-#![feature(slice_patterns)]
-#![feature(cfg_target_vendor)]
 #![no_std]
 
 #![stable(feature = "rust1", since = "1.0.0")]
@@ -97,8 +97,6 @@ pub use core::raw;
 #[stable(feature = "rust1", since = "1.0.0")]
 pub use core::result;
 #[stable(feature = "rust1", since = "1.0.0")]
-pub use core::sync;
-#[stable(feature = "rust1", since = "1.0.0")]
 pub use core::option;
 #[stable(feature = "rust1", since = "1.0.0")]
 pub use core::isize;
@@ -144,6 +142,7 @@ pub use std_unicode::char;
 mod macros;
 
 pub mod io;
+pub mod sync;
 
 // Rust 1.15.0
 pub mod ascii;

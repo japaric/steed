@@ -125,7 +125,7 @@ impl FileDesc {
               target_os = "haiku"))]
     pub fn set_cloexec(&self) -> io::Result<()> {
         unsafe {
-            let previous = cvt(libc::fcntl(self.fd, libc::F_GETFD, 0))?;
+            let previous = cvt(libc::fcntl(self.fd, libc::F_GETFD))?;
             cvt(libc::fcntl(self.fd, libc::F_SETFD, previous | libc::FD_CLOEXEC))?;
             Ok(())
         }
