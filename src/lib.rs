@@ -97,8 +97,6 @@ pub use core::raw;
 #[stable(feature = "rust1", since = "1.0.0")]
 pub use core::result;
 #[stable(feature = "rust1", since = "1.0.0")]
-pub use core::sync;
-#[stable(feature = "rust1", since = "1.0.0")]
 pub use core::option;
 #[stable(feature = "rust1", since = "1.0.0")]
 pub use core::isize;
@@ -144,6 +142,7 @@ pub use std_unicode::char;
 mod macros;
 
 pub mod io;
+pub mod sync;
 
 // Rust 1.15.0
 pub mod ascii;

@@ -16,6 +16,7 @@ use io::{self, Error, ErrorKind, SeekFrom};
 use libc::{self, c_int, mode_t};
 use mem;
 use path::{Path, PathBuf};
+use sync::Arc;
 use sys::fd::FileDesc;
 use sys::time::SystemTime;
 use sys::{cvt, cvt_r};
@@ -40,11 +41,16 @@ use linux;
 
 pub struct File(FileDesc);
 
+#[derive(Clone)]
+pub struct FileAttr {
+    stat: stat64,
+}
+
 pub struct ReadDir(Option<ReadDirInner>);
 
 struct ReadDirInner {
     fd: FileDesc,
-    root: PathBuf, // TODO: Replace by a `Arc<PathBuf>`
+    root: Arc<PathBuf>,
     buf: Vec<u8>,
     offset: usize,
 }
@@ -53,7 +59,7 @@ impl ReadDir {
     fn new(fd: FileDesc, root: PathBuf) -> ReadDir {
         ReadDir(Some(ReadDirInner {
             fd: fd,
-            root: root,
+            root: Arc::new(root),
             buf: Vec::with_capacity(32768),
             offset: 0,
         }))
@@ -63,12 +69,12 @@ impl ReadDir {
 pub struct DirEntry {
     entry: linux::linux_dirent64,
     name: OsString,
-    root: PathBuf,
+    root: Arc<PathBuf>,
 }
 
 impl DirEntry {
     pub unsafe fn from_raw(entry: *const linux::linux_dirent64,
-                           root: PathBuf)
+                           root: Arc<PathBuf>)
         -> DirEntry
     {
         let name = CStr::from_ptr((*entry).d_name.as_ptr()).to_bytes();
@@ -80,12 +86,7 @@ impl DirEntry {
     }
 }
 
-#[derive(Clone)]
-pub struct FileAttr {
-    stat: stat64,
-}
-
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct OpenOptions {
     // generic
     read: bool,
@@ -105,6 +106,7 @@ pub struct FilePermissions { mode: mode_t }
 #[derive(Copy, Clone, PartialEq, Eq, Hash, Debug)]
 pub struct FileType { mode: mode_t }
 
+#[derive(Debug)]
 pub struct DirBuilder { mode: mode_t }
 
 impl FileAttr {
