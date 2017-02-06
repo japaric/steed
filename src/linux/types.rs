@@ -64,15 +64,6 @@ pub struct rusage {
     _unimplemented: (),
 }
 
-// Where from?
-pub type blkcnt64_t = i64;
-#[cfg(not(any(target_arch = "mips", target_arch = "mips64")))]
-pub type dev_t = u64;
-pub type gid_t = __kernel_gid_t;
-pub type ino64_t = c_longlong;
-pub type off64_t = __kernel_off64_t;
-pub type uid_t = __kernel_uid_t;
-
 // libc helper type
 pub type socklen_t = c_int;
 
@@ -93,6 +84,7 @@ pub struct sockaddr_in {
     pub pad: [u8; 8],
 }
 
+// include/uapi/linux/in6.h
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub struct sockaddr_in6 {
@@ -101,6 +93,21 @@ pub struct sockaddr_in6 {
     pub sin6_flowinfo: u32,
     pub sin6_addr: in6_addr,
     pub sin6_scope_id: u32,
+}
+
+// include/uapi/linux/in.h
+pub const UNIX_PATH_MAX: usize = 108;
+#[repr(C)]
+#[derive(Copy)]
+pub struct sockaddr_un {
+    pub sun_family: sa_family_t,
+    pub sun_path: [c_char; UNIX_PATH_MAX],
+}
+
+impl Clone for sockaddr_un {
+    fn clone(&self) -> sockaddr_un {
+        *self
+    }
 }
 
 // include/uapi/linux/in.h
@@ -129,5 +136,24 @@ pub struct ip_mreq {
 #[repr(C)]
 pub struct ipv6_mreq {
     pub ipv6mr_multiaddr: in6_addr,
-    pub ipv6mr_interface: c_int,
+    // Changed from `c_int` to `c_uint` so it fits with the `sys::linux::net`
+    // source.
+    pub ipv6mr_interface: c_uint,
 }
+
+// include/uapi/linux/socket.h
+pub const _K_SS_MAXSIZE: usize = 128;
+pub type sockaddr_storage = __kernel_sockaddr_storage;
+pub struct __kernel_sockaddr_storage {
+    pub ss_family: sa_family_t,
+    __ss_data: [c_char; _K_SS_MAXSIZE - 2],
+}
+
+// Where from?
+pub type blkcnt64_t = i64;
+#[cfg(not(any(target_arch = "mips", target_arch = "mips64")))]
+pub type dev_t = u64;
+pub type gid_t = __kernel_gid_t;
+pub type ino64_t = c_longlong;
+pub type off64_t = __kernel_off64_t;
+pub type uid_t = __kernel_uid_t;

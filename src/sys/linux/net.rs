@@ -8,19 +8,26 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+#[cfg(issue = "22")]
+use ffi::CStr;
 use io;
-use libc::{c_int, c_ulong};
-use linux as libc;
-use linux::errno::{EINVAL, ENOSYS};
+use libc::{self, c_int, size_t, sockaddr, socklen_t};
+#[cfg(issue = "22")]
+use libc::EAI_SYSTEM;
 use net::{SocketAddr, Shutdown};
 #[cfg(issue = "22")]
 use str;
 use sys::fd::FileDesc;
 use sys_common::{AsInner, FromInner, IntoInner};
+use sys_common::net::{getsockopt, setsockopt};
 use time::Duration;
-use sys_common::net::{setsockopt, getsockopt};
 
 pub use sys::{cvt, cvt_r};
+pub mod netc {
+    pub use libc::*;
+}
+
+pub type wrlen_t = size_t;
 
 // See below for the usage of SOCK_CLOEXEC, but this constant is only defined on
 // Linux currently (e.g. support doesn't exist on other platforms). In order to
@@ -28,12 +35,17 @@ pub use sys::{cvt, cvt_r};
 // SOCK_CLOEXEC here for other platforms. Note that the dummy constant isn't
 // actually ever used (the blocks below are wrapped in `if cfg!` as well.
 #[cfg(target_os = "linux")]
-use linux::SOCK_CLOEXEC;
+use libc::SOCK_CLOEXEC;
 #[cfg(not(target_os = "linux"))]
 const SOCK_CLOEXEC: c_int = 0;
 
-#[cfg(issue = "22")]
-const EAI_SYSTEM: c_int = -11;
+// Another conditional contant for name resolution: Macos et iOS use
+// SO_NOSIGPIPE as a setsockopt flag to disable SIGPIPE emission on socket.
+// Other platforms do otherwise.
+#[cfg(target_vendor = "apple")]
+use libc::SO_NOSIGPIPE;
+#[cfg(not(target_vendor = "apple"))]
+const SO_NOSIGPIPE: c_int = 0;
 
 pub struct Socket(FileDesc);
 
@@ -49,7 +61,6 @@ pub fn cvt_gai(err: c_int) -> io::Result<()> {
     }
 
     let detail = unsafe {
-        use ffi::CStr;
         str::from_utf8(CStr::from_ptr(libc::gai_strerror(err)).to_bytes()).unwrap()
             .to_owned()
     };
@@ -76,21 +87,23 @@ impl Socket {
             // fallthrough to the fallback.
             if cfg!(target_os = "linux") {
                 match cvt(libc::socket(fam, ty | SOCK_CLOEXEC, 0)) {
-                    Ok(fd) => return Ok(Socket(FileDesc::new(fd as i32))),
-                    Err(ref e) if e.raw_os_error() == Some(EINVAL) => {}
+                    Ok(fd) => return Ok(Socket(FileDesc::new(fd))),
+                    Err(ref e) if e.raw_os_error() == Some(libc::EINVAL) => {}
                     Err(e) => return Err(e),
                 }
             }
 
             let fd = cvt(libc::socket(fam, ty, 0))?;
-            let fd = FileDesc::new(fd as i32);
+            let fd = FileDesc::new(fd);
             fd.set_cloexec()?;
             let socket = Socket(fd);
+            if cfg!(target_vendor = "apple") {
+                setsockopt(&socket, libc::SOL_SOCKET, SO_NOSIGPIPE, 1)?;
+            }
             Ok(socket)
         }
     }
 
-    #[cfg_attr(not(issue = "22"), allow(dead_code))]
     pub fn new_pair(fam: c_int, ty: c_int) -> io::Result<(Socket, Socket)> {
         unsafe {
             let mut fds = [0, 0];
@@ -101,7 +114,7 @@ impl Socket {
                     Ok(_) => {
                         return Ok((Socket(FileDesc::new(fds[0])), Socket(FileDesc::new(fds[1]))));
                     }
-                    Err(ref e) if e.raw_os_error() == Some(EINVAL) => {},
+                    Err(ref e) if e.raw_os_error() == Some(libc::EINVAL) => {},
                     Err(e) => return Err(e),
                 }
             }
@@ -115,7 +128,7 @@ impl Socket {
         }
     }
 
-    pub fn accept(&self, storage: *mut libc::sockaddr, len: *mut c_int)
+    pub fn accept(&self, storage: *mut sockaddr, len: *mut socklen_t)
                   -> io::Result<Socket> {
         // Unfortunately the only known way right now to accept a socket and
         // atomically set the CLOEXEC flag is to use the `accept4` syscall on
@@ -126,14 +139,14 @@ impl Socket {
         });
         match res {
             Ok(fd) => return Ok(Socket(FileDesc::new(fd as i32))),
-            Err(ref e) if e.raw_os_error() == Some(ENOSYS) => {}
+            Err(ref e) if e.raw_os_error() == Some(libc::ENOSYS) => {}
             Err(e) => return Err(e),
         }
 
         let fd = cvt_r(|| unsafe {
             libc::accept(self.0.raw(), storage, len)
         })?;
-        let fd = FileDesc::new(fd as i32);
+        let fd = FileDesc::new(fd);
         fd.set_cloexec()?;
         Ok(Socket(fd))
     }
@@ -150,12 +163,11 @@ impl Socket {
         self.0.read_to_end(buf)
     }
 
-    #[cfg_attr(not(issue = "22"), allow(dead_code))]
     pub fn write(&self, buf: &[u8]) -> io::Result<usize> {
         self.0.write(buf)
     }
 
-    pub fn set_timeout(&self, dur: Option<Duration>, kind: c_int) -> io::Result<()> {
+    pub fn set_timeout(&self, dur: Option<Duration>, kind: libc::c_int) -> io::Result<()> {
         let timeout = match dur {
             Some(dur) => {
                 if dur.as_secs() == 0 && dur.subsec_nanos() == 0 {
@@ -187,7 +199,7 @@ impl Socket {
         setsockopt(self, libc::SOL_SOCKET, kind, timeout)
     }
 
-    pub fn timeout(&self, kind: c_int) -> io::Result<Option<Duration>> {
+    pub fn timeout(&self, kind: libc::c_int) -> io::Result<Option<Duration>> {
         let raw: libc::timeval = getsockopt(self, libc::SOL_SOCKET, kind)?;
         if raw.tv_sec == 0 && raw.tv_usec == 0 {
             Ok(None)
@@ -218,8 +230,8 @@ impl Socket {
     }
 
     pub fn set_nonblocking(&self, nonblocking: bool) -> io::Result<()> {
-        let mut nonblocking = nonblocking as c_int;
-        cvt(unsafe { libc::ioctl(*self.as_inner(), libc::FIONBIO, &mut nonblocking as *mut _ as c_ulong) }).map(|_| ())
+        let mut nonblocking = nonblocking as libc::c_int;
+        cvt(unsafe { libc::ioctl(*self.as_inner(), libc::FIONBIO, &mut nonblocking as *mut _ as libc::c_ulong) }).map(|_| ())
     }
 
     pub fn take_error(&self) -> io::Result<Option<io::Error>> {

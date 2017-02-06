@@ -116,6 +116,7 @@ pub const IPV6_ADD_MEMBERSHIP: c_int = 20;
 pub const IPV6_DROP_MEMBERSHIP: c_int = 21;
 
 // include/linux/socket.h
+pub const AF_UNIX: c_int = 1;
 pub const AF_INET: c_int = 2;
 pub const AF_INET6: c_int = 10;
 
@@ -341,8 +342,8 @@ pub unsafe fn ftruncate64(fd: c_int, length: loff_t) -> c_int {
 
 // fs/ioctl.c
 #[inline(always)]
-pub unsafe fn ioctl(fd: c_int, cmd: c_uint, arg: c_ulong) -> ssize_t {
-    syscall!(IOCTL, fd, cmd, arg) as ssize_t
+pub unsafe fn ioctl(fd: c_int, cmd: c_uint, arg: c_ulong) -> c_int {
+    syscall!(IOCTL, fd, cmd, arg) as c_int
 }
 
 // fs/sync.c
@@ -584,15 +585,15 @@ pub unsafe fn getrandom(buf: *mut c_char, count: size_t, flags: c_uint) -> ssize
 
 // net/socket.c
 #[inline(always)]
-pub unsafe fn socket(family: c_int, typ: c_int, protocol: c_int) -> ssize_t {
+pub unsafe fn socket(family: c_int, typ: c_int, protocol: c_int) -> c_int {
     #[cfg(not(target_arch = "x86"))]
     #[inline(always)]
-    unsafe fn socket(family: c_int, typ: c_int, protocol: c_int) -> ssize_t {
-        syscall!(SOCKET, family, typ, protocol) as ssize_t
+    unsafe fn socket(family: c_int, typ: c_int, protocol: c_int) -> c_int {
+        syscall!(SOCKET, family, typ, protocol) as c_int
     }
     #[cfg(target_arch = "x86")]
     #[inline(always)]
-    unsafe fn socket(family: c_int, typ: c_int, protocol: c_int) -> ssize_t {
+    unsafe fn socket(family: c_int, typ: c_int, protocol: c_int) -> c_int {
         syscall!(SOCKETCALL,
                  SYS_SOCKET,
                  &[family as c_long,
@@ -600,7 +601,7 @@ pub unsafe fn socket(family: c_int, typ: c_int, protocol: c_int) -> ssize_t {
                    protocol,
                    0,
                    0,
-                   0] as *const _) as ssize_t
+                   0] as *const _) as c_int
     }
     socket(family, typ, protocol)
 }
@@ -645,21 +646,21 @@ pub unsafe fn socketpair(family: c_int,
 pub unsafe fn accept(fd: c_int,
                      addr: *mut sockaddr,
                      addrlen: *mut socklen_t)
-                     -> ssize_t {
+                     -> c_int {
     #[cfg(not(target_arch = "x86"))]
     #[inline(always)]
     unsafe fn accept(fd: c_int,
                      addr: *mut sockaddr,
                      addrlen: *mut socklen_t)
-                     -> ssize_t {
-        syscall!(ACCEPT, fd, addr, addrlen) as ssize_t
+                     -> c_int {
+        syscall!(ACCEPT, fd, addr, addrlen) as c_int
     }
     #[cfg(target_arch = "x86")]
     #[inline(always)]
     unsafe fn accept(fd: c_int,
                      addr: *mut sockaddr,
                      addrlen: *mut socklen_t)
-                     -> ssize_t {
+                     -> c_int {
         syscall!(SOCKETCALL,
                  SYS_ACCEPT,
                  &[fd as c_long,
@@ -667,7 +668,7 @@ pub unsafe fn accept(fd: c_int,
                    addrlen as c_long,
                    0,
                    0,
-                   0] as *const _) as ssize_t
+                   0] as *const _) as c_int
     }
     accept(fd, addr, addrlen)
 }
@@ -678,15 +679,15 @@ pub unsafe fn accept4(fd: c_int,
                       addr: *mut sockaddr,
                       addrlen: *mut socklen_t,
                       flags: c_int)
-                      -> ssize_t {
+                      -> c_int {
     #[cfg(not(target_arch = "x86"))]
     #[inline(always)]
     unsafe fn accept4(fd: c_int,
                       addr: *mut sockaddr,
                       addrlen: *mut socklen_t,
                       flags: c_int)
-                      -> ssize_t {
-        syscall!(ACCEPT4, fd, addr, addrlen, flags) as ssize_t
+                      -> c_int {
+        syscall!(ACCEPT4, fd, addr, addrlen, flags) as c_int
     }
     #[cfg(target_arch = "x86")]
     #[inline(always)]
@@ -694,7 +695,7 @@ pub unsafe fn accept4(fd: c_int,
                       addr: *mut sockaddr,
                       addrlen: *mut socklen_t,
                       flags: c_int)
-                      -> ssize_t {
+                      -> c_int {
         syscall!(SOCKETCALL,
                  SYS_ACCEPT4,
                  &[fd as c_long,
@@ -702,7 +703,7 @@ pub unsafe fn accept4(fd: c_int,
                    addrlen as c_long,
                    flags,
                    0,
-                   0] as *const _) as ssize_t
+                   0] as *const _) as c_int
     }
     accept4(fd, addr, addrlen, flags)
 }
@@ -712,7 +713,7 @@ pub unsafe fn accept4(fd: c_int,
 pub unsafe fn setsockopt(fd: c_int,
                          level: c_int,
                          name: c_int,
-                         value: *const c_uchar,
+                         value: *const c_void,
                          optlen: socklen_t)
                          -> ssize_t {
     #[cfg(not(target_arch = "x86"))]
@@ -720,7 +721,7 @@ pub unsafe fn setsockopt(fd: c_int,
     unsafe fn setsockopt(fd: c_int,
                          level: c_int,
                          name: c_int,
-                         value: *const c_uchar,
+                         value: *const c_void,
                          optlen: socklen_t)
                          -> ssize_t {
         syscall!(SETSOCKOPT, fd, level, name, value, optlen) as ssize_t
@@ -730,7 +731,7 @@ pub unsafe fn setsockopt(fd: c_int,
     unsafe fn setsockopt(fd: c_int,
                          level: c_int,
                          name: c_int,
-                         value: *const c_uchar,
+                         value: *const c_void,
                          optlen: socklen_t)
                          -> ssize_t {
         syscall!(SOCKETCALL,
@@ -750,7 +751,7 @@ pub unsafe fn setsockopt(fd: c_int,
 pub unsafe fn getsockopt(fd: c_int,
                          level: c_int,
                          name: c_int,
-                         value: *mut c_uchar,
+                         value: *mut c_void,
                          optlen: *mut socklen_t)
                          -> ssize_t {
     #[cfg(not(target_arch = "x86"))]
@@ -758,7 +759,7 @@ pub unsafe fn getsockopt(fd: c_int,
     unsafe fn getsockopt(fd: c_int,
                          level: c_int,
                          name: c_int,
-                         value: *mut c_uchar,
+                         value: *mut c_void,
                          optlen: *mut socklen_t)
                          -> ssize_t {
         syscall!(GETSOCKOPT, fd, level, name, value, optlen) as ssize_t
@@ -768,7 +769,7 @@ pub unsafe fn getsockopt(fd: c_int,
     unsafe fn getsockopt(fd: c_int,
                          level: c_int,
                          name: c_int,
-                         value: *mut c_uchar,
+                         value: *mut c_void,
                          optlen: *mut socklen_t)
                          -> ssize_t {
         syscall!(SOCKETCALL,
@@ -841,7 +842,7 @@ pub unsafe fn connect(fd: c_int,
 // net/socket.c
 #[inline(always)]
 pub unsafe fn send(fd: c_int,
-                   buf: *const c_uchar,
+                   buf: *const c_char,
                    len: size_t,
                    flags: c_int)
                    -> ssize_t {
@@ -851,7 +852,7 @@ pub unsafe fn send(fd: c_int,
 // net/socket.c
 #[inline(always)]
 pub unsafe fn sendto(fd: c_int,
-                     buf: *const c_uchar,
+                     buf: *const c_char,
                      len: size_t,
                      flags: c_int,
                      addr: *const sockaddr,
@@ -860,7 +861,7 @@ pub unsafe fn sendto(fd: c_int,
     #[cfg(not(target_arch = "x86"))]
     #[inline(always)]
     unsafe fn sendto(fd: c_int,
-                     buf: *const c_uchar,
+                     buf: *const c_char,
                      len: size_t,
                      flags: c_int,
                      addr: *const sockaddr,
@@ -871,7 +872,7 @@ pub unsafe fn sendto(fd: c_int,
     #[cfg(target_arch = "x86")]
     #[inline(always)]
     unsafe fn sendto(fd: c_int,
-                     buf: *const c_uchar,
+                     buf: *const c_char,
                      len: size_t,
                      flags: c_int,
                      addr: *const sockaddr,
@@ -894,21 +895,21 @@ pub unsafe fn sendto(fd: c_int,
 pub unsafe fn getpeername(fd: c_int,
                           addr: *mut sockaddr,
                           addrlen: *mut socklen_t)
-                          -> ssize_t {
+                          -> c_int {
     #[cfg(not(target_arch = "x86"))]
     #[inline(always)]
     unsafe fn getpeername(fd: c_int,
                           addr: *mut sockaddr,
                           addrlen: *mut socklen_t)
-                          -> ssize_t {
-        syscall!(GETPEERNAME, fd, addr, addrlen) as ssize_t
+                          -> c_int {
+        syscall!(GETPEERNAME, fd, addr, addrlen) as c_int
     }
     #[cfg(target_arch = "x86")]
     #[inline(always)]
     unsafe fn getpeername(fd: c_int,
                           addr: *mut sockaddr,
                           addrlen: *mut socklen_t)
-                          -> ssize_t {
+                          -> c_int {
         syscall!(SOCKETCALL,
                  SYS_GETPEERNAME,
                  &[fd as c_long,
@@ -916,8 +917,7 @@ pub unsafe fn getpeername(fd: c_int,
                    addrlen as c_long,
                    0,
                    0,
-                   0] as *const _) as ssize_t
-
+                   0] as *const _) as c_int
     }
     getpeername(fd, addr, addrlen)
 }
@@ -927,21 +927,21 @@ pub unsafe fn getpeername(fd: c_int,
 pub unsafe fn getsockname(fd: c_int,
                           addr: *mut sockaddr,
                           addrlen: *mut socklen_t)
-                          -> ssize_t {
+                          -> c_int {
     #[cfg(not(target_arch = "x86"))]
     #[inline(always)]
     unsafe fn getsockname(fd: c_int,
                           addr: *mut sockaddr,
                           addrlen: *mut socklen_t)
-                          -> ssize_t {
-        syscall!(GETSOCKNAME, fd, addr, addrlen) as ssize_t
+                          -> c_int {
+        syscall!(GETSOCKNAME, fd, addr, addrlen) as c_int
     }
     #[cfg(target_arch = "x86")]
     #[inline(always)]
     unsafe fn getsockname(fd: c_int,
                           addr: *mut sockaddr,
                           addrlen: *mut socklen_t)
-                          -> ssize_t {
+                          -> c_int {
         syscall!(SOCKETCALL,
                  SYS_GETSOCKNAME,
                  &[fd as c_long,
@@ -949,7 +949,7 @@ pub unsafe fn getsockname(fd: c_int,
                    addrlen as c_long,
                    0,
                    0,
-                   0] as *const _) as ssize_t
+                   0] as *const _) as c_int
     }
     getsockname(fd, addr, addrlen)
 }
@@ -1012,7 +1012,7 @@ pub unsafe fn listen(fd: c_int, backlog: c_int) -> ssize_t {
 // net/socket.c
 #[inline(always)]
 pub unsafe fn recvfrom(fd: c_int,
-                       buf: *mut c_uchar,
+                       buf: *mut c_char,
                        size: size_t,
                        flags: c_int,
                        addr: *mut sockaddr,
@@ -1021,7 +1021,7 @@ pub unsafe fn recvfrom(fd: c_int,
     #[cfg(not(target_arch = "x86"))]
     #[inline(always)]
     unsafe fn recvfrom(fd: c_int,
-                       buf: *mut c_uchar,
+                       buf: *mut c_char,
                        size: size_t,
                        flags: c_int,
                        addr: *mut sockaddr,
@@ -1032,7 +1032,7 @@ pub unsafe fn recvfrom(fd: c_int,
     #[cfg(target_arch = "x86")]
     #[inline(always)]
     unsafe fn recvfrom(fd: c_int,
-                       buf: *mut c_uchar,
+                       buf: *mut c_char,
                        size: size_t,
                        flags: c_int,
                        addr: *mut sockaddr,

@@ -1,3 +1,5 @@
+#![allow(non_camel_case_types)]
+
 pub mod ext;
 // Rust 1.15.0
 pub mod fd;

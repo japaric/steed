@@ -18,8 +18,8 @@ use fmt;
 use hash;
 use mem;
 use net::{hton, ntoh};
+use sys::net::netc as c;
 use sys_common::{AsInner, FromInner};
-use linux as libc;
 
 /// An IP address, either an IPv4 or IPv6 address.
 ///
@@ -55,14 +55,14 @@ pub enum IpAddr {
 #[derive(Copy)]
 #[stable(feature = "rust1", since = "1.0.0")]
 pub struct Ipv4Addr {
-    inner: libc::in_addr,
+    inner: c::in_addr,
 }
 
 /// Representation of an IPv6 address.
 #[derive(Copy)]
 #[stable(feature = "rust1", since = "1.0.0")]
 pub struct Ipv6Addr {
-    inner: libc::in6_addr,
+    inner: c::in6_addr,
 }
 
 #[allow(missing_docs)]
@@ -157,7 +157,7 @@ impl Ipv4Addr {
     #[stable(feature = "rust1", since = "1.0.0")]
     pub fn new(a: u8, b: u8, c: u8, d: u8) -> Ipv4Addr {
         Ipv4Addr {
-            inner: libc::in_addr {
+            inner: c::in_addr {
                 s_addr: hton(((a as u32) << 24) |
                              ((b as u32) << 16) |
                              ((c as u32) <<  8) |
@@ -356,11 +356,11 @@ impl Ord for Ipv4Addr {
     }
 }
 
-impl AsInner<libc::in_addr> for Ipv4Addr {
-    fn as_inner(&self) -> &libc::in_addr { &self.inner }
+impl AsInner<c::in_addr> for Ipv4Addr {
+    fn as_inner(&self) -> &c::in_addr { &self.inner }
 }
-impl FromInner<libc::in_addr> for Ipv4Addr {
-    fn from_inner(addr: libc::in_addr) -> Ipv4Addr {
+impl FromInner<c::in_addr> for Ipv4Addr {
+    fn from_inner(addr: c::in_addr) -> Ipv4Addr {
         Ipv4Addr { inner: addr }
     }
 }
@@ -394,7 +394,7 @@ impl Ipv6Addr {
     #[stable(feature = "rust1", since = "1.0.0")]
     pub fn new(a: u16, b: u16, c: u16, d: u16, e: u16, f: u16, g: u16,
                h: u16) -> Ipv6Addr {
-        let mut addr: libc::in6_addr = unsafe { mem::zeroed() };
+        let mut addr: c::in6_addr = unsafe { mem::zeroed() };
         addr.s6_addr = [(a >> 8) as u8, a as u8,
                         (b >> 8) as u8, b as u8,
                         (c >> 8) as u8, c as u8,
@@ -667,11 +667,11 @@ impl Ord for Ipv6Addr {
     }
 }
 
-impl AsInner<libc::in6_addr> for Ipv6Addr {
-    fn as_inner(&self) -> &libc::in6_addr { &self.inner }
+impl AsInner<c::in6_addr> for Ipv6Addr {
+    fn as_inner(&self) -> &c::in6_addr { &self.inner }
 }
-impl FromInner<libc::in6_addr> for Ipv6Addr {
-    fn from_inner(addr: libc::in6_addr) -> Ipv6Addr {
+impl FromInner<c::in6_addr> for Ipv6Addr {
+    fn from_inner(addr: c::in6_addr) -> Ipv6Addr {
         Ipv6Addr { inner: addr }
     }
 }
@@ -679,7 +679,7 @@ impl FromInner<libc::in6_addr> for Ipv6Addr {
 #[stable(feature = "ipv6_from_octets", since = "1.9.0")]
 impl From<[u8; 16]> for Ipv6Addr {
     fn from(octets: [u8; 16]) -> Ipv6Addr {
-        let mut inner: libc::in6_addr = unsafe { mem::zeroed() };
+        let mut inner: c::in6_addr = unsafe { mem::zeroed() };
         inner.s6_addr = octets;
         Ipv6Addr::from_inner(inner)
     }
