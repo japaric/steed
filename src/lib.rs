@@ -158,7 +158,7 @@ pub mod fs;
 pub mod memchr;
 // Rust 1.15.0
 pub mod num;
-// Rust 1.14.0
+// Rust 1.15.0
 pub mod net;
 // Rust 1.15.0
 pub mod os;
