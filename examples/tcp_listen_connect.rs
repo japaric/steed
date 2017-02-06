@@ -12,7 +12,7 @@ fn main () {
     drop(stream);
 
     let (mut accepted, _peer_addr) = listener.accept().expect("accept");
-    let mut responce = Vec::new();
-    accepted.read_to_end(&mut responce).expect("read_to_end");
-    assert_eq!(request.to_vec(), responce);
+    let mut response = Vec::new();
+    accepted.read_to_end(&mut response).expect("read_to_end");
+    assert_eq!(request.to_vec(), response);
 }

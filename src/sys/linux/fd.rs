@@ -114,7 +114,7 @@ impl FileDesc {
                   target_os = "haiku")))]
     pub fn set_cloexec(&self) -> io::Result<()> {
         unsafe {
-            cvt(libc::ioctl(self.fd, libc::FIOCLEX))?;
+            cvt(libc::ioctl(self.fd, libc::FIOCLEX, 0))?;
             Ok(())
         }
     }

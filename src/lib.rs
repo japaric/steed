@@ -155,9 +155,11 @@ pub mod ffi;
 // Rust 1.15.0
 pub mod fs;
 // Rust 1.15.0
-pub mod num;
-// Rust 1.15.0
 pub mod memchr;
+// Rust 1.15.0
+pub mod num;
+// Rust 1.14.0
+pub mod net;
 // Rust 1.15.0
 pub mod os;
 // Rust 1.15.0
@@ -166,8 +168,6 @@ pub mod path;
 pub mod process;
 // Rust 1.15.0
 pub mod time;
-// Rust 1.14.0
-pub mod net;
 
 // Rust 1.15.0
 // The runtime entry point and a few unstable public functions used by the
