@@ -281,6 +281,8 @@ summarize the functionality that interfaces with the Linux kernel:
 
 - Filesystem operations (`std::fs`)
 
+- `std::net`: TCP, UPD. `lookup_host` is missing.
+
 - Dynamic memory allocation (thanks to [ralloc]!)
 
 - `std::time`
