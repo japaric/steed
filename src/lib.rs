@@ -141,7 +141,6 @@ pub use std_unicode::char;
 #[macro_use]
 mod macros;
 
-pub mod io;
 pub mod sync;
 
 // Rust 1.15.0
@@ -154,6 +153,8 @@ pub mod error;
 pub mod ffi;
 // Rust 1.15.0
 pub mod fs;
+// Rust 1.15.0 (mostly, not the submodules `lazy`, `stdio`)
+pub mod io;
 // Rust 1.15.0
 pub mod memchr;
 // Rust 1.15.0
