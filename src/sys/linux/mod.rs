@@ -5,7 +5,6 @@ pub mod ext;
 pub mod fd;
 // Rust 1.15.0 (close...)
 pub mod fs;
-pub mod io;
 pub mod memchr;
 // Rust 1.15.0
 pub mod os_str;
@@ -91,8 +90,6 @@ pub fn cvt_r<I: Cvt, F: FnMut() -> I>(mut f: F) -> Result<I> {
         }
     }
 }
-
-pub fn cleanup() { }
 
 pub unsafe fn abort_internal() -> ! {
     intrinsics::abort()
