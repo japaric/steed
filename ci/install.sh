@@ -9,7 +9,7 @@ main() {
            --force \
            --git japaric/cross \
            --tag v0.1.9 \
-           --target x86_64-unknown-linux-gnu
+           --target x86_64-unknown-linux-musl
 }
 
 main
