@@ -31,6 +31,8 @@ pub const SOCK_DGRAM: c_int = 2;
 
 pub const SOL_SOCKET: c_int = 1;
 
+pub const MAP_ANONYMOUS: c_int = 0x20;
+
 // include/linux/types.h
 pub type ino_t = __kernel_ino_t;
 // include/uapi/asm-generic/posix_types.h

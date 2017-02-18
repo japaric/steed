@@ -31,6 +31,8 @@ pub const SOCK_DGRAM: c_int = 2;
 
 pub const SOL_SOCKET: c_int = 1;
 
+pub const MAP_ANONYMOUS: c_int = 0x20;
+
 // include/uapi/linux/net.h
 pub const SYS_SOCKET: c_ulong = 1;
 pub const SYS_BIND: c_ulong = 2;

@@ -13,6 +13,7 @@
 #![feature(dropck_parametricity)]
 #![feature(generic_param_attrs)]
 #![feature(exact_size_is_empty)]
+#![feature(fnbox)]
 #![feature(fused)]
 #![feature(heap_api)]
 #![feature(int_error_internals)]
@@ -178,6 +179,7 @@ pub mod os;
 pub mod path;
 // Rust 1.16.0 (incomplete)
 pub mod process;
+pub mod thread;
 // Rust 1.16.0
 pub mod time;
 

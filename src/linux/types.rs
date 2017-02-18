@@ -10,10 +10,11 @@ pub type clockid_t = __kernel_clockid_t;
 pub type loff_t = __kernel_loff_t;
 pub type mode_t = __kernel_mode_t;
 pub type nlink_t = u32;
+pub type off_t = __kernel_off_t;
 pub type pid_t = __kernel_pid_t;
+pub type suseconds_t = __kernel_suseconds_t;
 pub type time_t = __kernel_time_t;
 pub type umode_t = c_ushort;
-pub type suseconds_t = __kernel_suseconds_t;
 
 // include/linux/socket.h
 pub type sa_family_t = __kernel_sa_family_t;
@@ -28,10 +29,11 @@ type __kernel_loff_t = c_longlong;
 type __kernel_long_t = c_long;
 type __kernel_mode_t = c_uint;
 type __kernel_off64_t = c_longlong;
+type __kernel_off_t = c_long;
 type __kernel_pid_t = c_int;
+type __kernel_suseconds_t = __kernel_long_t;
 type __kernel_time_t = __kernel_long_t;
 type __kernel_uid_t = c_uint;
-type __kernel_suseconds_t = __kernel_long_t;
 
 // include/uapi/linux/time.h
 #[derive(Clone, Copy)]
