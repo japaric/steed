@@ -7,12 +7,12 @@ RUN apt-get update && \
     libc6-dev && \
     mkdir /json
 
-COPY x86_64-unknown-linux-steed.json /json
+COPY xargo.sh /
+RUN bash /xargo.sh
 
-RUN apt-get install -y --no-install-recommends \
-    curl && \
-    curl -LSfs http://japaric.github.io/trust/install.sh | \
-    sh -s -- --git japaric/xargo --tag v0.3.5 --target x86_64-unknown-linux-gnu --to /usr/bin && \
-    apt-get purge --auto-remove -y curl
+COPY lld.sh /
+RUN bash /lld.sh
+
+COPY x86_64-unknown-linux-steed.json /json
 
 ENV RUST_TARGET_PATH=/json

@@ -8,7 +8,7 @@ main() {
         sh -s -- \
            --force \
            --git japaric/cross \
-           --tag v0.1.9 \
+           --tag v0.1.10 \
            --target x86_64-unknown-linux-musl
 }
 

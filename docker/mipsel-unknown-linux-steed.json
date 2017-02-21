@@ -5,18 +5,19 @@
     "env": "steed",
     "executables": true,
     "has-elf-tls": true,
-    "linker-is-gnu": true,
+    "linker": "ld.lld",
+    "linker-flavor": "ld",
     "llvm-target": "mipsel-unknown-linux",
     "max-atomic-width": 32,
     "os": "linux",
     "panic-strategy": "abort",
-    "pre-link-args": [
-        "-Wl,--as-needed",
-        "-Wl,--build-id=none",
-        "-Wl,-z,noexecstack",
-        "-nostartfiles",
-        "-static"
-    ],
+    "pre-link-args": {
+        "gcc": [
+            "-Wl,--as-needed",
+            "-Wl,-z,noexecstack",
+            "-nostartfiles"
+        ]
+    },
     "relocation-model": "static",
     "target-endian": "little",
     "target-family": "unix",

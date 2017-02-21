@@ -9,8 +9,9 @@
 - [Features](#features)
 - [Supported architectures](#supported-architectures)
 - [Usage](#usage)
-  - [On x86_64 Linux](#on-x86_64-linux)
-  - [On other systems](#on-other-systems)
+  - [Using `cross`](#using-cross)
+  - [Using `lld`](#using-lld)
+  - [Using `gcc`](#using-gcc)
 - [Current functionality](#current-functionality)
 - [Contributing](#contributing)
 - [License](#license)
@@ -76,21 +77,21 @@ fn main() {
 ```
 
 ```
-# xargo build --target x86_64-unknown-linux-steed --release --example hello
+# xargo rustc --target x86_64-unknown-linux-steed --release --example hello -- -C lto
 $ ./hello
 Hello, world!
 
 $ strip -s hello
 
 $ file hello
-hello: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, stripped
+hello: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, stripped, with debug_info
 
 $ size hello
    text    data     bss     dec     hex filename
-    173       0       0     173      bd hello
+    173       0       0     173      ad hello
 
 $ ls -l hello
--rwxr-xr-x 1 japaric japaric 632 Feb  1 00:00 hello
+-rwxr-xr-x 2 japaric japaric 4712 Apr 11 00:00 hello
 ```
 
 **Disclaimer** The binary size will inevitably go up after we add missing
@@ -141,31 +142,24 @@ To compile your library / application against `steed`, follow these steps:
 
 [issues]: https://github.com/japaric/steed/issues
 
-### On x86_64 Linux
+### Using `cross`
 
-To easiest way to use `steed` is to use the `cross` tool:
+To easiest way to use `steed` is to use the [`cross`] tool:
+
+[`cross`]: https://github.com/japaric/cross#cross
 
 > **NOTE** `cross` depends on Docker and only works on x86_64 Linux
 
 ```
-# if you don't have cross installed
-# (Cross v0.1.8 or newer is required)
+# Always use the latest version
 $ cargo install cross
 
 # instead of this step, just go to the crate you want to build
 $ cargo new --bin hello && cd $_
 
-# this is the part that replaces `std` with `steed`
-$ edit Xargo.toml && cat $_
-```
-
-``` toml
-[dependencies.collections]  # `steed` depends on collections
-[dependencies.rand]  # and rand
-
-[dependencies.std]
-git = "https://github.com/japaric/steed"  # `path` works too
-stage = 1
+# Xargo magic to replace `std` with `steed`
+# (if you want to run tests, fetch `Xargo.test.toml` instead of `Xargo.std.toml`)
+$ curl -L https://raw.githubusercontent.com/japaric/steed/master/Xargo.std.toml > Xargo.toml
 ```
 
 ```
@@ -175,20 +169,21 @@ $ cross run --target x86_64-unknown-linux-steed
 Hello, world!
 
 $ file target/x86_64-unknown-linux-steed/debug/hello
-hello: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, not stripped
+hello: ELF 64-bit LSB executable, x86-64, version 1 (SYSV),statically linked, not stripped, with debug_info
 ```
 
 You can use `cross` to cross compile your crate to other architectures as well.
 
 ```
-# (continuation from the previous example)
+# continuation from the previous example
 $ cross build --target aarch64-unknown-linux-steed
 
 $ file target/aarch64-unknown-linux-steed/debug/hello
-hello: ELF 64-bit LSB executable, ARM aarch64, version 1 (SYSV),statically linked, not stripped
+hello: ELF 64-bit LSB executable, ARM aarch64, version 1 (SYSV), statically linked, not stripped, with debug_info
 ```
 
 `cross` can even transparently execute those cross compiled binaries using QEMU.
+QEMU doesn't need to be installed on the host system.
 
 ```
 $ cross run --target aarch64-unknown-linux-steed -v
@@ -198,76 +193,65 @@ $ cross run --target aarch64-unknown-linux-steed -v
 Hello, world!
 ```
 
-### On other systems
+> **NOTE** `cross test` works as well but you have to use the other Xargo.toml
 
-If you are not using a x86_64 Linux system or don't want to use/install Docker,
-then you can use Xargo to compile your program against `steed`.
+### Using `lld`
 
-```
-# if you don't have Xargo installed
-# (Xargo v0.3.4 or newer is required)
-$ cargo install xargo 
+If you are not running x86_64 Linux or don't want to install / use Docker. You
+can compile `steed` programs using [`xargo`] and [`lld`].
 
-# grab the target specification file for the `steed` target
-$ curl -OL https://github.com/japaric/steed/raw/master/docker/x86_64-unknown-linux-steed.json
-
-# required to compile some of `steed` dependencies
-$ export RUST_TARGET_PATH=$(pwd)
-
-# this is the part that replaces `std` with `steed`
-$ edit Xargo.toml && cat $_
-```
-
-``` toml
-[dependencies.collections]  # `steed` depends on collections
-[dependencies.rand]  # and rand
-
-[dependencies.std]
-git = "https://github.com/japaric/steed"  # `path` works too
-stage = 1
-```
+[`xargo`]: https://github.com/japaric/xargo#xargo
+[`lld`]: https://lld.llvm.org/
 
 ```
+# This is for Ubuntu, adjust as necessary
+$ sudo apt-get install lld-4.0
+
+# Xargo v0.3.4 or newer is required
+$ cargo install xargo
+
+# OMITTED: fetching Xargo.toml
+
+# Fetch the target definition
+$ curl -LO https://raw.githubusercontent.com/japaric/steed/master/docker/x86_64-unknown-linux-steed.json
+
 $ xargo run --target x86_64-unknown-linux-steed
-    Finished dev [unoptimized + debuginfo] target(s) in 0.0 secs
-     Running `target/x86_64-unknown-linux-steed/debug/hello`
 Hello, world!
-
-$ file target/x86_64-unknown-linux-steed/debug/hello
-hello: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, not stripped
 ```
 
-You can cross compile as well but you'll have to install a cross linker on your
-host system:
+Cross compilation works out of the box; there's no need to install a cross C
+toolchain:
 
 ```
-# assuming Ubuntu
-$ sudo apt-get install gcc-aarch64-linux-gnu
-
-# point Cargo to the right linker
-$ export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_STEED_LINKER=aarch64-linux-gnu-gcc
-
-# grab the target specification file for the `steed` target
-$ curl -OL https://github.com/japaric/steed/raw/master/docker/aarch64-unknown-linux-steed.json
-
-# required to compile some of `steed` dependencies
-$ export RUST_TARGET_PATH=$(pwd)
+# fetch another target definition
+$ curl -LO https://raw.githubusercontent.com/japaric/steed/master/docker/aarch64-unknown-linux-steed.json
 
 $ xargo build --target aarch64-unknown-linux-steed
 
-$ file target/aarch64-unknown-linux-steed/debug/hello
-hello: ELF 64-bit LSB executable, ARM aarch64, version 1 (SYSV),statically linked, not stripped
+$ file target/aarch64-unknown-linux-steed/debug/examples/hello
+hello: ELF 64-bit LSB executable, ARM aarch64, version 1 (SYSV), statically linked, not stripped, with debug_info
 ```
 
-You can execute the cross compiled binaries too but you'll have to install and
-explicitly call QEMU:
+To execute foreign binaries you can use QEMU:
 
 ```
-# assuming Ubuntu
+# This is for Ubuntu, adjust as necessary
 $ sudo apt-get install qemu-user
 
-$ qemu-aarch64 target/aarch64-unknown-linux-steed/debug/hello
+$ qemu-aarch64 target/aarch64-unknown-linux-steed/debug/examples/hello
 Hello, world!
+```
+
+### Using `gcc`
+
+If you don't want to install `lld`, you can link `steed` programs using `gcc`,
+which you probably already have installed.
+
+```
+$ xargo rustc --target x86_64-unknown-linux-gnu -- -C linker=gcc -Z linker-flavor=gcc
+
+$ file target/x86_64-unknown-linux-steed/debug/hello
+hello: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=ac4fce139edd9741b818cd73123be6c934718f78, not stripped, with debug_info
 ```
 
 ## Current functionality

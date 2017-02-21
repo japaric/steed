@@ -2,7 +2,7 @@ set -ex
 
 run() {
     docker build \
-           -t japaric/${1}:v0.1.9 \
+           -t japaric/${1}:v0.1.10 \
            -f docker/${1}/Dockerfile \
            docker
 }

@@ -6,3 +6,11 @@ rand = {}
 features = ["mem"]
 git = "https://github.com/rust-lang-nursery/compiler-builtins"
 stage = 1
+
+[dependencies.std]
+git = "https://github.com/japaric/steed"
+stage = 2
+
+[dependencies.test]
+git = "https://github.com/japaric/steed"
+stage = 3
