@@ -1070,6 +1070,7 @@ pub unsafe fn recvfrom(fd: c_int,
 }
 
 // kernel/sys.c
+#[inline(always)]
 pub unsafe fn prctl(option: c_int,
                     arg2: c_ulong,
                     arg3: c_ulong,
@@ -1081,11 +1082,13 @@ pub unsafe fn prctl(option: c_int,
 }
 
 // kernel/sched/core.c
+#[inline(always)]
 pub unsafe fn sched_yield() -> ssize_t {
     syscall!(SCHED_YIELD) as ssize_t
 }
 
 // kernel/sched/core.c
+#[inline(always)]
 pub unsafe fn mmap(addr: *mut c_void,
                    length: size_t,
                    prot: c_int,
@@ -1094,15 +1097,41 @@ pub unsafe fn mmap(addr: *mut c_void,
                    offset: off_t)
     -> *mut c_void
 {
-    syscall!(MMAP, addr, length, prot, flags, fd, offset) as *mut c_void
+    #[cfg(target_pointer_width = "32")]
+    #[inline(always)]
+    unsafe fn mmap(addr: *mut c_void,
+                   length: size_t,
+                   prot: c_int,
+                   flags: c_int,
+                   fd: c_int,
+                   offset: off_t)
+        -> *mut c_void
+    {
+        syscall!(MMAP2, addr, length, prot, flags, fd, offset / 4096) as *mut c_void
+    }
+    #[cfg(target_pointer_width = "64")]
+    #[inline(always)]
+    unsafe fn mmap(addr: *mut c_void,
+                   length: size_t,
+                   prot: c_int,
+                   flags: c_int,
+                   fd: c_int,
+                   offset: off_t)
+        -> *mut c_void
+    {
+        syscall!(MMAP, addr, length, prot, flags, fd, offset) as *mut c_void
+    }
+    mmap(addr, length, prot, flags, fd, offset)
 }
 
 // kernel/time/hrtimer.c
+#[inline(always)]
 pub unsafe fn nanosleep(rqtp: *const timespec, rmtp: *mut timespec) -> ssize_t {
     syscall!(NANOSLEEP, rqtp, rmtp) as ssize_t
 }
 
 // kernel/futex.c
+#[inline(always)]
 pub unsafe fn futex(uaddr: *mut u32,
                     op: c_int,
                     val: u32,

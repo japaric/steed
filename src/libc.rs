@@ -124,6 +124,9 @@ pub struct pthread_attr_t {
 }
 
 struct thread {
+    // Required, because one cannot easily read out register containing the
+    // pointer to this structure on some platforms.
+    this: *mut thread,
     thread_id: pid_t,
 }
 
@@ -178,6 +181,42 @@ pub unsafe fn pthread_getattr_np(pthread: pthread_t,
 }
 */
 
+pub mod internal {
+    use linux;
+    use super::*;
+
+    pub struct Buffer(thread);
+
+    #[cfg(target_arch = "x86")]
+    unsafe fn set_thread_pointer(thread_data: *mut thread) {
+        let mut user_desc = linux::user_desc {
+            entry_number: -1i32 as u32,
+            base_addr: thread_data as u32,
+            limit: 0xfffff,
+            flags: 0x51,
+        };
+        let result = linux::set_thread_area(&mut user_desc);
+        if result < 0 {
+            panic!("set_thread_pointer: set_thread_area: {}", result);
+        }
+        asm!("mov $0,%gs"::"r"(((user_desc.entry_number << 3) | 3) as u16));
+    }
+
+    #[cfg(target_arch = "x86_64")]
+    unsafe fn set_thread_pointer(thread_data: *mut thread) {
+        let result = linux::arch_prctl(linux::ARCH_SET_FS, thread_data as c_ulong);
+        if result < 0 {
+            panic!("set_thread_pointer: arch_prctl: {}", result);
+        }
+    }
+
+    pub unsafe fn init_main_thread(buffer: *mut Buffer) {
+        let buffer = &mut (*buffer).0;
+        buffer.this = buffer;
+        set_thread_pointer(buffer);
+    }
+}
+
 pub unsafe fn pthread_create(pthread: *mut pthread_t,
                              attr: *const pthread_attr_t,
                              start_routine: extern "C" fn(*mut c_void) -> *mut c_void,
@@ -207,6 +246,7 @@ pub unsafe fn pthread_create(pthread: *mut pthread_t,
 
     let stack = map.offset(stack_size as isize);
     let thread = stack as *mut thread;
+    (*thread).this = thread;
 
     let child_tid = syscall_clone(start_routine,
                                   stack,
@@ -235,6 +275,129 @@ extern {
                      ctid: *mut pid_t) -> pid_t;
 }
 
+#[cfg(target_arch = "x86")]
+#[inline(never)]
+#[naked]
+#[no_mangle]
+unsafe extern "C" fn __steed_clone() {
+    // Syscall number is passed in %eax, syscall arguments in %ebx, %ecx, %edx,
+    // %esi, %edi. The arguments are
+    // (flags: c_ulong,           // %ebx
+    //  child_stack: *mut c_void, // %ecx
+    //  ptid: *mut c_int,         // %edx
+    //  newtls: c_ulong,          // %esi
+    //  ctid: *mut c_int)         // %edi
+    //
+    // No registers are clobbered, %eax gets the return value.
+    //
+    // Only %eax, %ecx and %edx are caller-saved, so we must restore the value
+    // of all other registers before returning.
+    //
+    // The cdecl calling convention passes arguments on the stack, right to
+    // left. Since we push %ebp onto the stack in the very beginning, all
+    // offsets are increased by 4. The arguments are
+    // (fn_: extern "C" fn(*mut c_void) -> *mut c_void, // 8(%ebp)
+    //  child_stack: *mut c_void,                       // 12(%ebp)
+    //  flags: c_ulong,                                 // 16(%ebp)
+    //  arg: *mut c_void,                               // 20(%ebp)
+    //  ptid: *mut pid_t,                               // 24(%ebp)
+    //  newtls: *mut c_void,                            // 28(%ebp)
+    //  ctid: *mut pid_t)                               // 32(%ebp)
+    //
+    // Both ABIs return the function result in %eax.
+    //
+    // This means we need the following moves:
+    // 16(%ebp) -> %ebx // flags
+    // 12(%ebp) -> %ecx // child_stack
+    // 24(%ebp) -> %edx // ptid
+    // fancy    -> %esi // newtls
+    // 32(%ebp) -> %edi // ctid
+    //
+    // We need to create a struct of type `struct user_desc` (see `clone(2)`
+    // and `set_thread_area(2)`) and store it in %esi. We do it by pushing it
+    // onto the parent stack.
+    //
+    // We save `fn_` in %ebp.
+
+    asm!("
+        # Stack frame
+        push %ebp
+        mov %esp,%ebp
+
+        # Save registers
+        push %ebx
+        push %esi
+        push %edi
+
+        mov 12(%ebp),%ecx # child_stack
+        and $$-16,%ecx    # Align the stack
+
+        # Push the parameter
+        sub $$16,%ecx     # Keep the stack aligned
+        mov 20(%ebp),%edi # arg
+        mov %edi,(%ecx)
+
+        # Construct the struct
+        # I don't know what these parameters do, but glibc and musl agree on
+        # these.
+
+        # Bitfield, according to glibc:
+        # seg_32bit:1 = 1
+        # contents:2 = 0
+        # read_exec_only:1 = 0
+        # limit_in_pages:1 = 1
+        # seg_not_present:1 = 0
+        # useable:1 = 1
+        push $$0x51
+        push $$0xfffff # limit
+        push 28(%ebp)  # base_addr
+        xor %eax,%eax
+        mov %gs,%ax
+        shr $$3,%eax
+        push %eax      # entry_number
+
+        mov $$120,%eax    # CLONE
+        mov 16(%ebp),%ebx # flags
+        mov 24(%ebp),%edx # ptid
+        mov %esp,%esi     # newtls
+        mov 32(%ebp),%edi # ctid
+
+        mov 8(%ebp),%ebp  # fn_
+
+        int $$0x80
+
+        # CLONE returns 0 in the child thread, return if we're the parent.
+        test %eax,%eax
+        jnz __steed_clone_parent
+
+        mov %ebp,%eax # fn_
+
+        # Mark the lowest stack frame
+        xor %ebp,%ebp
+
+        # arg is already on the stack
+        call *%eax
+
+        mov %eax,%ebx # status
+        mov $$1,%eax  # EXIT
+        int $$0x80
+        hlt
+
+        __steed_clone_parent:
+
+        # Pop the struct
+        add $$16,%esp
+
+        # Restore registers
+        pop %edi
+        pop %esi
+        pop %ebx
+
+        # Stack frame
+        pop %ebp
+    ");
+}
+
 #[cfg(target_arch = "x86_64")]
 #[inline(never)]
 #[naked]
@@ -250,7 +413,7 @@ unsafe extern "C" fn __steed_clone() {
     //
     // The registers %rcx and %r11 are clobbered, %rax gets the return value.
     //
-    // The System V AMD64 API passes arguments in %rdi, %rsi, %rdx, %rcx, %r8,
+    // The System V AMD64 ABI passes arguments in %rdi, %rsi, %rdx, %rcx, %r8,
     // %r9, 8(%rsp). The arguments are
     // (fn_: extern "C" fn(*mut c_void) -> *mut c_void, // %rdi
     //  child_stack: *mut c_void,                       // %rsi
@@ -298,9 +461,9 @@ unsafe extern "C" fn __steed_clone() {
 
         # CLONE returns 0 in the child thread, return if we're the parent.
         test %rax,%rax
-        jnz __steed_clone_end
+        jnz __steed_clone_parent
 
-        # Mark the lowest stack frame?
+        # Mark the lowest stack frame
         xor %rbp,%rbp
 
         pop %rdi # arg
@@ -313,7 +476,7 @@ unsafe extern "C" fn __steed_clone() {
         # Unreachable.
         hlt
 
-        __steed_clone_end:
+        __steed_clone_parent:
     ");
 }
 

@@ -86,3 +86,19 @@ pub struct stat64 {
 }
 
 pub type blksize_t = i32;
+
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub struct user_desc {
+    pub entry_number: c_uint,
+    pub base_addr: c_uint,
+    pub limit: c_uint,
+    pub flags: c_uint,
+}
+
+// arch/x86/kernel/tls.c
+#[inline(always)]
+pub unsafe fn set_thread_area(u_info: *mut user_desc) -> ssize_t {
+    // TODO(steed)!
+    syscall!(SET_THREAD_AREA, u_info) as ssize_t
+}

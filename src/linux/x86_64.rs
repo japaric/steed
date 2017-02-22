@@ -57,3 +57,12 @@ pub struct stat64 {
     pub st_ctime_nsec: c_long,
     __reserved: [c_long; 3],
 }
+
+// arch/x86/include/uapi/asm/prctl.h
+pub const ARCH_SET_FS: c_int = 0x1002;
+
+// arch/x86/um/syscall_64.c
+#[inline(always)]
+pub unsafe fn arch_prctl(code: c_int, addr: c_ulong) -> ssize_t {
+    syscall!(ARCH_PRCTL, code, addr) as ssize_t
+}
