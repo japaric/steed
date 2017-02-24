@@ -182,17 +182,24 @@ pub unsafe fn pthread_getattr_np(pthread: pthread_t,
 */
 
 pub mod internal {
-    use linux;
     use super::*;
 
     pub struct Buffer(thread);
 
+    #[cfg(target_arch = "aarch64")]
+    unsafe fn set_thread_pointer(thread_data: *mut thread) {
+        let _ = thread_data; // TODO(steed): Set thread-local pointer.
+    }
+
     #[cfg(target_arch = "arm")]
     unsafe fn set_thread_pointer(thread_data: *mut thread) {
+        let _ = thread_data; // TODO(steed): Set thread-local pointer.
     }
 
     #[cfg(target_arch = "x86")]
     unsafe fn set_thread_pointer(thread_data: *mut thread) {
+        use linux;
+
         let mut user_desc = linux::user_desc {
             entry_number: -1i32 as u32,
             base_addr: thread_data as u32,
@@ -208,6 +215,8 @@ pub mod internal {
 
     #[cfg(target_arch = "x86_64")]
     unsafe fn set_thread_pointer(thread_data: *mut thread) {
+        use linux;
+
         let result = linux::arch_prctl(linux::ARCH_SET_FS, thread_data as c_ulong);
         if result < 0 {
             panic!("set_thread_pointer: arch_prctl: {}", result);
@@ -282,6 +291,72 @@ extern {
                      ctid: *mut pid_t) -> pid_t;
 }
 
+#[cfg(target_arch = "aarch64")]
+#[inline(never)]
+#[naked]
+#[no_mangle]
+unsafe extern "C" fn __steed_clone() {
+    // Syscall number is passed in x8, syscall arguments in x0, x1, x2, x3, x4.
+    // The arguments are
+    // (flags: c_ulong,           // x0
+    //  child_stack: *mut c_void, // x1
+    //  ptid: *mut c_int,         // x2
+    //  newtls: c_ulong,          // x3
+    //  ctid: *mut c_int)         // x4
+    //
+    // No registers are clobbered, x0 gets the return value.
+    //
+    // We do not clobber any registers, so we don't need to save any.
+    //
+    // The calling convention passes arguments int registers, from x0 to x6.
+    // (fn_: extern "C" fn(*mut c_void) -> *mut c_void, // x0
+    //  child_stack: *mut c_void,                       // x1
+    //  flags: c_ulong,                                 // x2
+    //  arg: *mut c_void,                               // x3
+    //  ptid: *mut pid_t,                               // x4
+    //  newtls: *mut c_void,                            // x5
+    //  ctid: *mut pid_t)                               // x6
+    //
+    // Both ABIs return the function result in x0.
+    //
+    // This means we need the following moves:
+    // x2 -> x0 // flags
+    // x1 -> x1 // child_stack
+    // x4 -> x2 // ptid
+    // x5 -> x3 // newtls
+    // x6 -> x4 // ctid
+    //
+    // We save `fn_` and `arg` on the child stack.
+
+    asm!("
+        // Align the child stack.
+        and x1,x1,#-16
+
+        // Save `fn_` and `arg` on the child stack.
+        stp x0,x3,[x1,#-16]!
+
+        mov x8,#220 // CLONE
+        mov x0,x2   // flags
+                    // child_stack
+        mov x2,x4   // ptid
+        mov x3,x5   // newtls
+        mov x4,x6   // ctid
+        svc #0
+
+        cbnz x0,__steed_clone_parent
+
+        // Restore `fn_` and `arg`.
+        ldp x1,x0,[sp],#16
+        blr x1
+
+        mov x8,#93 // EXIT
+                   // status
+        svc #0
+
+        __steed_clone_parent:
+    ");
+}
+
 #[cfg(target_arch = "arm")]
 #[inline(never)]
 #[naked]
@@ -300,9 +375,10 @@ unsafe extern "C" fn __steed_clone() {
     // Only r0, r1, r2, r3 are caller-saved, so we must restore the value of
     // all other registers before returning.
     //
-    // The calling convention passes arguments on the stack, right to left.
-    // Since we push r4 to r7 onto the stack in the very beginning, all offsets
-    // are increased by 16. The arguments are
+    // The calling convention passes the first four arguments in r0 to r4 and
+    // all further arguments on the stack, right to left. Since we push r4 to
+    // r7 onto the stack in the very beginning, all stack offsets are increased
+    // by 16. The arguments are
     // (fn_: extern "C" fn(*mut c_void) -> *mut c_void, // r0
     //  child_stack: *mut c_void,                       // r1
     //  flags: c_ulong,                                 // r2
@@ -437,9 +513,7 @@ unsafe extern "C" fn __steed_clone() {
         mov 20(%ebp),%edi # arg
         mov %edi,(%ecx)
 
-        # Construct the struct
-        # I don't know what these parameters do, but glibc and musl agree on
-        # these.
+        # Construct a struct of type `user_desc`
 
         # Bitfield, according to glibc:
         # seg_32bit:1 = 1
