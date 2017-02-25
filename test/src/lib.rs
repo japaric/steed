@@ -30,6 +30,8 @@ pub enum ShouldPanic {
     Yes,
 }
 
+pub fn black_box<T>(_: T) {}
+
 pub fn test_main_static(tests: &'static [TestDescAndFn]) {
     let n = tests.len();
 
