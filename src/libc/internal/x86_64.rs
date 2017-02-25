@@ -63,7 +63,7 @@ unsafe extern "C" fn __steed_clone() {
 
         # CLONE returns 0 in the child thread, return if we're the parent.
         test %rax,%rax
-        jnz __steed_clone_parent
+        jnz 1f
 
         # Mark the lowest stack frame
         xor %rbp,%rbp
@@ -78,7 +78,7 @@ unsafe extern "C" fn __steed_clone() {
         # Unreachable.
         hlt
 
-        __steed_clone_parent:
+        1:
     ");
 }
 

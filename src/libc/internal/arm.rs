@@ -59,13 +59,13 @@ unsafe extern "C" fn __steed_clone() {
 
         @ CLONE returns 0 in the child thread, return if we're the parent.
         tst r0,r0
-        bne __steed_clone_parent
+        bne 3f
 
         mov r0,r6 @ arg
 
         @ Do we need to execute `fn_` in thumb mode?
         tst r5,#1
-        bne __steed_clone_thumb
+        bne 2f
 
         @ pc (Program Counter) is always 2 instructions ahead.
         mov lr,pc
@@ -77,14 +77,14 @@ unsafe extern "C" fn __steed_clone() {
                   @ status
         svc 0
 
-        __steed_clone_thumb:
+        2:
 
         @ Again, pc is 2 instructions ahead.
         mov lr,pc
         bx r5 @ Start thumb mode
-        b __steed_clone_exit
+        b 2b
 
-        __steed_clone_parent:
+        3:
 
         @ Restore r4 to r7
         ldmfd sp!,{r4,r5,r6,r7}

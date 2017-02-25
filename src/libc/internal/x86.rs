@@ -90,7 +90,7 @@ unsafe extern "C" fn __steed_clone() {
 
         # CLONE returns 0 in the child thread, return if we're the parent.
         test %eax,%eax
-        jnz __steed_clone_parent
+        jnz 1f
 
         mov %ebp,%eax # fn_
 
@@ -105,7 +105,7 @@ unsafe extern "C" fn __steed_clone() {
         int $$0x80
         hlt
 
-        __steed_clone_parent:
+        1:
 
         # Pop the struct
         add $$16,%esp

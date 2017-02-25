@@ -14,7 +14,7 @@ unsafe extern "C" fn __steed_clone() {
     //
     // We do not clobber any registers, so we don't need to save any.
     //
-    // The calling convention passes arguments int registers, from x0 to x6.
+    // The calling convention passes arguments in registers, from x0 to x6.
     // (fn_: extern "C" fn(*mut c_void) -> *mut c_void, // x0
     //  child_stack: *mut c_void,                       // x1
     //  flags: c_ulong,                                 // x2
@@ -49,7 +49,7 @@ unsafe extern "C" fn __steed_clone() {
         mov x4,x6   // ctid
         svc #0
 
-        cbnz x0,__steed_clone_parent
+        cbnz x0,1f
 
         // Restore `fn_` and `arg`.
         ldp x1,x0,[sp],#16
@@ -59,7 +59,7 @@ unsafe extern "C" fn __steed_clone() {
                    // status
         svc #0
 
-        __steed_clone_parent:
+        1:
     ");
 }
 
