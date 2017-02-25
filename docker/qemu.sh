@@ -29,7 +29,7 @@ main() {
 
     pushd $td
 
-    curl http://wiki.qemu-project.org/download/qemu-$version.tar.bz2 | \
+    curl http://download.qemu-project.org/qemu-$version.tar.bz2 | \
         tar --strip-components=1 -xj
     ./configure \
         --disable-kvm \
