@@ -24,6 +24,10 @@ pub struct StaticTestName(pub &'static str);
 
 pub struct Bencher {}
 
+impl Bencher {
+    pub fn iter<T, F>(&mut self, _: F) where F: FnMut() -> T {}
+}
+
 #[derive(Clone, Copy)]
 pub enum ShouldPanic {
     No,
