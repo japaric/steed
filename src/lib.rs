@@ -52,14 +52,18 @@ extern crate alloc;
 #[macro_reexport(vec, format)]
 extern crate collections as core_collections;
 extern crate compiler_builtins;
+#[cfg(not(test))]
 #[cfg(feature = "ralloc")]
 extern crate ralloc;
+#[cfg(not(test))]
 #[cfg(feature = "naive_ralloc")]
 extern crate naive_ralloc;
 #[macro_use]
 extern crate sc;
 extern crate std_unicode;
 extern crate rand as core_rand;
+#[cfg(test)]
+extern crate test;
 
 // Rust 1.15.0
 // The Rust prelude
@@ -177,6 +181,7 @@ pub mod rt;
 
 mod ctypes;
 mod linux;
+#[cfg(not(test))]
 mod panicking;
 mod rand;
 mod sys;
@@ -185,16 +190,18 @@ mod libc;
 
 // NOTE These two are "undefined" symbols that LLVM emits but that, AFAIK, we
 // never use
-#[unstable(feature = "steed", issue = "0")]
+#[cfg(not(test))]
 #[doc(hidden)]
 #[no_mangle]
+#[unstable(feature = "steed", issue = "0")]
 pub unsafe extern "C" fn __aeabi_unwind_cpp_pr0() {
     intrinsics::unreachable()
 }
 
-#[unstable(feature = "steed", issue = "0")]
+#[cfg(not(test))]
 #[doc(hidden)]
 #[no_mangle]
+#[unstable(feature = "steed", issue = "0")]
 pub unsafe extern "C" fn __aeabi_unwind_cpp_pr1() {
     intrinsics::unreachable()
 }

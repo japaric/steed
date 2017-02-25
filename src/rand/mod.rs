@@ -242,6 +242,7 @@ impl Rng for OsRng {
 
 
 #[cfg(test)]
+#[cfg(issue = "115")]
 mod tests {
     use sync::mpsc::channel;
     use rand::Rng;

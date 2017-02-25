@@ -27,12 +27,38 @@ main() {
     )
 
     for example in ${examples[@]}; do
-        cross run --target $TARGET --no-default-features --features naive_ralloc --example $example
+        cross run \
+              --target $TARGET \
+              --no-default-features \
+              --features "compiler-builtins naive_ralloc" \
+              --example $example
     done
 
     for example in ${examples[@]}; do
-        cross run --target $TARGET --no-default-features --features naive_ralloc --example $example --release
+        cross run \
+              --target $TARGET \
+              --no-default-features \
+              --features "compiler-builtins naive_ralloc" \
+              --example $example --release
     done
+
+    cat >>Xargo.toml <<'EOF'
+
+[dependencies.std]
+default-features = false
+features = ["compiler-builtins", "naive_ralloc"]
+path = "/project"
+stage = 1
+
+[dependencies.test]
+path = "/project/test"
+stage = 2
+EOF
+
+    cross test \
+          --target $TARGET \
+          --no-default-features \
+          --features "naive_ralloc"
 
     set +x
     pushd target/$TARGET/release/examples

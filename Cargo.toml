@@ -19,11 +19,13 @@ optional = true
 path = "naive_ralloc"
 
 [dependencies.compiler_builtins]
+default-features = false
 features = ["mem"]
 git = "https://github.com/rust-lang-nursery/compiler-builtins"
 
 [features]
-default = ["ralloc"]
+default = ["compiler-builtins", "ralloc"]
+compiler-builtins = ["compiler_builtins/compiler-builtins"]
 
 [profile.release]
 lto = true

@@ -618,6 +618,7 @@ impl fmt::Debug for UdpSocket {
 }
 
 #[cfg(all(test, not(target_os = "emscripten")))]
+#[cfg(issue = "115")]
 mod tests {
     use io::ErrorKind;
     use net::*;

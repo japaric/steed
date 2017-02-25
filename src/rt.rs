@@ -73,6 +73,7 @@ impl Stack {
 // Most Rust operations, like using a local/stack variable, will modify the
 // register where `$BSP` resides so we have to use assembly to avoid that.
 
+#[cfg(not(test))]
 #[cfg(target_arch = "x86_64")]
 #[export_name = "_start"]
 #[naked]
@@ -88,6 +89,7 @@ pub extern "C" fn entry() -> ! {
     }
 }
 
+#[cfg(not(test))]
 #[cfg(target_arch = "x86")]
 #[export_name = "_start"]
 #[naked]
@@ -107,6 +109,7 @@ pub extern "C" fn entry() -> ! {
     }
 }
 
+#[cfg(not(test))]
 #[cfg(target_arch = "arm")]
 #[export_name = "_start"]
 #[naked]
@@ -122,6 +125,7 @@ pub extern "C" fn entry() -> ! {
     }
 }
 
+#[cfg(not(test))]
 #[cfg(target_arch = "aarch64")]
 #[export_name = "_start"]
 #[naked]
@@ -137,6 +141,7 @@ pub extern "C" fn entry() -> ! {
     }
 }
 
+#[cfg(not(test))]
 #[cfg(target_arch = "mips")]
 #[export_name = "__start"]
 #[naked]
@@ -153,6 +158,7 @@ pub extern "C" fn entry() -> ! {
 }
 
 // FIXME
+#[cfg(not(test))]
 #[cfg(target_arch = "mips64")]
 #[export_name = "__start"]
 #[naked]
@@ -168,6 +174,7 @@ pub extern "C" fn entry() -> ! {
     }
 }
 
+#[cfg(not(test))]
 #[cfg(any(target_arch = "powerpc", target_arch = "powerpc64"))]
 #[export_name = "_start"]
 #[naked]
@@ -191,6 +198,7 @@ pub extern "C" fn entry() -> ! {
 // guess, is related to the `fn main() { .. }` function one writes in their
 // crates. But the relationship is not that simple due to the presence of the
 // `start` lang item. The next section explains how that lang item works.
+#[cfg(not(test))]
 #[inline(never)]
 #[export_name = "_start_rust"]
 pub extern "C" fn start(sp: &'static Stack) -> ! {
@@ -216,6 +224,7 @@ pub extern "C" fn start(sp: &'static Stack) -> ! {
 //
 // Where `start` is *this* `start` lang item and `user_main` is the (mangled)
 // `main` function within the executable source code.
+#[cfg(not(test))]
 #[lang = "start"]
 extern "C" fn lang_start(main: *const u8,
                          _argc: isize,

@@ -626,6 +626,7 @@ impl fmt::Debug for UdpSocket {
 }
 
 #[cfg(test)]
+#[cfg(issue = "115")]
 mod tests {
     use super::*;
     use collections::HashMap;

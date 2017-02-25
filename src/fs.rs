@@ -1723,6 +1723,7 @@ impl AsInnerMut<fs_imp::DirBuilder> for DirBuilder {
 }
 
 #[cfg(all(test, not(target_os = "emscripten")))]
+#[cfg(issue = "115")]
 mod tests {
     use io::prelude::*;
 

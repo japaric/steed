@@ -72,6 +72,7 @@ pub enum c_void {
 }
 
 #[cfg(test)]
+#[cfg(issue = "115")]
 #[allow(unused_imports)]
 mod tests {
     use any::TypeId;

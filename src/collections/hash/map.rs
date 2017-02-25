@@ -2232,6 +2232,7 @@ fn assert_covariance() {
 }
 
 #[cfg(test)]
+#[cfg(issue = "115")]
 mod test_map {
     use super::HashMap;
     use super::Entry::{Occupied, Vacant};

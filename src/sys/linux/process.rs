@@ -632,6 +632,7 @@ impl Process {
 }
 
 #[cfg(all(test, not(target_os = "emscripten")))]
+#[cfg(issue = "115")]
 mod tests {
     use super::*;
 

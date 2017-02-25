@@ -795,6 +795,7 @@ impl<W: Write> fmt::Debug for LineWriter<W> where W: fmt::Debug {
 }
 
 #[cfg(test)]
+#[cfg(issue = "115")]
 mod tests {
     use io::prelude::*;
     use io::{self, BufReader, BufWriter, LineWriter, SeekFrom};

@@ -33,6 +33,7 @@ mod tcp;
 mod udp;
 mod parser;
 #[cfg(test)]
+#[cfg(issue = "115")]
 mod test;
 
 /// Possible values which can be passed to the [`shutdown`] method of
