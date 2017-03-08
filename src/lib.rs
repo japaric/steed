@@ -25,6 +25,7 @@
 #![feature(slice_concat_ext)]
 #![feature(slice_patterns)]
 #![feature(staged_api)]
+#![feature(str_internals)]
 #![feature(try_from)]
 #![feature(unicode)]
 #![feature(unique)]
