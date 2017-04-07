@@ -101,9 +101,20 @@ $ ls -l hello
 
 ## Supported architectures
 
-`steed` is [continuously tested][ci] on these platforms (using QEMU):
+Turns out that writing architecture specific code is tricky! We were trying to
+provide "if it compiles, it works" level of support for every architecture that
+`std` supports but that stalled development as it's hard to get some features
+working on a bunch of different architectures.
 
-[ci]: https://travis-ci.org/japaric/steed
+So, we have adopted Rust's tier system to unstuck development. Our platform
+support is split in two tiers:
+
+### Tier 1
+
+"If it compiles, it works" level of support. PRs won't land if [CI] tests don't
+pass on these platforms:
+
+[CI]: https://travis-ci.org/japaric/steed
 
 - `aarch64-unknown-linux-steed`
 
@@ -112,6 +123,15 @@ $ ls -l hello
 - `armv7-unknown-linux-steedeabihf`
 
 - `i686-unknown-linux-steed`
+
+- `x86_64-unknown-linux-steed`
+
+### Tier 2
+
+"Best effort" level of support. Using some features that require architecture
+specific code, like threads, may panic at runtime if the work to support that
+feature has not been done yet (`unimplemented!()`). We don't block PRs if CI
+tests don't pass on these platforms:
 
 - `mips-unknown-linux-steed`
 
@@ -129,7 +149,6 @@ $ ls -l hello
 
 <!-- - `sparc64-unknown-linux-steed` -->
 
-- `x86_64-unknown-linux-steed`
 
 ## Usage
 
