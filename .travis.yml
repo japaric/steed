@@ -8,24 +8,25 @@ rust: nightly
 env: TARGET=x86_64-unknown-linux-steed
 matrix:
   include:
-    # Linux
-    - env: TARGET=i686-unknown-linux-steed
+    # Tier 1
     # - env: TARGET=x86_64-unknown-linux-steed  # this is the default job
-
-    # Other architectures
     - env: TARGET=aarch64-unknown-linux-steed
     - env: TARGET=arm-unknown-linux-steedeabi
     - env: TARGET=arm-unknown-linux-steedeabihf
     - env: TARGET=armv7-unknown-linux-steedeabihf
+    - env: TARGET=i686-unknown-linux-steed
+
+    # Tier 2
     - env: TARGET=mips-unknown-linux-steed
     # - env: TARGET=mips64-unknown-linux-steedabi64
     # - env: TARGET=mips64el-unknown-linux-steedabi64
     - env: TARGET=mipsel-unknown-linux-steed
-    - env: TARGET=powerpc-unknown-linux-steed
     - env: TARGET=powerpc64-unknown-linux-steed
     # - env: TARGET=powerpc64le-unknown-linux-steed
     # - env: TARGET=s390x-unknown-linux-steed
     # - env: TARGET=sparc64-unknown-linux-steed
+  allow_failures:
+    - env: TARGET=powerpc-unknown-linux-steed
 
 install:
   - set -e
