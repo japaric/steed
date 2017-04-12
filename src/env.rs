@@ -915,6 +915,7 @@ mod tests {
     use ffi::{OsString, OsStr};
     use path::{Path, PathBuf};
 
+    #[cfg(issue = "69")]
     fn make_rand_name() -> OsString {
         let mut rng = rand::thread_rng();
         let n = format!("TEST{}", rng.gen_ascii_chars().take(10)
@@ -928,6 +929,7 @@ mod tests {
         assert_eq!(a.as_ref().map(|s| &**s), b.map(OsStr::new).map(|s| &*s));
     }
 
+    #[cfg(issue = "69")]
     #[test]
     fn test_set_var() {
         let n = make_rand_name();
@@ -935,6 +937,7 @@ mod tests {
         eq(var_os(&n), Some("VALUE"));
     }
 
+    #[cfg(issue = "69")]
     #[test]
     fn test_remove_var() {
         let n = make_rand_name();
@@ -943,6 +946,7 @@ mod tests {
         eq(var_os(&n), None);
     }
 
+    #[cfg(issue = "69")]
     #[test]
     fn test_set_var_overwrite() {
         let n = make_rand_name();
@@ -953,6 +957,7 @@ mod tests {
         eq(var_os(&n), Some(""));
     }
 
+    #[cfg(issue = "69")]
     #[test]
     #[cfg_attr(target_os = "emscripten", ignore)]
     fn test_var_big() {
@@ -967,6 +972,7 @@ mod tests {
         eq(var_os(&n), Some(&s));
     }
 
+    #[cfg(issue = "69")]
     #[test]
     #[cfg_attr(target_os = "emscripten", ignore)]
     fn test_self_exe_path() {
@@ -978,6 +984,7 @@ mod tests {
         assert!(path.is_absolute());
     }
 
+    #[cfg(issue = "69")]
     #[test]
     #[cfg_attr(target_os = "emscripten", ignore)]
     fn test_env_set_get_huge() {
@@ -989,6 +996,7 @@ mod tests {
         eq(var_os(&n), None);
     }
 
+    #[cfg(issue = "69")]
     #[test]
     fn test_env_set_var() {
         let n = make_rand_name();
@@ -1004,6 +1012,7 @@ mod tests {
         }));
     }
 
+    #[cfg(issue = "69")]
     #[test]
     fn test() {
         assert!((!Path::new("test-path").is_absolute()));
@@ -1031,6 +1040,7 @@ mod tests {
                             &mut [r"c:\", r"c:\foo;bar\", r"c:\baz"]));
     }
 
+    #[cfg(issue = "69")]
     #[test]
     #[cfg(unix)]
     fn split_paths_unix() {
@@ -1046,6 +1056,7 @@ mod tests {
         assert!(check_parse("/:/usr/local", &mut ["/", "/usr/local"]));
     }
 
+    #[cfg(issue = "69")]
     #[test]
     #[cfg(unix)]
     fn join_paths_unix() {
@@ -1079,4 +1090,4 @@ mod tests {
                         r#""c:\te;st";c:\"#));
         assert!(join_paths([r#"c:\te"st"#].iter().cloned()).is_err());
     }
-    }
+}
