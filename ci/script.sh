@@ -9,6 +9,7 @@ main() {
 
     local examples=(
         _llseek
+        args
         create
         dup
         format

@@ -1,5 +1,9 @@
 #![allow(non_camel_case_types)]
 
+// Rust 1.16.0
+pub mod args;
+// Rust 1.16.0
+pub mod env;
 pub mod ext;
 // Rust 1.15.0
 pub mod fd;

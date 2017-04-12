@@ -1,15 +1,16 @@
 #![feature(alloc)]
 #![feature(allow_internal_unstable)]
 #![feature(asm)]
+#![feature(box_syntax)]
 #![feature(cfg_target_vendor)]
 #![feature(collections)]
-#![feature(collections_bound)]
 #![feature(collections_range)]
 #![feature(compiler_builtins_lib)]
 #![feature(const_fn)]
 #![feature(core_intrinsics)]
 #![feature(custom_attribute)]
 #![feature(dropck_parametricity)]
+#![feature(exact_size_is_empty)]
 #![feature(fused)]
 #![feature(heap_api)]
 #![feature(int_error_internals)]
@@ -152,6 +153,8 @@ pub mod sync;
 pub mod ascii;
 // Rust 1.15.0
 pub mod collections;
+// Rust 1.16.0
+pub mod env;
 // Rust 1.15.0
 pub mod error;
 // Rust 1.15.0
