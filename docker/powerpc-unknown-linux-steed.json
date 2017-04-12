@@ -13,7 +13,7 @@
         "gcc": [
             "-Wl,--as-needed",
             "-Wl,-z,noexecstack",
-            "-m64",
+            "-m32",
             "-nostartfiles"
         ]
     },
