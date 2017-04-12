@@ -130,8 +130,8 @@ pass on these platforms:
 
 "Best effort" level of support. Using some features that require architecture
 specific code, like threads, may panic at runtime if the work to support that
-feature has not been done yet (`unimplemented!()`). We don't block PRs if CI
-tests don't pass on these platforms:
+feature has not been done yet (i.e. `unimplemented!()`). We don't block PRs if
+CI tests don't pass on these platforms:
 
 - `mips-unknown-linux-steed`
 
@@ -149,6 +149,11 @@ tests don't pass on these platforms:
 
 <!-- - `sparc64-unknown-linux-steed` -->
 
+We eventually hope to move all targets into the tier 1 but we'll need help from
+people more familiar with the non-x86 architectures. If you'd like to help,
+feel free to contact us on IRC (#rust-steed @ irc.mozilla.org) or via the issue
+tracker, or directly tackle the architecture specific issues, issue tagged with
+e.g. `A-powerpc`, listed on the issue tracker.
 
 ## Usage
 
