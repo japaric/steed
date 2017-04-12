@@ -30,7 +30,7 @@ main() {
         cross run \
               --target $TARGET \
               --no-default-features \
-              --features "compiler-builtins naive_ralloc" \
+              --features naive_ralloc \
               --example $example
     done
 
@@ -38,7 +38,7 @@ main() {
         cross run \
               --target $TARGET \
               --no-default-features \
-              --features "compiler-builtins naive_ralloc" \
+              --features naive_ralloc \
               --example $example --release
     done
 
@@ -46,19 +46,19 @@ main() {
 
 [dependencies.std]
 default-features = false
-features = ["compiler-builtins", "naive_ralloc"]
+features = ["naive_ralloc"]
 path = "/project"
-stage = 1
+stage = 2
 
 [dependencies.test]
 path = "/project/test"
-stage = 2
+stage = 3
 EOF
 
     cross test \
           --target $TARGET \
           --no-default-features \
-          --features "naive_ralloc"
+          --features naive_ralloc
 
     set +x
     pushd target/$TARGET/release/examples
