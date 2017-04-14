@@ -28,16 +28,16 @@ use time::Duration;
 ///
 /// # fn foo() -> std::io::Result<()> {
 /// {
-///     let mut socket = try!(UdpSocket::bind("127.0.0.1:34254"));
+///     let mut socket = UdpSocket::bind("127.0.0.1:34254")?;
 ///
 ///     // read from the socket
 ///     let mut buf = [0; 10];
-///     let (amt, src) = try!(socket.recv_from(&mut buf));
+///     let (amt, src) = socket.recv_from(&mut buf)?;
 ///
 ///     // send a reply to the socket we received data from
 ///     let buf = &mut buf[..amt];
 ///     buf.reverse();
-///     try!(socket.send_to(buf, &src));
+///     socket.send_to(buf, &src)?;
 ///     # Ok(())
 /// } // the socket is closed here
 /// # }
@@ -884,11 +884,23 @@ mod tests {
 
     #[test]
     fn set_nonblocking() {
-        let addr = next_test_ip4();
+        each_ip(&mut |addr, _| {
+            let socket = t!(UdpSocket::bind(&addr));
 
-        let stream = t!(UdpSocket::bind(&addr));
+            t!(socket.set_nonblocking(true));
+            t!(socket.set_nonblocking(false));
 
-        t!(stream.set_nonblocking(true));
-        t!(stream.set_nonblocking(false));
+            t!(socket.connect(addr));
+
+            t!(socket.set_nonblocking(false));
+            t!(socket.set_nonblocking(true));
+
+            let mut buf = [0];
+            match socket.recv(&mut buf) {
+                Ok(_) => panic!("expected error"),
+                Err(ref e) if e.kind() == ErrorKind::WouldBlock => {}
+                Err(e) => panic!("unexpected error {}", e),
+            }
+        })
     }
 }

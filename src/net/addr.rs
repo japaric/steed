@@ -12,13 +12,13 @@ use fmt;
 use hash;
 use io;
 use mem;
-#[cfg(issue = "22")]
+#[cfg(issue = "101")]
 use net::lookup_host;
 use net::{ntoh, hton, IpAddr, Ipv4Addr, Ipv6Addr};
 use option;
 use sys::net::netc as c;
 use sys_common::{FromInner, AsInner, IntoInner};
-#[cfg(issue = "22")]
+#[cfg(issue = "101")]
 use vec;
 use iter;
 use slice;
@@ -151,8 +151,6 @@ impl SocketAddr {
     /// # Examples
     ///
     /// ```
-    /// #![feature(sockaddr_checker)]
-    ///
     /// use std::net::{IpAddr, Ipv4Addr, SocketAddr};
     ///
     /// fn main() {
@@ -161,7 +159,7 @@ impl SocketAddr {
     ///     assert_eq!(socket.is_ipv6(), false);
     /// }
     /// ```
-    #[unstable(feature = "sockaddr_checker", issue = "36949")]
+    #[stable(feature = "sockaddr_checker", since = "1.16.0")]
     pub fn is_ipv4(&self) -> bool {
         match *self {
             SocketAddr::V4(_) => true,
@@ -175,8 +173,6 @@ impl SocketAddr {
     /// # Examples
     ///
     /// ```
-    /// #![feature(sockaddr_checker)]
-    ///
     /// use std::net::{IpAddr, Ipv6Addr, SocketAddr};
     ///
     /// fn main() {
@@ -186,7 +182,7 @@ impl SocketAddr {
     ///     assert_eq!(socket.is_ipv6(), true);
     /// }
     /// ```
-    #[unstable(feature = "sockaddr_checker", issue = "36949")]
+    #[stable(feature = "sockaddr_checker", since = "1.16.0")]
     pub fn is_ipv6(&self) -> bool {
         match *self {
             SocketAddr::V4(_) => false,
@@ -449,6 +445,20 @@ impl FromInner<c::sockaddr_in6> for SocketAddrV6 {
     }
 }
 
+#[stable(feature = "ip_from_ip", since = "1.16.0")]
+impl From<SocketAddrV4> for SocketAddr {
+    fn from(sock4: SocketAddrV4) -> SocketAddr {
+        SocketAddr::V4(sock4)
+    }
+}
+
+#[stable(feature = "ip_from_ip", since = "1.16.0")]
+impl From<SocketAddrV6> for SocketAddr {
+    fn from(sock6: SocketAddrV6) -> SocketAddr {
+        SocketAddr::V6(sock6)
+    }
+}
+
 impl<'a> IntoInner<(*const c::sockaddr, c::socklen_t)> for &'a SocketAddr {
     fn into_inner(self) -> (*const c::sockaddr, c::socklen_t) {
         match *self {
@@ -677,7 +687,7 @@ impl ToSocketAddrs for (Ipv6Addr, u16) {
     }
 }
 
-#[cfg(issue = "22")]
+#[cfg(issue = "101")]
 fn resolve_socket_addr(s: &str, p: u16) -> io::Result<vec::IntoIter<SocketAddr>> {
     let ips = lookup_host(s)?;
     let v: Vec<_> = ips.map(|mut a| { a.set_port(p); a }).collect();
@@ -685,7 +695,7 @@ fn resolve_socket_addr(s: &str, p: u16) -> io::Result<vec::IntoIter<SocketAddr>>
 }
 
 #[stable(feature = "rust1", since = "1.0.0")]
-#[cfg(issue = "22")]
+#[cfg(issue = "101")]
 impl<'a> ToSocketAddrs for (&'a str, u16) {
     type Iter = vec::IntoIter<SocketAddr>;
     fn to_socket_addrs(&self) -> io::Result<vec::IntoIter<SocketAddr>> {
@@ -707,7 +717,7 @@ impl<'a> ToSocketAddrs for (&'a str, u16) {
 
 // accepts strings like 'localhost:12345'
 #[stable(feature = "rust1", since = "1.0.0")]
-#[cfg(issue = "22")]
+#[cfg(issue = "101")]
 impl ToSocketAddrs for str {
     type Iter = vec::IntoIter<SocketAddr>;
     fn to_socket_addrs(&self) -> io::Result<vec::IntoIter<SocketAddr>> {
@@ -752,6 +762,15 @@ impl<'a, T: ToSocketAddrs + ?Sized> ToSocketAddrs for &'a T {
     }
 }
 
+#[cfg(issue = "101")]
+#[stable(feature = "string_to_socket_addrs", since = "1.16.0")]
+impl ToSocketAddrs for String {
+    type Iter = vec::IntoIter<SocketAddr>;
+    fn to_socket_addrs(&self) -> io::Result<vec::IntoIter<SocketAddr>> {
+        (&**self).to_socket_addrs()
+    }
+}
+
 #[cfg(all(test, not(target_os = "emscripten")))]
 #[cfg(issue = "115")]
 mod tests {
@@ -788,6 +807,18 @@ mod tests {
 
         let a = sa4(Ipv4Addr::new(127, 0, 0, 1), 23924);
         assert!(tsa("localhost:23924").unwrap().contains(&a));
+    }
+
+    #[test]
+    fn to_socket_addr_string() {
+        let a = sa4(Ipv4Addr::new(77, 88, 21, 11), 24352);
+        assert_eq!(Ok(vec![a]), tsa(&*format!("{}:{}", "77.88.21.11", "24352")));
+        assert_eq!(Ok(vec![a]), tsa(&format!("{}:{}", "77.88.21.11", "24352")));
+        assert_eq!(Ok(vec![a]), tsa(format!("{}:{}", "77.88.21.11", "24352")));
+
+        let s = format!("{}:{}", "77.88.21.11", "24352");
+        assert_eq!(Ok(vec![a]), tsa(s));
+        // s has been moved into the tsa call
     }
 
     // FIXME: figure out why this fails on openbsd and bitrig and fix it

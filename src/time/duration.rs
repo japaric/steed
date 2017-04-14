@@ -8,22 +8,26 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+use iter::Sum;
 use ops::{Add, Sub, Mul, Div, AddAssign, SubAssign, MulAssign, DivAssign};
 
 const NANOS_PER_SEC: u32 = 1_000_000_000;
 const NANOS_PER_MILLI: u32 = 1_000_000;
 const MILLIS_PER_SEC: u64 = 1_000;
 
-/// A duration type to represent a span of time, typically used for system
+/// A `Duration` type to represent a span of time, typically used for system
 /// timeouts.
 ///
-/// Each duration is composed of a number of seconds and nanosecond precision.
+/// Each `Duration` is composed of a number of seconds and nanosecond precision.
 /// APIs binding a system timeout will typically round up the nanosecond
 /// precision if the underlying system does not support that level of precision.
 ///
-/// Durations implement many common traits, including `Add`, `Sub`, and other
-/// ops traits. Currently a duration may only be inspected for its number of
-/// seconds and its nanosecond precision.
+/// `Duration`s implement many common traits, including [`Add`], [`Sub`], and other
+/// [`ops`] traits.
+///
+/// [`Add`]: ../../std/ops/trait.Add.html
+/// [`Sub`]: ../../std/ops/trait.Sub.html
+/// [`ops`]: ../../std/ops/index.html
 ///
 /// # Examples
 ///
@@ -56,6 +60,14 @@ impl Duration {
     ///
     /// This constructor will panic if the carry from the nanoseconds overflows
     /// the seconds counter.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use std::time::Duration;
+    ///
+    /// let five_seconds = Duration::new(5, 0);
+    /// ```
     #[stable(feature = "duration", since = "1.3.0")]
     #[inline]
     pub fn new(secs: u64, nanos: u32) -> Duration {
@@ -66,6 +78,14 @@ impl Duration {
     }
 
     /// Creates a new `Duration` from the specified number of seconds.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use std::time::Duration;
+    ///
+    /// let five_seconds = Duration::from_secs(5);
+    /// ```
     #[stable(feature = "duration", since = "1.3.0")]
     #[inline]
     pub fn from_secs(secs: u64) -> Duration {
@@ -73,6 +93,14 @@ impl Duration {
     }
 
     /// Creates a new `Duration` from the specified number of milliseconds.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use std::time::Duration;
+    ///
+    /// let five_seconds = Duration::from_millis(5000);
+    /// ```
     #[stable(feature = "duration", since = "1.3.0")]
     #[inline]
     pub fn from_millis(millis: u64) -> Duration {
@@ -81,39 +109,57 @@ impl Duration {
         Duration { secs: secs, nanos: nanos }
     }
 
-    /// Returns the number of whole seconds represented by this duration.
+    /// Returns the number of whole seconds represented by this `Duration`.
     ///
     /// The extra precision represented by this duration is ignored (i.e. extra
     /// nanoseconds are not represented in the returned value).
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use std::time::Duration;
+    ///
+    /// let five_seconds = Duration::new(5, 0);
+    /// assert_eq!(five_seconds.as_secs(), 5);
+    /// ```
     #[stable(feature = "duration", since = "1.3.0")]
     #[inline]
     pub fn as_secs(&self) -> u64 { self.secs }
 
-    /// Returns the nanosecond precision represented by this duration.
+    /// Returns the nanosecond precision represented by this `Duration`.
     ///
     /// This method does **not** return the length of the duration when
     /// represented by nanoseconds. The returned number always represents a
     /// fractional portion of a second (i.e. it is less than one billion).
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use std::time::Duration;
+    ///
+    /// let duration = Duration::from_millis(5010);
+    /// assert_eq!(duration.subsec_nanos(), 10000000);
+    /// ```
     #[stable(feature = "duration", since = "1.3.0")]
     #[inline]
     pub fn subsec_nanos(&self) -> u32 { self.nanos }
 
-    /// Checked duration addition. Computes `self + other`, returning `None`
+    /// Checked `Duration` addition. Computes `self + other`, returning [`None`]
     /// if overflow occurred.
+    ///
+    /// [`None`]: ../../std/option/enum.Option.html#variant.None
     ///
     /// # Examples
     ///
     /// Basic usage:
     ///
     /// ```
-    /// #![feature(duration_checked_ops)]
-    ///
     /// use std::time::Duration;
     ///
     /// assert_eq!(Duration::new(0, 0).checked_add(Duration::new(0, 1)), Some(Duration::new(0, 1)));
     /// assert_eq!(Duration::new(1, 0).checked_add(Duration::new(std::u64::MAX, 0)), None);
     /// ```
-    #[unstable(feature = "duration_checked_ops", issue = "35774")]
+    #[stable(feature = "duration_checked_ops", since = "1.16.0")]
     #[inline]
     pub fn checked_add(self, rhs: Duration) -> Option<Duration> {
         if let Some(mut secs) = self.secs.checked_add(rhs.secs) {
@@ -136,22 +182,22 @@ impl Duration {
         }
     }
 
-    /// Checked duration subtraction. Computes `self + other`, returning `None`
+    /// Checked `Duration` subtraction. Computes `self - other`, returning [`None`]
     /// if the result would be negative or if underflow occurred.
+    ///
+    /// [`None`]: ../../std/option/enum.Option.html#variant.None
     ///
     /// # Examples
     ///
     /// Basic usage:
     ///
     /// ```
-    /// #![feature(duration_checked_ops)]
-    ///
     /// use std::time::Duration;
     ///
     /// assert_eq!(Duration::new(0, 1).checked_sub(Duration::new(0, 0)), Some(Duration::new(0, 1)));
     /// assert_eq!(Duration::new(0, 0).checked_sub(Duration::new(0, 1)), None);
     /// ```
-    #[unstable(feature = "duration_checked_ops", issue = "35774")]
+    #[stable(feature = "duration_checked_ops", since = "1.16.0")]
     #[inline]
     pub fn checked_sub(self, rhs: Duration) -> Option<Duration> {
         if let Some(mut secs) = self.secs.checked_sub(rhs.secs) {
@@ -172,22 +218,22 @@ impl Duration {
         }
     }
 
-    /// Checked duration multiplication. Computes `self * other`, returning
-    /// `None` if underflow or overflow occurred.
+    /// Checked `Duration` multiplication. Computes `self * other`, returning
+    /// [`None`] if overflow occurred.
+    ///
+    /// [`None`]: ../../std/option/enum.Option.html#variant.None
     ///
     /// # Examples
     ///
     /// Basic usage:
     ///
     /// ```
-    /// #![feature(duration_checked_ops)]
-    ///
     /// use std::time::Duration;
     ///
     /// assert_eq!(Duration::new(0, 500_000_001).checked_mul(2), Some(Duration::new(1, 2)));
     /// assert_eq!(Duration::new(std::u64::MAX - 1, 0).checked_mul(2), None);
     /// ```
-    #[unstable(feature = "duration_checked_ops", issue = "35774")]
+    #[stable(feature = "duration_checked_ops", since = "1.16.0")]
     #[inline]
     pub fn checked_mul(self, rhs: u32) -> Option<Duration> {
         // Multiply nanoseconds as u64, because it cannot overflow that way.
@@ -207,23 +253,23 @@ impl Duration {
         }
     }
 
-    /// Checked duration division. Computes `self / other`, returning `None`
-    /// if `other == 0` or the operation results in underflow or overflow.
+    /// Checked `Duration` division. Computes `self / other`, returning [`None`]
+    /// if `other == 0`.
+    ///
+    /// [`None`]: ../../std/option/enum.Option.html#variant.None
     ///
     /// # Examples
     ///
     /// Basic usage:
     ///
     /// ```
-    /// #![feature(duration_checked_ops)]
-    ///
     /// use std::time::Duration;
     ///
     /// assert_eq!(Duration::new(2, 0).checked_div(2), Some(Duration::new(1, 0)));
     /// assert_eq!(Duration::new(1, 0).checked_div(2), Some(Duration::new(0, 500_000_000)));
     /// assert_eq!(Duration::new(2, 0).checked_div(0), None);
     /// ```
-    #[unstable(feature = "duration_checked_ops", issue = "35774")]
+    #[stable(feature = "duration_checked_ops", since = "1.16.0")]
     #[inline]
     pub fn checked_div(self, rhs: u32) -> Option<Duration> {
         if rhs != 0 {
@@ -300,6 +346,20 @@ impl Div<u32> for Duration {
 impl DivAssign<u32> for Duration {
     fn div_assign(&mut self, rhs: u32) {
         *self = *self / rhs;
+    }
+}
+
+#[stable(feature = "duration_sum", since = "1.16.0")]
+impl Sum for Duration {
+    fn sum<I: Iterator<Item=Duration>>(iter: I) -> Duration {
+        iter.fold(Duration::new(0, 0), |a, b| a + b)
+    }
+}
+
+#[stable(feature = "duration_sum", since = "1.16.0")]
+impl<'a> Sum<&'a Duration> for Duration {
+    fn sum<I: Iterator<Item=&'a Duration>>(iter: I) -> Duration {
+        iter.fold(Duration::new(0, 0), |a, b| a + *b)
     }
 }
 
