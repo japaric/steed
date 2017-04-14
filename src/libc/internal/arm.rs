@@ -15,7 +15,7 @@ unsafe extern "C" fn __steed_clone() {
     // Only r0, r1, r2, r3 are caller-saved, so we must restore the value of
     // all other registers before returning.
     //
-    // The calling convention passes the first four arguments in r0 to r4 and
+    // The calling convention passes the first four arguments in r0 to r3 and
     // all further arguments on the stack, right to left. Since we push r4 to
     // r7 onto the stack in the very beginning, all stack offsets are increased
     // by 16. The arguments are
