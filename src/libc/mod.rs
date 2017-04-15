@@ -198,6 +198,8 @@ pub unsafe fn pthread_create(pthread: *mut pthread_t,
     let mask = align - 1;
     let stack_size = ((*attr).stack_size + mask) & !mask;
 
+    // TODO(steed, #131): Make sure this is freed on normal and abnormal thread
+    // exit.
     let map = mmap(ptr::null_mut(),
                    stack_size + mem::size_of::<thread>(),
                    PROT_READ | PROT_WRITE,
@@ -288,7 +290,7 @@ pub unsafe fn pthread_join(pthread: pthread_t, retval: *mut *mut c_void)
     if tmp == 0 {
         return 0;
     }
-    // TODO(steed): Why does FUTEX_WAIT_PRIVATE not work?
+    // TODO(steed, #130): Why does FUTEX_WAIT_PRIVATE not work?
     let res = linux::futex(&mut (*thread).thread_id as *mut _ as *mut u32,
                            linux::FUTEX_WAIT,
                            (*thread).thread_id as u32,

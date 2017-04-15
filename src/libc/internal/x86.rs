@@ -125,6 +125,8 @@ pub unsafe fn set_thread_pointer(thread_data: *mut ()) {
         entry_number: -1i32 as u32,
         base_addr: thread_data as u32,
         limit: 0xfffff,
+        // This `flags` value is explained in the `asm!` block of
+        // `__steed_clone` above.
         flags: 0x51,
     };
     let result = linux::set_thread_area(&mut user_desc);

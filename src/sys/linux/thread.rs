@@ -183,6 +183,7 @@ impl Thread {
     */
 }
 
+// TODO(steed, #134): Implement `Drop` for `Thread`.
 /*
 impl Drop for Thread {
     fn drop(&mut self) {

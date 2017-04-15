@@ -60,6 +60,7 @@ impl Builder {
                 imp::Thread::set_name(name);
             }
             unsafe {
+                // TODO(steed, #128): Add guard page to new threads.
                 /*
                 thread_info::set(imp::guard::current(), their_thread);
                 let try_result = panic::catch_unwind(panic::AssertUnwindSafe(f));
@@ -110,6 +111,7 @@ pub struct ThreadId(u64);
 impl ThreadId {
     // Generate a new unique thread ID.
     fn new() -> ThreadId {
+        // TODO(steed, #129): Use `std`s implementation (commented out below).
         /*
         static GUARD: mutex::Mutex = mutex::Mutex::new();
         static mut COUNTER: u64 = 0;

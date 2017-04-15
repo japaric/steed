@@ -16,6 +16,7 @@ pub fn exit(code: i32) -> ! {
 }
 
 pub fn page_size() -> usize {
+    // TODO(steed, #133): Implement me.
     unimplemented!();
 }
 

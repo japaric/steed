@@ -92,5 +92,5 @@ unsafe extern "C" fn __steed_clone() {
 }
 
 pub unsafe fn set_thread_pointer(thread_data: *mut ()) {
-    let _ = thread_data; // TODO(steed): Set thread-local pointer.
+    let _ = thread_data; // TODO(steed, #127): Set thread-local pointer.
 }

@@ -6,7 +6,7 @@ name = "std"
 version = "0.1.0"
 
 [dependencies]
-sc = { git = "git://github.com/japaric/syscall.rs" }
+sc = "0.2.0"
 
 [dependencies.ralloc]
 default-features = false
