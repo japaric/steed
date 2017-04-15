@@ -1,5 +1,12 @@
 #![allow(non_camel_case_types)]
 
+#![cfg_attr(not(any(target_arch = "aarch64",
+                    target_arch = "arm",
+                    target_arch = "powerpc",
+                    target_arch = "x86",
+                    target_arch = "x86_64")),
+            allow(unused))]
+
 use cmp;
 use linux;
 use mem;
@@ -183,6 +190,36 @@ pub unsafe fn pthread_getattr_np(pthread: pthread_t,
 }
 */
 
+#[cfg(not(any(target_arch = "aarch64",
+              target_arch = "arm",
+              target_arch = "powerpc",
+              target_arch = "x86",
+              target_arch = "x86_64")))]
+pub unsafe fn pthread_create(pthread: *mut pthread_t,
+                             attr: *const pthread_attr_t,
+                             start_routine: extern "C" fn(*mut c_void) -> *mut c_void,
+                             arg: *mut c_void)
+    -> c_int
+{
+    if false {
+        let flags = CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND
+            | CLONE_THREAD | CLONE_SYSVSEM | CLONE_SETTLS
+            | CLONE_CHILD_CLEARTID | CLONE_PARENT_SETTID;
+        mmap(ptr::null_mut(), 0, PROT_READ | PROT_WRITE, MAP_PRIVATE |
+             MAP_ANON, -1, 0);
+    }
+    unimplemented!();
+}
+// Heavily simplified (i.e. less features) version of pthread_create.
+// musl: src/thread/pthread_create.c
+//
+// Doesn't care about signals, thread-local storage and perhaps other things
+// yet.
+#[cfg(any(target_arch = "aarch64",
+          target_arch = "arm",
+          target_arch = "powerpc",
+          target_arch = "x86",
+          target_arch = "x86_64"))]
 pub unsafe fn pthread_create(pthread: *mut pthread_t,
                              attr: *const pthread_attr_t,
                              start_routine: extern "C" fn(*mut c_void) -> *mut c_void,
@@ -232,6 +269,11 @@ pub unsafe fn pthread_create(pthread: *mut pthread_t,
     0
 }
 
+#[cfg(any(target_arch = "aarch64",
+          target_arch = "arm",
+          target_arch = "powerpc",
+          target_arch = "x86",
+          target_arch = "x86_64"))]
 extern {
     // Defined in internal/<arch>.rs.
     //
@@ -280,6 +322,31 @@ pub unsafe fn pthread_detach(thread: pthread_t) -> c_int {
 }
 */
 
+#[cfg(not(any(target_arch = "aarch64",
+              target_arch = "arm",
+              target_arch = "powerpc",
+              target_arch = "x86",
+              target_arch = "x86_64")))]
+pub unsafe fn pthread_join(pthread: pthread_t, retval: *mut *mut c_void)
+    -> c_int
+{
+    if false {
+        let thread = pthread.thread;
+        linux::futex(&mut (*thread).thread_id as *mut _ as *mut u32,
+                     linux::FUTEX_WAIT,
+                     (*thread).thread_id as u32,
+                     ptr::null(),
+                     ptr::null_mut(),
+                     0);
+    }
+    unimplemented!();
+}
+
+#[cfg(any(target_arch = "aarch64",
+          target_arch = "arm",
+          target_arch = "powerpc",
+          target_arch = "x86",
+          target_arch = "x86_64"))]
 pub unsafe fn pthread_join(pthread: pthread_t, retval: *mut *mut c_void)
     -> c_int
 {
@@ -287,6 +354,8 @@ pub unsafe fn pthread_join(pthread: pthread_t, retval: *mut *mut c_void)
     let thread = pthread.thread;
 
     let tmp = (*thread).thread_id;
+    // 0 would mean that the thread has exited already (CLONE_CHILD_CLEARTID
+    // flag on the clone syscall).
     if tmp == 0 {
         return 0;
     }
