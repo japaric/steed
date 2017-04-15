@@ -12,8 +12,10 @@
 
 #![stable(feature = "rust1", since = "1.0.0")]
 
+#[cfg(issue = "101")]
+use fmt;
 use io::{self, Error, ErrorKind};
-#[cfg(issue = "22")]
+#[cfg(issue = "101")]
 use sys_common::net as net_imp;
 
 #[stable(feature = "rust1", since = "1.0.0")]
@@ -96,17 +98,25 @@ fn each_addr<A: ToSocketAddrs, F, T>(addr: A, mut f: F) -> io::Result<T>
                                               iterator and returning socket \
                                               addresses",
            issue = "27705")]
-#[cfg(issue = "22")]
+#[cfg(issue = "101")]
 pub struct LookupHost(net_imp::LookupHost);
 
 #[unstable(feature = "lookup_host", reason = "unsure about the returned \
                                               iterator and returning socket \
                                               addresses",
            issue = "27705")]
-#[cfg(issue = "22")]
+#[cfg(issue = "101")]
 impl Iterator for LookupHost {
     type Item = SocketAddr;
     fn next(&mut self) -> Option<SocketAddr> { self.0.next() }
+}
+
+#[stable(feature = "std_debug", since = "1.15.0")]
+#[cfg(issue = "101")]
+impl fmt::Debug for LookupHost {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        f.pad("LookupHost { .. }")
+    }
 }
 
 /// Resolve the host specified by `host` as a number of `SocketAddr` instances.
@@ -125,7 +135,7 @@ impl Iterator for LookupHost {
 /// use std::net;
 ///
 /// # fn foo() -> std::io::Result<()> {
-/// for host in try!(net::lookup_host("rust-lang.org")) {
+/// for host in net::lookup_host("rust-lang.org")? {
 ///     println!("found address: {}", host);
 /// }
 /// # Ok(())
@@ -135,7 +145,7 @@ impl Iterator for LookupHost {
                                               iterator and returning socket \
                                               addresses",
            issue = "27705")]
-#[cfg(issue = "22")]
+#[cfg(issue = "101")]
 pub fn lookup_host(host: &str) -> io::Result<LookupHost> {
     net_imp::lookup_host(host).map(LookupHost)
 }

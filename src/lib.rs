@@ -9,7 +9,9 @@
 #![feature(const_fn)]
 #![feature(core_intrinsics)]
 #![feature(custom_attribute)]
+#![feature(dropck_eyepatch)]
 #![feature(dropck_parametricity)]
+#![feature(generic_param_attrs)]
 #![feature(exact_size_is_empty)]
 #![feature(fused)]
 #![feature(heap_api)]
@@ -19,6 +21,7 @@
 #![feature(naked_functions)]
 #![feature(oom)]
 #![feature(prelude_import)]
+#![feature(pub_restricted)]
 #![feature(rand)]
 #![feature(raw)]
 #![feature(shared)]
@@ -67,7 +70,7 @@ extern crate rand as core_rand;
 #[cfg(test)]
 extern crate test;
 
-// Rust 1.15.0
+// Rust 1.16.0
 // The Rust prelude
 pub mod prelude;
 
@@ -143,42 +146,42 @@ pub use core_collections::vec;
 #[stable(feature = "rust1", since = "1.0.0")]
 pub use std_unicode::char;
 
-// Rust 1.15.0
+// Rust 1.16.0
 #[macro_use]
 mod macros;
 
 pub mod sync;
 
-// Rust 1.15.0
-pub mod ascii;
-// Rust 1.15.0
-pub mod collections;
 // Rust 1.16.0
+pub mod ascii;
+// Rust 1.16.0 (incomplete)
+pub mod collections;
+// Rust 1.16.0 (incomplete)
 pub mod env;
-// Rust 1.15.0
+// Rust 1.16.0
 pub mod error;
-// Rust 1.15.0
+// Rust 1.16.0
 pub mod ffi;
-// Rust 1.15.0
+// Rust 1.16.0 (no tests)
 pub mod fs;
-// Rust 1.15.0 (mostly, not the submodules `lazy`, `stdio`)
+// Rust 1.16.0 (no tests, mostly, not the submodules `lazy`, `stdio`)
 pub mod io;
-// Rust 1.15.0
+// Rust 1.16.0
 pub mod memchr;
-// Rust 1.15.0
-pub mod num;
-// Rust 1.15.0
+// Rust 1.16.0 (no tests, missing `lookup_host` and friends)
 pub mod net;
-// Rust 1.15.0
+// Rust 1.16.0
+pub mod num;
+// Rust 1.16.0 (no tests)
 pub mod os;
-// Rust 1.15.0
+// Rust 1.16.0
 pub mod path;
-// Rust 1.15.0
+// Rust 1.16.0 (incomplete)
 pub mod process;
-// Rust 1.15.0
+// Rust 1.16.0
 pub mod time;
 
-// Rust 1.15.0
+// Rust 1.16.0 (plus our own entry point)
 // The runtime entry point and a few unstable public functions used by the
 // compiler
 pub mod rt;

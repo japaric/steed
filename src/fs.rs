@@ -35,21 +35,54 @@ use time::SystemTime;
 ///
 /// # Examples
 ///
+/// Create a new file and write bytes to it:
+///
 /// ```no_run
-/// use std::io::prelude::*;
 /// use std::fs::File;
+/// use std::io::prelude::*;
 ///
 /// # fn foo() -> std::io::Result<()> {
-/// let mut f = try!(File::create("foo.txt"));
-/// try!(f.write_all(b"Hello, world!"));
-///
-/// let mut f = try!(File::open("foo.txt"));
-/// let mut s = String::new();
-/// try!(f.read_to_string(&mut s));
-/// assert_eq!(s, "Hello, world!");
+/// let mut file = File::create("foo.txt")?;
+/// file.write_all(b"Hello, world!")?;
 /// # Ok(())
 /// # }
 /// ```
+///
+/// Read the contents of a file into a `String`:
+///
+/// ```no_run
+/// use std::fs::File;
+/// use std::io::prelude::*;
+///
+/// # fn foo() -> std::io::Result<()> {
+/// let mut file = File::open("foo.txt")?;
+/// let mut contents = String::new();
+/// file.read_to_string(&mut contents)?;
+/// assert_eq!(contents, "Hello, world!");
+/// # Ok(())
+/// # }
+/// ```
+///
+/// It can be more efficient to read the contents of a file with a buffered
+/// [`Read`]er. This can be accomplished with [`BufReader<R>`]:
+///
+/// ```no_run
+/// use std::fs::File;
+/// use std::io::BufReader;
+/// use std::io::prelude::*;
+///
+/// # fn foo() -> std::io::Result<()> {
+/// let file = File::open("foo.txt")?;
+/// let mut buf_reader = BufReader::new(file);
+/// let mut contents = String::new();
+/// buf_reader.read_to_string(&mut contents)?;
+/// assert_eq!(contents, "Hello, world!");
+/// # Ok(())
+/// # }
+/// ```
+///
+/// [`Read`]: ../io/trait.Read.html
+/// [`BufReader<R>`]: ../io/struct.BufReader.html
 #[stable(feature = "rust1", since = "1.0.0")]
 pub struct File {
     inner: fs_imp::File,
@@ -57,11 +90,13 @@ pub struct File {
 
 /// Metadata information about a file.
 ///
-/// This structure is returned from the [`metadata`] function or method and
-/// represents known metadata about a file such as its permissions, size,
-/// modification times, etc.
+/// This structure is returned from the [`metadata`] or
+/// [`symlink_metadata`] function or method and represents known
+/// metadata about a file such as its permissions, size, modification
+/// times, etc.
 ///
 /// [`metadata`]: fn.metadata.html
+/// [`symlink_metadata`]: fn.symlink_metadata.html
 #[stable(feature = "rust1", since = "1.0.0")]
 #[derive(Clone)]
 pub struct Metadata(fs_imp::FileAttr);
@@ -140,7 +175,7 @@ pub struct DirEntry(fs_imp::DirEntry);
 ///             .create(true)
 ///             .open("foo.txt");
 /// ```
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 #[stable(feature = "rust1", since = "1.0.0")]
 pub struct OpenOptions(fs_imp::OpenOptions);
 
@@ -168,6 +203,7 @@ pub struct FileType(fs_imp::FileType);
 ///
 /// This builder also supports platform-specific options.
 #[stable(feature = "dir_builder", since = "1.6.0")]
+#[derive(Debug)]
 pub struct DirBuilder {
     inner: fs_imp::DirBuilder,
     recursive: bool,
@@ -191,7 +227,7 @@ impl File {
     /// use std::fs::File;
     ///
     /// # fn foo() -> std::io::Result<()> {
-    /// let mut f = try!(File::open("foo.txt"));
+    /// let mut f = File::open("foo.txt")?;
     /// # Ok(())
     /// # }
     /// ```
@@ -215,7 +251,7 @@ impl File {
     /// use std::fs::File;
     ///
     /// # fn foo() -> std::io::Result<()> {
-    /// let mut f = try!(File::create("foo.txt"));
+    /// let mut f = File::create("foo.txt")?;
     /// # Ok(())
     /// # }
     /// ```
@@ -236,10 +272,10 @@ impl File {
     /// use std::io::prelude::*;
     ///
     /// # fn foo() -> std::io::Result<()> {
-    /// let mut f = try!(File::create("foo.txt"));
-    /// try!(f.write_all(b"Hello, world!"));
+    /// let mut f = File::create("foo.txt")?;
+    /// f.write_all(b"Hello, world!")?;
     ///
-    /// try!(f.sync_all());
+    /// f.sync_all()?;
     /// # Ok(())
     /// # }
     /// ```
@@ -267,10 +303,10 @@ impl File {
     /// use std::io::prelude::*;
     ///
     /// # fn foo() -> std::io::Result<()> {
-    /// let mut f = try!(File::create("foo.txt"));
-    /// try!(f.write_all(b"Hello, world!"));
+    /// let mut f = File::create("foo.txt")?;
+    /// f.write_all(b"Hello, world!")?;
     ///
-    /// try!(f.sync_data());
+    /// f.sync_data()?;
     /// # Ok(())
     /// # }
     /// ```
@@ -297,8 +333,8 @@ impl File {
     /// use std::fs::File;
     ///
     /// # fn foo() -> std::io::Result<()> {
-    /// let mut f = try!(File::create("foo.txt"));
-    /// try!(f.set_len(10));
+    /// let mut f = File::create("foo.txt")?;
+    /// f.set_len(10)?;
     /// # Ok(())
     /// # }
     /// ```
@@ -315,8 +351,8 @@ impl File {
     /// use std::fs::File;
     ///
     /// # fn foo() -> std::io::Result<()> {
-    /// let mut f = try!(File::open("foo.txt"));
-    /// let metadata = try!(f.metadata());
+    /// let mut f = File::open("foo.txt")?;
+    /// let metadata = f.metadata()?;
     /// # Ok(())
     /// # }
     /// ```
@@ -337,8 +373,8 @@ impl File {
     /// use std::fs::File;
     ///
     /// # fn foo() -> std::io::Result<()> {
-    /// let mut f = try!(File::open("foo.txt"));
-    /// let file_copy = try!(f.try_clone());
+    /// let mut f = File::open("foo.txt")?;
+    /// let file_copy = f.try_clone()?;
     /// # Ok(())
     /// # }
     /// ```
@@ -368,7 +404,6 @@ impl File {
     /// # Examples
     ///
     /// ```
-    /// #![feature(set_permissions_atomic)]
     /// # fn foo() -> std::io::Result<()> {
     /// use std::fs::File;
     ///
@@ -379,7 +414,7 @@ impl File {
     /// # Ok(())
     /// # }
     /// ```
-    #[unstable(feature = "set_permissions_atomic", issue="37916")]
+    #[stable(feature = "set_permissions_atomic", since = "1.16.0")]
     pub fn set_permissions(&self, perm: Permissions) -> io::Result<()> {
         self.inner.set_permissions(perm.0)
     }
@@ -655,7 +690,7 @@ impl Metadata {
     /// # fn foo() -> std::io::Result<()> {
     /// use std::fs;
     ///
-    /// let metadata = try!(fs::metadata("foo.txt"));
+    /// let metadata = fs::metadata("foo.txt")?;
     ///
     /// println!("{:?}", metadata.file_type());
     /// # Ok(())
@@ -674,7 +709,7 @@ impl Metadata {
     /// # fn foo() -> std::io::Result<()> {
     /// use std::fs;
     ///
-    /// let metadata = try!(fs::metadata("foo.txt"));
+    /// let metadata = fs::metadata("foo.txt")?;
     ///
     /// assert!(!metadata.is_dir());
     /// # Ok(())
@@ -691,7 +726,7 @@ impl Metadata {
     /// # fn foo() -> std::io::Result<()> {
     /// use std::fs;
     ///
-    /// let metadata = try!(fs::metadata("foo.txt"));
+    /// let metadata = fs::metadata("foo.txt")?;
     ///
     /// assert!(metadata.is_file());
     /// # Ok(())
@@ -708,7 +743,7 @@ impl Metadata {
     /// # fn foo() -> std::io::Result<()> {
     /// use std::fs;
     ///
-    /// let metadata = try!(fs::metadata("foo.txt"));
+    /// let metadata = fs::metadata("foo.txt")?;
     ///
     /// assert_eq!(0, metadata.len());
     /// # Ok(())
@@ -725,7 +760,7 @@ impl Metadata {
     /// # fn foo() -> std::io::Result<()> {
     /// use std::fs;
     ///
-    /// let metadata = try!(fs::metadata("foo.txt"));
+    /// let metadata = fs::metadata("foo.txt")?;
     ///
     /// assert!(!metadata.permissions().readonly());
     /// # Ok(())
@@ -752,7 +787,7 @@ impl Metadata {
     /// # fn foo() -> std::io::Result<()> {
     /// use std::fs;
     ///
-    /// let metadata = try!(fs::metadata("foo.txt"));
+    /// let metadata = fs::metadata("foo.txt")?;
     ///
     /// if let Ok(time) = metadata.modified() {
     ///     println!("{:?}", time);
@@ -787,7 +822,7 @@ impl Metadata {
     /// # fn foo() -> std::io::Result<()> {
     /// use std::fs;
     ///
-    /// let metadata = try!(fs::metadata("foo.txt"));
+    /// let metadata = fs::metadata("foo.txt")?;
     ///
     /// if let Ok(time) = metadata.accessed() {
     ///     println!("{:?}", time);
@@ -818,7 +853,7 @@ impl Metadata {
     /// # fn foo() -> std::io::Result<()> {
     /// use std::fs;
     ///
-    /// let metadata = try!(fs::metadata("foo.txt"));
+    /// let metadata = fs::metadata("foo.txt")?;
     ///
     /// if let Ok(time) = metadata.created() {
     ///     println!("{:?}", time);
@@ -831,6 +866,21 @@ impl Metadata {
     #[stable(feature = "fs_time", since = "1.10.0")]
     pub fn created(&self) -> io::Result<SystemTime> {
         self.0.created().map(FromInner::from_inner)
+    }
+}
+
+#[stable(feature = "std_debug", since = "1.15.0")]
+impl fmt::Debug for Metadata {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        f.debug_struct("Metadata")
+            .field("file_type", &self.file_type())
+            .field("is_dir", &self.is_dir())
+            .field("is_file", &self.is_file())
+            .field("permissions", &self.permissions())
+            .field("modified", &self.modified())
+            .field("accessed", &self.accessed())
+            .field("created", &self.created())
+            .finish()
     }
 }
 
@@ -847,8 +897,8 @@ impl Permissions {
     /// use std::fs::File;
     ///
     /// # fn foo() -> std::io::Result<()> {
-    /// let mut f = try!(File::create("foo.txt"));
-    /// let metadata = try!(f.metadata());
+    /// let mut f = File::create("foo.txt")?;
+    /// let metadata = f.metadata()?;
     ///
     /// assert_eq!(false, metadata.permissions().readonly());
     /// # Ok(())
@@ -868,8 +918,8 @@ impl Permissions {
     /// use std::fs::File;
     ///
     /// # fn foo() -> std::io::Result<()> {
-    /// let f = try!(File::create("foo.txt"));
-    /// let metadata = try!(f.metadata());
+    /// let f = File::create("foo.txt")?;
+    /// let metadata = f.metadata()?;
     /// let mut permissions = metadata.permissions();
     ///
     /// permissions.set_readonly(true);
@@ -897,7 +947,7 @@ impl FileType {
     /// # fn foo() -> std::io::Result<()> {
     /// use std::fs;
     ///
-    /// let metadata = try!(fs::metadata("foo.txt"));
+    /// let metadata = fs::metadata("foo.txt")?;
     /// let file_type = metadata.file_type();
     ///
     /// assert_eq!(file_type.is_dir(), false);
@@ -915,7 +965,7 @@ impl FileType {
     /// # fn foo() -> std::io::Result<()> {
     /// use std::fs;
     ///
-    /// let metadata = try!(fs::metadata("foo.txt"));
+    /// let metadata = fs::metadata("foo.txt")?;
     /// let file_type = metadata.file_type();
     ///
     /// assert_eq!(file_type.is_file(), true);
@@ -927,13 +977,24 @@ impl FileType {
 
     /// Test whether this file type represents a symbolic link.
     ///
+    /// The underlying [`Metadata`] struct needs to be retrieved
+    /// with the [`fs::symlink_metadata`] function and not the
+    /// [`fs::metadata`] function. The [`fs::metadata`] function
+    /// follows symbolic links, so [`is_symlink`] would always
+    /// return false for the target file.
+    ///
+    /// [`Metadata`]: struct.Metadata.html
+    /// [`fs::metadata`]: fn.metadata.html
+    /// [`fs::symlink_metadata`]: fn.symlink_metadata.html
+    /// [`is_symlink`]: struct.FileType.html#method.is_symlink
+    ///
     /// # Examples
     ///
     /// ```
     /// # fn foo() -> std::io::Result<()> {
     /// use std::fs;
     ///
-    /// let metadata = try!(fs::metadata("foo.txt"));
+    /// let metadata = fs::symlink_metadata("foo.txt")?;
     /// let file_type = metadata.file_type();
     ///
     /// assert_eq!(file_type.is_symlink(), false);
@@ -978,8 +1039,8 @@ impl DirEntry {
     /// ```
     /// use std::fs;
     /// # fn foo() -> std::io::Result<()> {
-    /// for entry in try!(fs::read_dir(".")) {
-    ///     let dir = try!(entry);
+    /// for entry in fs::read_dir(".")? {
+    ///     let dir = entry?;
     ///     println!("{:?}", dir.path());
     /// }
     /// # Ok(())
@@ -1131,7 +1192,7 @@ impl AsInner<fs_imp::DirEntry> for DirEntry {
 /// use std::fs;
 ///
 /// # fn foo() -> std::io::Result<()> {
-/// try!(fs::remove_file("a.txt"));
+/// fs::remove_file("a.txt")?;
 /// # Ok(())
 /// # }
 /// ```
@@ -1167,7 +1228,7 @@ pub fn remove_file<P: AsRef<Path>>(path: P) -> io::Result<()> {
 /// # fn foo() -> std::io::Result<()> {
 /// use std::fs;
 ///
-/// let attr = try!(fs::metadata("/some/file/path.txt"));
+/// let attr = fs::metadata("/some/file/path.txt")?;
 /// // inspect attr ...
 /// # Ok(())
 /// # }
@@ -1200,7 +1261,7 @@ pub fn metadata<P: AsRef<Path>>(path: P) -> io::Result<Metadata> {
 /// # fn foo() -> std::io::Result<()> {
 /// use std::fs;
 ///
-/// let attr = try!(fs::symlink_metadata("/some/file/path.txt"));
+/// let attr = fs::symlink_metadata("/some/file/path.txt")?;
 /// // inspect attr ...
 /// # Ok(())
 /// # }
@@ -1243,7 +1304,7 @@ pub fn symlink_metadata<P: AsRef<Path>>(path: P) -> io::Result<Metadata> {
 /// use std::fs;
 ///
 /// # fn foo() -> std::io::Result<()> {
-/// try!(fs::rename("a.txt", "b.txt")); // Rename a.txt to b.txt
+/// fs::rename("a.txt", "b.txt")?; // Rename a.txt to b.txt
 /// # Ok(())
 /// # }
 /// ```
@@ -1287,7 +1348,7 @@ pub fn rename<P: AsRef<Path>, Q: AsRef<Path>>(from: P, to: Q) -> io::Result<()> 
 /// use std::fs;
 ///
 /// # fn foo() -> std::io::Result<()> {
-/// try!(fs::copy("foo.txt", "bar.txt"));  // Copy foo.txt to bar.txt
+/// fs::copy("foo.txt", "bar.txt")?;  // Copy foo.txt to bar.txt
 /// # Ok(()) }
 /// ```
 #[stable(feature = "rust1", since = "1.0.0")]
@@ -1320,7 +1381,7 @@ pub fn copy<P: AsRef<Path>, Q: AsRef<Path>>(from: P, to: Q) -> io::Result<u64> {
 /// use std::fs;
 ///
 /// # fn foo() -> std::io::Result<()> {
-/// try!(fs::hard_link("a.txt", "b.txt")); // Hard link a.txt to b.txt
+/// fs::hard_link("a.txt", "b.txt")?; // Hard link a.txt to b.txt
 /// # Ok(())
 /// # }
 /// ```
@@ -1343,7 +1404,7 @@ pub fn hard_link<P: AsRef<Path>, Q: AsRef<Path>>(src: P, dst: Q) -> io::Result<(
 /// use std::fs;
 ///
 /// # fn foo() -> std::io::Result<()> {
-/// try!(fs::soft_link("a.txt", "b.txt"));
+/// fs::soft_link("a.txt", "b.txt")?;
 /// # Ok(())
 /// # }
 /// ```
@@ -1379,7 +1440,7 @@ pub fn soft_link<P: AsRef<Path>, Q: AsRef<Path>>(src: P, dst: Q) -> io::Result<(
 /// use std::fs;
 ///
 /// # fn foo() -> std::io::Result<()> {
-/// let path = try!(fs::read_link("a.txt"));
+/// let path = fs::read_link("a.txt")?;
 /// # Ok(())
 /// # }
 /// ```
@@ -1412,7 +1473,7 @@ pub fn read_link<P: AsRef<Path>>(path: P) -> io::Result<PathBuf> {
 /// use std::fs;
 ///
 /// # fn foo() -> std::io::Result<()> {
-/// let path = try!(fs::canonicalize("../a/../foo.txt"));
+/// let path = fs::canonicalize("../a/../foo.txt")?;
 /// # Ok(())
 /// # }
 /// ```
@@ -1444,7 +1505,7 @@ pub fn canonicalize<P: AsRef<Path>>(path: P) -> io::Result<PathBuf> {
 /// use std::fs;
 ///
 /// # fn foo() -> std::io::Result<()> {
-/// try!(fs::create_dir("/some/dir"));
+/// fs::create_dir("/some/dir")?;
 /// # Ok(())
 /// # }
 /// ```
@@ -1479,7 +1540,7 @@ pub fn create_dir<P: AsRef<Path>>(path: P) -> io::Result<()> {
 /// use std::fs;
 ///
 /// # fn foo() -> std::io::Result<()> {
-/// try!(fs::create_dir_all("/some/dir"));
+/// fs::create_dir_all("/some/dir")?;
 /// # Ok(())
 /// # }
 /// ```
@@ -1511,7 +1572,7 @@ pub fn create_dir_all<P: AsRef<Path>>(path: P) -> io::Result<()> {
 /// use std::fs;
 ///
 /// # fn foo() -> std::io::Result<()> {
-/// try!(fs::remove_dir("/some/dir"));
+/// fs::remove_dir("/some/dir")?;
 /// # Ok(())
 /// # }
 /// ```
@@ -1544,7 +1605,7 @@ pub fn remove_dir<P: AsRef<Path>>(path: P) -> io::Result<()> {
 /// use std::fs;
 ///
 /// # fn foo() -> std::io::Result<()> {
-/// try!(fs::remove_dir_all("/some/dir"));
+/// fs::remove_dir_all("/some/dir")?;
 /// # Ok(())
 /// # }
 /// ```
@@ -1587,11 +1648,11 @@ pub fn remove_dir_all<P: AsRef<Path>>(path: P) -> io::Result<()> {
 /// // one possible implementation of walking a directory only visiting files
 /// fn visit_dirs(dir: &Path, cb: &Fn(&DirEntry)) -> io::Result<()> {
 ///     if dir.is_dir() {
-///         for entry in try!(fs::read_dir(dir)) {
-///             let entry = try!(entry);
+///         for entry in fs::read_dir(dir)? {
+///             let entry = entry?;
 ///             let path = entry.path();
 ///             if path.is_dir() {
-///                 try!(visit_dirs(&path, cb));
+///                 visit_dirs(&path, cb)?;
 ///             } else {
 ///                 cb(&entry);
 ///             }
@@ -1628,9 +1689,9 @@ pub fn read_dir<P: AsRef<Path>>(path: P) -> io::Result<ReadDir> {
 /// # fn foo() -> std::io::Result<()> {
 /// use std::fs;
 ///
-/// let mut perms = try!(fs::metadata("foo.txt")).permissions();
+/// let mut perms = fs::metadata("foo.txt")?.permissions();
 /// perms.set_readonly(true);
-/// try!(fs::set_permissions("foo.txt", perms));
+/// fs::set_permissions("foo.txt", perms)?;
 /// # Ok(())
 /// # }
 /// ```
@@ -1752,6 +1813,16 @@ mod tests {
         }
     ) }
 
+    #[cfg(windows)]
+    macro_rules! error { ($e:expr, $s:expr) => (
+        match $e {
+            Ok(_) => panic!("Unexpected success. Should've been: {:?}", $s),
+            Err(ref err) => assert!(err.raw_os_error() == Some($s),
+                                    format!("`{}` did not have a code of `{}`", err, $s))
+        }
+    ) }
+
+    #[cfg(unix)]
     macro_rules! error { ($e:expr, $s:expr) => (
         match $e {
             Ok(_) => panic!("Unexpected success. Should've been: {:?}", $s),
@@ -1772,12 +1843,9 @@ mod tests {
 
         match symlink_file(r"nonexisting_target", link) {
             Ok(_) => true,
-            Err(ref err) =>
-                if err.to_string().contains("A required privilege is not held by the client.") {
-                    false
-                } else {
-                    true
-                }
+            // ERROR_PRIVILEGE_NOT_HELD = 1314
+            Err(ref err) if err.raw_os_error() == Some(1314) => false,
+            Err(_) => true,
         }
     }
 
@@ -1808,12 +1876,10 @@ mod tests {
         let filename = &tmpdir.join("file_that_does_not_exist.txt");
         let result = File::open(filename);
 
-        if cfg!(unix) {
-            error!(result, "No such file or directory");
-        }
-        if cfg!(windows) {
-            error!(result, "The system cannot find the file specified");
-        }
+        #[cfg(unix)]
+        error!(result, "No such file or directory");
+        #[cfg(windows)]
+        error!(result, 2); // ERROR_FILE_NOT_FOUND
     }
 
     #[test]
@@ -1823,12 +1889,10 @@ mod tests {
 
         let result = fs::remove_file(filename);
 
-        if cfg!(unix) {
-            error!(result, "No such file or directory");
-        }
-        if cfg!(windows) {
-            error!(result, "The system cannot find the file specified");
-        }
+        #[cfg(unix)]
+        error!(result, "No such file or directory");
+        #[cfg(windows)]
+        error!(result, 2); // ERROR_FILE_NOT_FOUND
     }
 
     #[test]
@@ -2583,8 +2647,10 @@ mod tests {
         let mut a = OO::new(); a.append(true);
         let mut ra = OO::new(); ra.read(true).append(true);
 
-        let invalid_options = if cfg!(windows) { "The parameter is incorrect" }
-                              else { "Invalid argument" };
+        #[cfg(windows)]
+        let invalid_options = 87; // ERROR_INVALID_PARAMETER
+        #[cfg(unix)]
+        let invalid_options = "Invalid argument";
 
         // Test various combinations of creation modes and access modes.
         //

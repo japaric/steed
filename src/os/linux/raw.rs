@@ -17,6 +17,7 @@
                               crates.io should be used instead for the correct \
                               definitions")]
 #![allow(deprecated)]
+#![allow(missing_debug_implementations)]
 
 use os::raw::c_ulong;
 
@@ -156,12 +157,9 @@ mod arch {
     }
 }
 
-#[cfg(target_arch = "mips64")]
-mod arch {
-    pub use libc::{off_t, ino_t, nlink_t, blksize_t, blkcnt_t, stat, time_t};
-}
-
-#[cfg(target_arch = "s390x")]
+#[cfg(any(target_arch = "mips64",
+          target_arch = "s390x",
+          target_arch = "sparc64"))]
 mod arch {
     pub use libc::{off_t, ino_t, nlink_t, blksize_t, blkcnt_t, stat, time_t};
 }

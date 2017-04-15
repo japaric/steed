@@ -12,6 +12,7 @@
 
 #![stable(feature = "rust1", since = "1.0.0")]
 
+use fmt;
 use mem;
 use ops::Range;
 use iter::FusedIterator;
@@ -65,6 +66,11 @@ pub trait AsciiExt {
     /// ASCII letters 'a' to 'z' are mapped to 'A' to 'Z',
     /// but non-ASCII letters are unchanged.
     ///
+    /// To uppercase the string in-place, use [`make_ascii_uppercase`].
+    ///
+    /// To uppercase ASCII characters in addition to non-ASCII characters, use
+    /// [`str::to_uppercase`].
+    ///
     /// # Examples
     ///
     /// ```
@@ -76,6 +82,9 @@ pub trait AsciiExt {
     /// assert_eq!('A', ascii.to_ascii_uppercase());
     /// assert_eq!('❤', utf8.to_ascii_uppercase());
     /// ```
+    ///
+    /// [`make_ascii_uppercase`]: #tymethod.make_ascii_uppercase
+    /// [`str::to_uppercase`]: ../primitive.str.html#method.to_uppercase
     #[stable(feature = "rust1", since = "1.0.0")]
     fn to_ascii_uppercase(&self) -> Self::Owned;
 
@@ -83,6 +92,11 @@ pub trait AsciiExt {
     ///
     /// ASCII letters 'A' to 'Z' are mapped to 'a' to 'z',
     /// but non-ASCII letters are unchanged.
+    ///
+    /// To lowercase the string in-place, use [`make_ascii_lowercase`].
+    ///
+    /// To lowercase ASCII characters in addition to non-ASCII characters, use
+    /// [`str::to_lowercase`].
     ///
     /// # Examples
     ///
@@ -95,6 +109,9 @@ pub trait AsciiExt {
     /// assert_eq!('a', ascii.to_ascii_lowercase());
     /// assert_eq!('❤', utf8.to_ascii_lowercase());
     /// ```
+    ///
+    /// [`make_ascii_lowercase`]: #tymethod.make_ascii_lowercase
+    /// [`str::to_lowercase`]: ../primitive.str.html#method.to_lowercase
     #[stable(feature = "rust1", since = "1.0.0")]
     fn to_ascii_lowercase(&self) -> Self::Owned;
 
@@ -122,7 +139,11 @@ pub trait AsciiExt {
 
     /// Converts this type to its ASCII upper case equivalent in-place.
     ///
-    /// See `to_ascii_uppercase` for more information.
+    /// ASCII letters 'a' to 'z' are mapped to 'A' to 'Z',
+    /// but non-ASCII letters are unchanged.
+    ///
+    /// To return a new uppercased string without modifying the existing one, use
+    /// [`to_ascii_uppercase`].
     ///
     /// # Examples
     ///
@@ -135,12 +156,18 @@ pub trait AsciiExt {
     ///
     /// assert_eq!('A', ascii);
     /// ```
+    ///
+    /// [`to_ascii_uppercase`]: #tymethod.to_ascii_uppercase
     #[stable(feature = "ascii", since = "1.9.0")]
     fn make_ascii_uppercase(&mut self);
 
     /// Converts this type to its ASCII lower case equivalent in-place.
     ///
-    /// See `to_ascii_lowercase` for more information.
+    /// ASCII letters 'A' to 'Z' are mapped to 'a' to 'z',
+    /// but non-ASCII letters are unchanged.
+    ///
+    /// To return a new lowercased string without modifying the existing one, use
+    /// [`to_ascii_lowercase`].
     ///
     /// # Examples
     ///
@@ -153,6 +180,8 @@ pub trait AsciiExt {
     ///
     /// assert_eq!('a', ascii);
     /// ```
+    ///
+    /// [`to_ascii_lowercase`]: #tymethod.to_ascii_lowercase
     #[stable(feature = "ascii", since = "1.9.0")]
     fn make_ascii_lowercase(&mut self);
 }
@@ -369,6 +398,13 @@ impl DoubleEndedIterator for EscapeDefault {
 impl ExactSizeIterator for EscapeDefault {}
 #[unstable(feature = "fused", issue = "35602")]
 impl FusedIterator for EscapeDefault {}
+
+#[stable(feature = "std_debug", since = "1.15.0")]
+impl fmt::Debug for EscapeDefault {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        f.pad("EscapeDefault { .. }")
+    }
+}
 
 
 static ASCII_LOWERCASE_MAP: [u8; 256] = [
