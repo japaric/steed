@@ -38,6 +38,16 @@ pub extern fn __rust_allocate(size: usize, _align: usize) -> *mut u8 {
 
 #[linkage = "external"]
 #[no_mangle]
+pub extern fn __rust_allocate_zeroed(size: usize, align: usize) -> *mut u8 {
+    unsafe {
+        let result = __rust_allocate(size, align);
+        intrinsics::write_bytes(result, 0, size);
+        result
+    }
+}
+
+#[linkage = "external"]
+#[no_mangle]
 pub extern fn __rust_deallocate(_ptr: *mut u8, _old_size: usize, _align: usize) {
 }
 
