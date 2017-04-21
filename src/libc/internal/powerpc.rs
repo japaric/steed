@@ -1,7 +1,5 @@
-#[inline(never)]
-#[naked]
-#[no_mangle]
-unsafe extern "C" fn __steed_clone() {
+#[cfg(not(test))]
+mod not_test {
     // Syscall number is passed in r0, syscall arguments in r3, r4, r5, r6, r7.
     // The arguments are
     // (flags: c_ulong,           // r3
@@ -35,7 +33,10 @@ unsafe extern "C" fn __steed_clone() {
     //
     // We save `fn_` and `arg` in r30 and r31 which we need to save first.
 
-    asm!("
+    global_asm!("
+        .globl __steed_clone
+        __steed_clone:
+
         # Save `fn_` and `arg` (while keeping the stack aligned).
         stwu 30,-16(1)
         stw 31,4(1)
@@ -82,6 +83,8 @@ unsafe extern "C" fn __steed_clone() {
         lwz 30,0(1)
         lwz 31,4(1)
         addi 1,1,16
+
+        blr
     ");
 }
 

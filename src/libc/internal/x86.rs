@@ -1,9 +1,7 @@
 use linux;
 
-#[inline(never)]
-#[naked]
-#[no_mangle]
-unsafe extern "C" fn __steed_clone() {
+#[cfg(not(test))]
+mod not_test {
     // Syscall number is passed in %eax, syscall arguments in %ebx, %ecx, %edx,
     // %esi, %edi. The arguments are
     // (flags: c_ulong,           // %ebx
@@ -43,7 +41,10 @@ unsafe extern "C" fn __steed_clone() {
     //
     // We save `fn_` in %ebp.
 
-    asm!("
+    global_asm!("
+        .globl __steed_clone
+        __steed_clone:
+
         # Stack frame
         push %ebp
         mov %esp,%ebp
@@ -54,10 +55,10 @@ unsafe extern "C" fn __steed_clone() {
         push %edi
 
         mov 12(%ebp),%ecx # child_stack
-        and $$-16,%ecx    # Align the stack
+        and $-16,%ecx     # Align the stack
 
         # Push the parameter
-        sub $$16,%ecx     # Keep the stack aligned
+        sub $16,%ecx      # Keep the stack aligned
         mov 20(%ebp),%edi # arg
         mov %edi,(%ecx)
 
@@ -70,15 +71,15 @@ unsafe extern "C" fn __steed_clone() {
         # limit_in_pages:1 = 1
         # seg_not_present:1 = 0
         # useable:1 = 1
-        push $$0x51
-        push $$0xfffff # limit
+        push $0x51
+        push $0xfffff  # limit
         push 28(%ebp)  # base_addr
         xor %eax,%eax
         mov %gs,%ax
-        shr $$3,%eax
+        shr $3,%eax
         push %eax      # entry_number
 
-        mov $$120,%eax    # CLONE
+        mov $120,%eax     # CLONE
         mov 16(%ebp),%ebx # flags
         mov 24(%ebp),%edx # ptid
         mov %esp,%esi     # newtls
@@ -86,7 +87,7 @@ unsafe extern "C" fn __steed_clone() {
 
         mov 8(%ebp),%ebp  # fn_
 
-        int $$0x80
+        int $0x80
 
         # CLONE returns 0 in the child thread, return if we're the parent.
         test %eax,%eax
@@ -101,14 +102,16 @@ unsafe extern "C" fn __steed_clone() {
         call *%eax
 
         mov %eax,%ebx # status
-        mov $$1,%eax  # EXIT
-        int $$0x80
+        mov $1,%eax   # EXIT
+        int $0x80
+
+        # Unreachable
         hlt
 
         1:
 
         # Pop the struct
-        add $$16,%esp
+        add $16,%esp
 
         # Restore registers
         pop %edi
@@ -117,6 +120,8 @@ unsafe extern "C" fn __steed_clone() {
 
         # Stack frame
         pop %ebp
+
+        ret
     ");
 }
 
@@ -133,6 +138,6 @@ pub unsafe fn set_thread_pointer(thread_data: *mut ()) {
     if result < 0 {
         panic!("set_thread_pointer: set_thread_area: {}", result);
     }
-    asm!("mov $0,%gs"::"r"(((user_desc.entry_number << 3) | 3) as u16));
+    asm!("mov $0,%gs"::"r"(((user_desc.entry_number << 3) | 3) as u16)::"volatile");
 }
 

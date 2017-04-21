@@ -1,10 +1,8 @@
 use libc::*;
 use linux;
 
-#[inline(never)]
-#[naked]
-#[no_mangle]
-unsafe extern "C" fn __steed_clone() {
+#[cfg(not(test))]
+mod not_test {
     // Syscall number is passed in %rax, syscall arguments in %rdi, %rsi, %rdx,
     // %r10, %r8. The arguments are
     // (flags: c_ulong,           // %rdi
@@ -40,17 +38,20 @@ unsafe extern "C" fn __steed_clone() {
     // There's a cycle in there (%rdx -> %rdi -> %r9 -> %r8 -> %rdx), we break
     // it at %rdi -> %r9 and move it to the scratch register %r11 instead.
 
-    asm!("
-        and $$-16,%rsi # Align the child stack to 16 bytes.
+    global_asm!("
+        .globl __steed_clone
+        __steed_clone:
+
+        and $-16,%rsi # Align the child stack to 16 bytes.
 
         # Push `arg` onto the child stack.
-        sub $$8,%rsi
+        sub $8,%rsi
         mov %rcx,(%rsi)
 
         # Temporarily store `fn_`
         mov %rdi,%r11
 
-        mov $$56,%rax    # CLONE
+        mov $56,%rax     # CLONE
         mov %rdx,%rdi    # flags
                          # child_stack
         mov %r8,%rdx     # ptid
@@ -72,13 +73,14 @@ unsafe extern "C" fn __steed_clone() {
         call *%r9 # fn_
 
         mov %rax,%rdi # status
-        mov $$60,%rax # EXIT
+        mov $60,%rax  # EXIT
         syscall
 
         # Unreachable.
         hlt
 
         1:
+        ret
     ");
 }
 

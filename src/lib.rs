@@ -15,6 +15,7 @@
 #![feature(exact_size_is_empty)]
 #![feature(fnbox)]
 #![feature(fused)]
+#![feature(global_asm)]
 #![feature(heap_api)]
 #![feature(int_error_internals)]
 #![feature(lang_items)]

@@ -1,7 +1,5 @@
-#[inline(never)]
-#[naked]
-#[no_mangle]
-unsafe extern "C" fn __steed_clone() {
+#[cfg(not(test))]
+mod not_test {
     // Syscall number is passed in x8, syscall arguments in x0, x1, x2, x3, x4.
     // The arguments are
     // (flags: c_ulong,           // x0
@@ -34,7 +32,10 @@ unsafe extern "C" fn __steed_clone() {
     //
     // We save `fn_` and `arg` on the child stack.
 
-    asm!("
+    global_asm!("
+        .globl __steed_clone
+        __steed_clone:
+
         // Align the child stack.
         and x1,x1,#-16
 
@@ -60,6 +61,7 @@ unsafe extern "C" fn __steed_clone() {
         svc #0
 
         1:
+        ret
     ");
 }
 
