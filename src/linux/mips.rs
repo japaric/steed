@@ -30,6 +30,8 @@ pub const SOCK_STREAM: c_int = 2;
 
 pub const SOL_SOCKET: c_int = 0xffff;
 
+pub const MAP_ANONYMOUS: c_int = 0x0800;
+
 #[derive(Clone, Copy)]
 #[repr(C)]
 pub struct stat64 {

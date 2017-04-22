@@ -23,6 +23,7 @@ main() {
         stderr
         system-time
         tcp_listen_connect
+        thread
         vec
         zero
     )

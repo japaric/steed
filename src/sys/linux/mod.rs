@@ -11,6 +11,8 @@ pub mod fd;
 pub mod fs;
 pub mod memchr;
 // Rust 1.15.0
+pub mod net;
+// Rust 1.15.0
 pub mod os_str;
 // Rust 1.15.0
 pub mod path;
@@ -20,9 +22,10 @@ pub mod pipe;
 pub mod process;
 pub mod os;
 pub mod rand;
+pub mod stack_overflow;
 pub mod time;
-// Rust 1.14.0
-pub mod net;
+// Rust 1.15.0
+pub mod thread;
 
 pub use os::linux as platform;
 

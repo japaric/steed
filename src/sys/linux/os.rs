@@ -15,6 +15,11 @@ pub fn exit(code: i32) -> ! {
     unsafe { linux::exit_group(code) }
 }
 
+pub fn page_size() -> usize {
+    // TODO(steed, #133): Implement me.
+    unimplemented!();
+}
+
 // TODO(steed): Fix this unsafety, should be *const c_char elements.
 static ENVIRON: [usize; 1] = [0];
 
