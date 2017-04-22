@@ -13,7 +13,7 @@ RUN bash /xargo.sh
 COPY qemu.sh /
 RUN apt-get install -y --no-install-recommends \
     gcc-powerpc64-linux-gnu && \
-    bash /qemu.sh 2.7.1 ppc64
+    bash /qemu.sh 2.9.0 ppc64
 
 COPY powerpc64-unknown-linux-steed.json /json
 

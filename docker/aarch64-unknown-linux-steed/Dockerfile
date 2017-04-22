@@ -14,7 +14,7 @@ COPY lld.sh /
 RUN bash /lld.sh
 
 COPY qemu.sh /
-RUN bash /qemu.sh 2.8.0 aarch64
+RUN bash /qemu.sh 2.9.0 aarch64
 
 COPY aarch64-unknown-linux-steed.json /json
 

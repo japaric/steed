@@ -14,7 +14,7 @@ COPY lld.sh /
 RUN bash /lld.sh
 
 COPY qemu.sh /
-RUN bash /qemu.sh 2.8.0 mips
+RUN bash /qemu.sh 2.9.0 mips
 
 COPY mips-unknown-linux-steed.json /json
 

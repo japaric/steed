@@ -14,7 +14,7 @@ COPY lld.sh /
 RUN bash /lld.sh
 
 COPY qemu.sh /
-RUN bash /qemu.sh 2.8.0 arm
+RUN bash /qemu.sh 2.9.0 arm
 
 COPY arm-unknown-linux-steedeabi.json /json
 

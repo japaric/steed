@@ -29,8 +29,8 @@ main() {
 
     pushd $td
 
-    curl http://download.qemu-project.org/qemu-$version.tar.bz2 | \
-        tar --strip-components=1 -xj
+    curl -L http://download.qemu-project.org/qemu-$version.tar.xz | \
+        tar --strip-components=1 -xJ
     ./configure \
         --disable-kvm \
         --disable-vnc \
