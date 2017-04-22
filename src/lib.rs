@@ -23,7 +23,6 @@
 #![feature(naked_functions)]
 #![feature(oom)]
 #![feature(prelude_import)]
-#![feature(pub_restricted)]
 #![feature(rand)]
 #![feature(raw)]
 #![feature(shared)]
