@@ -24,7 +24,7 @@ The ultimate goal is achieve truly hassle free cross compilation from any system
 That is:
 
 ```
-$ cargo build --target aarch64-unknown-linux-gnu
+$ cargo build --target aarch64-unknown-linux-steed
 ```
 
 Should work without having to install a C toolchain or cross compiled C
@@ -272,7 +272,7 @@ If you don't want to install `lld`, you can link `steed` programs using `gcc`,
 which you probably already have installed.
 
 ```
-$ xargo rustc --target x86_64-unknown-linux-gnu -- -C linker=gcc -Z linker-flavor=gcc
+$ xargo rustc --target x86_64-unknown-linux-steed -- -C linker=gcc -Z linker-flavor=gcc
 
 $ file target/x86_64-unknown-linux-steed/debug/hello
 hello: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=ac4fce139edd9741b818cd73123be6c934718f78, not stripped, with debug_info
@@ -294,6 +294,8 @@ summarize the functionality that interfaces with the Linux kernel:
 - Dynamic memory allocation (thanks to [ralloc]!)
 
 - `std::time`
+
+- Minimal thread support.
 
 [ralloc]: https://github.com/redox-os/ralloc
 
