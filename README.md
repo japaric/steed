@@ -295,6 +295,8 @@ summarize the functionality that interfaces with the Linux kernel:
 
 - `std::time`
 
+- Minimal thread support.
+
 [ralloc]: https://github.com/redox-os/ralloc
 
 Yup, that's all! I did say it was very early days, didn't I?
