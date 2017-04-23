@@ -828,7 +828,6 @@ impl<W: Write> fmt::Debug for LineWriter<W> where W: fmt::Debug {
 }
 
 #[cfg(test)]
-#[cfg(issue = "115")]
 mod tests {
     use io::prelude::*;
     use io::{self, BufReader, BufWriter, LineWriter, SeekFrom};
@@ -1151,6 +1150,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(issue = "144")]
     #[cfg_attr(target_os = "emscripten", ignore)]
     fn panic_in_write_doesnt_flush_in_drop() {
         static WRITES: AtomicUsize = AtomicUsize::new(0);

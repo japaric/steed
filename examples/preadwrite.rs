@@ -1,5 +1,3 @@
-#![feature(file_offset)]
-
 use std::fs::OpenOptions;
 use std::io::{self, Write};
 use std::os::unix::fs::FileExt;
