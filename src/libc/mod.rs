@@ -59,8 +59,7 @@ pub use linux::{unlink, write};
 
 pub type mode_t = u32;
 
-// Rust 1.15.0
-// src/liblibc/src/unix/notbsd/linux/mod.rs
+// Rust 1.16.0: src/liblibc/src/unix/notbsd/linux/mod.rs
 #[cfg(issue = "22")]
 pub const EAI_SYSTEM: c_int = -11;
 
@@ -375,19 +374,19 @@ pub unsafe fn pthread_join(pthread: pthread_t, retval: *mut *mut c_void)
     0
 }
 
-// Rust 1.15.0: src/liblibc/src/unix/notbsd/mod.rs
+// Rust 1.16.0: src/liblibc/src/unix/notbsd/mod.rs
 #[allow(non_snake_case)]
 pub fn WTERMSIG(status: c_int) -> c_int {
     status & 0x7f
 }
 
-// Rust 1.15.0: src/liblibc/src/unix/notbsd/mod.rs
+// Rust 1.16.0: src/liblibc/src/unix/notbsd/mod.rs
 #[allow(non_snake_case)]
 pub fn WIFEXITED(status: c_int) -> bool {
     (status & 0x7f) == 0
 }
 
-// Rust 1.15.0: src/liblibc/src/unix/notbsd/mod.rs
+// Rust 1.16.0: src/liblibc/src/unix/notbsd/mod.rs
 #[allow(non_snake_case)]
 pub fn WEXITSTATUS(status: c_int) -> c_int {
     (status >> 8) & 0xff
