@@ -14,7 +14,7 @@ use sys::ext::prelude::*;
 use vec;
 
 static ENV_LOCK: () = ();
-// TODO(steed): Synchronize environment access once we have mutexes.
+// TODO(steed, #143): Synchronize environment access once we have mutexes.
 trait MutexExt {
     fn lock(&self) { }
     fn unlock(&self) { }

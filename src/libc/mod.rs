@@ -88,13 +88,15 @@ pub struct EnvVal {
     pub value: Cow<'static, [u8]>,
 }
 
-#[allow(unused)]
 static mut ENV_PTR: *const *const u8 = 0 as *const *const u8;
 static mut ENV: *mut HashMap<&'static [u8], EnvVal> = 0 as *mut _;
 #[allow(unused)]
 static mut AUXVAL: *const usize = 0 as *const usize;
 
 fn parse_env_str(input: &'static CStr) -> Option<(&'static [u8], &'static [u8])> {
+    // Strategy (copied from glibc): Variable name and value are separated by
+    // an ASCII equals sign '='. Since a variable name must not be empty, allow
+    // variable names starting with an equals sign. Skip all malformed lines.
     let input = input.to_bytes();
     if input.is_empty() {
         return None;
