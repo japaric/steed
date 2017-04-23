@@ -7,9 +7,13 @@
                     target_arch = "x86_64")),
             allow(unused))]
 
+use borrow::Cow;
 use cmp;
+use collections::HashMap;
+use ffi::CStr;
 use linux;
 use mem;
+use memchr::memchr;
 use ptr;
 
 pub mod internal;
@@ -50,12 +54,12 @@ pub use linux::{SOL_SOCKET};
 pub use linux::{SEEK_CUR, SEEK_END, SEEK_SET};
 pub use linux::{TCP_NODELAY};
 
-pub use linux::{accept, accept4, bind, close, connect, fdatasync, fstat64};
-pub use linux::{fsync, ftruncate64, getpeername, getsockname, getsockopt};
-pub use linux::{ioctl, link, listen, lstat64, mmap, nanosleep, prctl, pread64};
-pub use linux::{pwrite64, read, recvfrom, rename, rmdir, sched_yield, send};
-pub use linux::{sendto, setsockopt, socket, socketpair, shutdown, symlink};
-pub use linux::{unlink, write};
+pub use linux::{accept, accept4, bind, chdir, close, connect, exit_group};
+pub use linux::{fdatasync, fstat64, fsync, ftruncate64, getcwd, getpeername};
+pub use linux::{getsockname, getsockopt, ioctl, link, listen, lstat64, mmap};
+pub use linux::{nanosleep, prctl, pread64, pwrite64, read, recvfrom, rename};
+pub use linux::{rmdir, sched_yield, send, sendto, setsockopt, socket};
+pub use linux::{socketpair, shutdown, symlink, unlink, write};
 
 pub type mode_t = u32;
 
@@ -77,6 +81,88 @@ pub unsafe fn strlen(cs: *const c_char) -> size_t {
         count += 1;
     }
     count
+}
+
+pub struct EnvVal {
+    pub key: Cow<'static, [u8]>,
+    pub value: Cow<'static, [u8]>,
+}
+
+static mut ENV_PTR: *const *const u8 = 0 as *const *const u8;
+static mut ENV: *mut HashMap<&'static [u8], EnvVal> = 0 as *mut _;
+#[allow(unused)]
+static mut AUXVAL: *const usize = 0 as *const usize;
+
+fn parse_env_str(input: &'static CStr) -> Option<(&'static [u8], &'static [u8])> {
+    // Strategy (copied from glibc): Variable name and value are separated by
+    // an ASCII equals sign '='. Since a variable name must not be empty, allow
+    // variable names starting with an equals sign. Skip all malformed lines.
+    let input = input.to_bytes();
+    if input.is_empty() {
+        return None;
+    }
+    let pos = memchr(b'=', &input[1..]).map(|p| p + 1);
+    pos.map(|p| (&input[..p], &input[p+1..]))
+}
+
+fn invalid_env_key(key: &[u8]) -> bool {
+    // NUL is checked for at a higher level.
+    key.is_empty() || memchr(b'=', &key[1..]).is_some()
+}
+
+unsafe fn make_static(s: &[u8]) -> &'static [u8] {
+    &*(s as *const [u8])
+}
+
+/// One-time global initialization.
+pub unsafe fn _init(argc: isize, argv: *const *const u8) {
+    ENV_PTR = argv.offset(argc + 1) as *const *const u8;
+    let mut ptr = ENV_PTR;
+    ENV = Box::into_raw(Box::new(HashMap::new()));
+    while !(*ptr).is_null() {
+        if let Some((key, value)) = parse_env_str(CStr::from_ptr(*ptr as *const _)) {
+            if !(*ENV).contains_key(key) {
+                (*ENV).insert(key, EnvVal {
+                    key: Cow::from(key),
+                    value: Cow::from(value),
+                });
+            }
+        }
+        ptr = ptr.offset(1);
+    }
+    AUXVAL = ptr.offset(1) as *const usize;
+}
+
+pub unsafe fn getenv(key: &[u8]) -> Option<&'static [u8]> {
+    (*ENV).get(key).map(|v| make_static(&v.value))
+}
+
+pub unsafe fn setenv(key: &[u8], value: &[u8]) -> c_int {
+    if invalid_env_key(key) {
+        return -linux::errno::EINVAL;
+    }
+    let key = Cow::from(key.to_owned());
+    let value = Cow::from(value.to_owned());
+    let key_static = make_static(&key);
+    (*ENV).insert(key_static, EnvVal { key: key, value: value });
+    0
+}
+
+pub unsafe fn unsetenv(key: &[u8]) -> c_int {
+    if invalid_env_key(key) {
+        return -linux::errno::EINVAL;
+    }
+    (*ENV).remove(key);
+    0
+}
+
+pub unsafe fn env() -> &'static HashMap<&'static [u8], EnvVal> {
+    &*ENV
+}
+
+pub unsafe fn environ() -> *const *const c_char {
+    static ENVIRON: [usize; 1] = [0];
+    ENVIRON.as_ptr() as *const _
 }
 
 #[inline(always)]

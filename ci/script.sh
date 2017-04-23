@@ -10,8 +10,10 @@ main() {
     local examples=(
         _llseek
         args
+        chdir
         create
         dup
+        env
         format
         hashmap
         hello

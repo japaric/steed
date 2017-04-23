@@ -1142,3 +1142,15 @@ pub unsafe fn futex(uaddr: *mut u32,
 {
     syscall!(FUTEX, uaddr, op, val, utime, uaddr2, val3) as c_int
 }
+
+// fs/dcache.c
+#[inline(always)]
+pub unsafe fn getcwd(buf: *mut c_char, size: size_t) -> ssize_t {
+    syscall!(GETCWD, buf, size) as ssize_t
+}
+
+// fs/open.c
+#[inline(always)]
+pub unsafe fn chdir(filename: *const c_char) -> ssize_t {
+    syscall!(CHDIR, filename) as ssize_t
+}

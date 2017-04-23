@@ -16,18 +16,12 @@
 
 #![stable(feature = "env", since = "1.0.0")]
 
-#[cfg(issue = "69")]
 use error::Error;
-#[cfg(issue = "69")]
 use ffi::{OsStr, OsString};
-use ffi::OsString;
 use fmt;
-#[cfg(issue = "69")]
 use io;
-#[cfg(issue = "69")]
 use path::{Path, PathBuf};
 use sys;
-#[cfg(issue = "69")]
 use sys::os as os_imp;
 
 /// Returns the current working directory as a `PathBuf`.
@@ -49,7 +43,6 @@ use sys::os as os_imp;
 /// let p = env::current_dir().unwrap();
 /// println!("The current directory is {}", p.display());
 /// ```
-#[cfg(issue = "69")]
 #[stable(feature = "env", since = "1.0.0")]
 pub fn current_dir() -> io::Result<PathBuf> {
     os_imp::getcwd()
@@ -68,7 +61,6 @@ pub fn current_dir() -> io::Result<PathBuf> {
 /// assert!(env::set_current_dir(&root).is_ok());
 /// println!("Successfully changed working directory to {}!", root.display());
 /// ```
-#[cfg(issue = "69")]
 #[stable(feature = "env", since = "1.0.0")]
 pub fn set_current_dir<P: AsRef<Path>>(p: P) -> io::Result<()> {
     os_imp::chdir(p.as_ref())
@@ -79,7 +71,6 @@ pub fn set_current_dir<P: AsRef<Path>>(p: P) -> io::Result<()> {
 /// This structure is created through the [`std::env::vars`] function.
 ///
 /// [`std::env::vars`]: fn.vars.html
-#[cfg(issue = "69")]
 #[stable(feature = "env", since = "1.0.0")]
 pub struct Vars { inner: VarsOs }
 
@@ -88,7 +79,6 @@ pub struct Vars { inner: VarsOs }
 /// This structure is created through the [`std::env::vars_os`] function.
 ///
 /// [`std::env::vars_os`]: fn.vars_os.html
-#[cfg(issue = "69")]
 #[stable(feature = "env", since = "1.0.0")]
 pub struct VarsOs { inner: os_imp::Env }
 
@@ -116,7 +106,6 @@ pub struct VarsOs { inner: os_imp::Env }
 ///     println!("{}: {}", key, value);
 /// }
 /// ```
-#[cfg(issue = "69")]
 #[stable(feature = "env", since = "1.0.0")]
 pub fn vars() -> Vars {
     Vars { inner: vars_os() }
@@ -140,13 +129,11 @@ pub fn vars() -> Vars {
 ///     println!("{:?}: {:?}", key, value);
 /// }
 /// ```
-#[cfg(issue = "69")]
 #[stable(feature = "env", since = "1.0.0")]
 pub fn vars_os() -> VarsOs {
     VarsOs { inner: os_imp::env() }
 }
 
-#[cfg(issue = "69")]
 #[stable(feature = "env", since = "1.0.0")]
 impl Iterator for Vars {
     type Item = (String, String);
@@ -158,7 +145,6 @@ impl Iterator for Vars {
     fn size_hint(&self) -> (usize, Option<usize>) { self.inner.size_hint() }
 }
 
-#[cfg(issue = "69")]
 #[stable(feature = "std_debug", since = "1.15.0")]
 impl fmt::Debug for Vars {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -166,7 +152,6 @@ impl fmt::Debug for Vars {
     }
 }
 
-#[cfg(issue = "69")]
 #[stable(feature = "env", since = "1.0.0")]
 impl Iterator for VarsOs {
     type Item = (OsString, OsString);
@@ -174,7 +159,6 @@ impl Iterator for VarsOs {
     fn size_hint(&self) -> (usize, Option<usize>) { self.inner.size_hint() }
 }
 
-#[cfg(issue = "69")]
 #[stable(feature = "std_debug", since = "1.15.0")]
 impl fmt::Debug for VarsOs {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -199,13 +183,11 @@ impl fmt::Debug for VarsOs {
 ///     Err(e) => println!("couldn't interpret {}: {}", key, e),
 /// }
 /// ```
-#[cfg(issue = "69")]
 #[stable(feature = "env", since = "1.0.0")]
 pub fn var<K: AsRef<OsStr>>(key: K) -> Result<String, VarError> {
     _var(key.as_ref())
 }
 
-#[cfg(issue = "69")]
 fn _var(key: &OsStr) -> Result<String, VarError> {
     match var_os(key) {
         Some(s) => s.into_string().map_err(VarError::NotUnicode),
@@ -227,13 +209,11 @@ fn _var(key: &OsStr) -> Result<String, VarError> {
 ///     None => println!("{} is not defined in the environment.", key)
 /// }
 /// ```
-#[cfg(issue = "69")]
 #[stable(feature = "env", since = "1.0.0")]
 pub fn var_os<K: AsRef<OsStr>>(key: K) -> Option<OsString> {
     _var_os(key.as_ref())
 }
 
-#[cfg(issue = "69")]
 fn _var_os(key: &OsStr) -> Option<OsString> {
     os_imp::getenv(key).unwrap_or_else(|e| {
         panic!("failed to get environment variable `{:?}`: {}", key, e)
@@ -243,7 +223,6 @@ fn _var_os(key: &OsStr) -> Option<OsString> {
 /// Possible errors from the [`env::var`] function.
 ///
 /// [`env::var`]: fn.var.html
-#[cfg(issue = "69")]
 #[derive(Debug, PartialEq, Eq, Clone)]
 #[stable(feature = "env", since = "1.0.0")]
 pub enum VarError {
@@ -259,7 +238,6 @@ pub enum VarError {
     NotUnicode(#[stable(feature = "env", since = "1.0.0")] OsString),
 }
 
-#[cfg(issue = "69")]
 #[stable(feature = "env", since = "1.0.0")]
 impl fmt::Display for VarError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -272,7 +250,6 @@ impl fmt::Display for VarError {
     }
 }
 
-#[cfg(issue = "69")]
 #[stable(feature = "env", since = "1.0.0")]
 impl Error for VarError {
     fn description(&self) -> &str {
@@ -312,13 +289,11 @@ impl Error for VarError {
 /// env::set_var(key, "VALUE");
 /// assert_eq!(env::var(key), Ok("VALUE".to_string()));
 /// ```
-#[cfg(issue = "69")]
 #[stable(feature = "env", since = "1.0.0")]
 pub fn set_var<K: AsRef<OsStr>, V: AsRef<OsStr>>(k: K, v: V) {
     _set_var(k.as_ref(), v.as_ref())
 }
 
-#[cfg(issue = "69")]
 fn _set_var(k: &OsStr, v: &OsStr) {
     os_imp::setenv(k, v).unwrap_or_else(|e| {
         panic!("failed to set environment variable `{:?}` to `{:?}`: {}",
@@ -357,13 +332,11 @@ fn _set_var(k: &OsStr, v: &OsStr) {
 /// env::remove_var(key);
 /// assert!(env::var(key).is_err());
 /// ```
-#[cfg(issue = "69")]
 #[stable(feature = "env", since = "1.0.0")]
 pub fn remove_var<K: AsRef<OsStr>>(k: K) {
     _remove_var(k.as_ref())
 }
 
-#[cfg(issue = "69")]
 fn _remove_var(k: &OsStr) {
     os_imp::unsetenv(k).unwrap_or_else(|e| {
         panic!("failed to remove environment variable `{:?}`: {}", k, e)
@@ -374,7 +347,6 @@ fn _remove_var(k: &OsStr) {
 /// according to platform-specific conventions.
 ///
 /// This structure is returned from `std::env::split_paths`.
-#[cfg(issue = "69")]
 #[stable(feature = "env", since = "1.0.0")]
 pub struct SplitPaths<'a> { inner: os_imp::SplitPaths<'a> }
 
@@ -398,13 +370,11 @@ pub struct SplitPaths<'a> { inner: os_imp::SplitPaths<'a> }
 ///     None => println!("{} is not defined in the environment.", key)
 /// }
 /// ```
-#[cfg(issue = "69")]
 #[stable(feature = "env", since = "1.0.0")]
 pub fn split_paths<T: AsRef<OsStr> + ?Sized>(unparsed: &T) -> SplitPaths {
     SplitPaths { inner: os_imp::split_paths(unparsed.as_ref()) }
 }
 
-#[cfg(issue = "69")]
 #[stable(feature = "env", since = "1.0.0")]
 impl<'a> Iterator for SplitPaths<'a> {
     type Item = PathBuf;
@@ -412,7 +382,6 @@ impl<'a> Iterator for SplitPaths<'a> {
     fn size_hint(&self) -> (usize, Option<usize>) { self.inner.size_hint() }
 }
 
-#[cfg(issue = "69")]
 #[stable(feature = "std_debug", since = "1.15.0")]
 impl<'a> fmt::Debug for SplitPaths<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -422,7 +391,6 @@ impl<'a> fmt::Debug for SplitPaths<'a> {
 
 /// Error type returned from `std::env::join_paths` when paths fail to be
 /// joined.
-#[cfg(issue = "69")]
 #[derive(Debug)]
 #[stable(feature = "env", since = "1.0.0")]
 pub struct JoinPathsError {
@@ -451,7 +419,6 @@ pub struct JoinPathsError {
 ///     env::set_var("PATH", &new_path);
 /// }
 /// ```
-#[cfg(issue = "69")]
 #[stable(feature = "env", since = "1.0.0")]
 pub fn join_paths<I, T>(paths: I) -> Result<OsString, JoinPathsError>
     where I: IntoIterator<Item=T>, T: AsRef<OsStr>
@@ -461,7 +428,6 @@ pub fn join_paths<I, T>(paths: I) -> Result<OsString, JoinPathsError>
     })
 }
 
-#[cfg(issue = "69")]
 #[stable(feature = "env", since = "1.0.0")]
 impl fmt::Display for JoinPathsError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -470,7 +436,6 @@ impl fmt::Display for JoinPathsError {
 }
 
 #[stable(feature = "env", since = "1.0.0")]
-#[cfg(issue = "69")]
 impl Error for JoinPathsError {
     fn description(&self) -> &str { self.inner.description() }
 }
@@ -537,7 +502,6 @@ pub fn home_dir() -> Option<PathBuf> {
 /// # Ok(())
 /// # }
 /// ```
-#[cfg(issue = "69")]
 #[stable(feature = "env", since = "1.0.0")]
 pub fn temp_dir() -> PathBuf {
     os_imp::temp_dir()
@@ -603,7 +567,6 @@ pub fn temp_dir() -> PathBuf {
 ///     Err(e) => println!("failed to get current exe path: {}", e),
 /// };
 /// ```
-#[cfg(issue = "69")]
 #[stable(feature = "env", since = "1.0.0")]
 pub fn current_exe() -> io::Result<PathBuf> {
     os_imp::current_exe()
