@@ -34,7 +34,6 @@
 #![feature(try_from)]
 #![feature(unicode)]
 #![feature(unique)]
-#![feature(zero_one)]
 #![no_std]
 
 #![stable(feature = "rust1", since = "1.0.0")]
