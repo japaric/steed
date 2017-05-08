@@ -1,3 +1,6 @@
+use libc::*;
+use linux;
+
 #[cfg(not(test))]
 mod not_test {
     // Syscall number is passed in r7, syscall arguments in r0, r1, r2, r3, r4.
@@ -94,6 +97,14 @@ mod not_test {
     ");
 }
 
+#[inline(always)]
 pub unsafe fn set_thread_pointer(thread_data: *mut ()) {
-    let _ = thread_data; // TODO(steed, #127): Set thread-local pointer.
+    linux::arm_set_tls(thread_data);
+}
+
+#[inline(always)]
+pub unsafe fn thread_self() -> *mut thread {
+    let result;
+    asm!("mrc p15,0,$0,c13,c0,3":"=r"(result));
+    result
 }

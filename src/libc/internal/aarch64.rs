@@ -1,3 +1,5 @@
+use libc::thread;
+
 #[cfg(not(test))]
 mod not_test {
     // Syscall number is passed in x8, syscall arguments in x0, x1, x2, x3, x4.
@@ -65,6 +67,14 @@ mod not_test {
     ");
 }
 
+#[inline(always)]
 pub unsafe fn set_thread_pointer(thread_data: *mut ()) {
-    let _ = thread_data; // TODO(steed, #127): Set thread-local pointer.
+    asm!("msr tpidr_el0,$0"::"r"(thread_data)::"volatile");
+}
+
+#[inline(always)]
+pub unsafe fn thread_self() -> *mut thread {
+    let result;
+    asm!("mrs $0,tpidr_el0":"=r"(result));
+    result
 }

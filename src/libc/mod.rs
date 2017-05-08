@@ -15,6 +15,8 @@ use linux;
 use mem;
 use memchr::memchr;
 use ptr;
+use self::internal::*;
+use sys;
 
 pub mod internal;
 
@@ -33,6 +35,7 @@ pub use linux::{CLONE_SYSVSEM, CLONE_THREAD, CLONE_VM};
 pub use linux::{DT_BLK, DT_CHR, DT_DIR, DT_FIFO, DT_LNK, DT_REG, DT_SOCK};
 pub use linux::{F_DUPFD_CLOEXEC, F_DUPFD, F_GETFL, F_SETFL};
 pub use linux::{FIOCLEX, FIONBIO};
+pub use linux::{FUTEX_WAIT, FUTEX_WAKE, FUTEX_PRIVATE};
 pub use linux::{IP_ADD_MEMBERSHIP, IP_DROP_MEMBERSHIP, IP_MULTICAST_LOOP};
 pub use linux::{IP_MULTICAST_TTL, IP_TTL};
 pub use linux::{IPV6_ADD_MEMBERSHIP, IPV6_DROP_MEMBERSHIP};
@@ -217,11 +220,31 @@ pub struct pthread_attr_t {
     stack_size: usize,
 }
 
-struct thread {
+pub struct thread {
     // Required, because one cannot easily read out register containing the
     // pointer to this structure on some platforms.
     this: *mut thread,
+    data: thread_data,
+}
+
+struct thread_data {
     thread_id: pid_t,
+
+    parking_lot_word_lock_data: sys::parking_lot::core::word_lock::ThreadData,
+    parking_lot_data: sys::parking_lot::core::parking_lot::ThreadData,
+}
+
+impl thread_data {
+    pub fn new() -> thread_data {
+        thread_data {
+            thread_id: -1,
+
+            parking_lot_word_lock_data:
+               sys::parking_lot::core::word_lock::ThreadData::new(),
+            parking_lot_data:
+               sys::parking_lot::core::parking_lot::ThreadData::new(),
+        }
+    }
 }
 
 #[derive(Clone, Copy)]
@@ -337,14 +360,16 @@ pub unsafe fn pthread_create(pthread: *mut pthread_t,
     let stack = map.offset(stack_size as isize);
     let thread = stack as *mut thread;
     (*thread).this = thread;
+    // TODO(steed, #131): Call the destructors of the TLS on thread exit.
+    ptr::write(&mut (*thread).data, thread_data::new());
 
     let child_tid = syscall_clone(start_routine,
                                   stack,
                                   flags,
                                   arg,
-                                  &mut (*thread).thread_id,
+                                  &mut (*thread).data.thread_id,
                                   thread as *mut c_void,
-                                  &mut (*thread).thread_id);
+                                  &mut (*thread).data.thread_id);
     if child_tid < 0 {
         return -child_tid;
     }
@@ -352,6 +377,28 @@ pub unsafe fn pthread_create(pthread: *mut pthread_t,
         thread: thread,
     };
     0
+}
+
+fn thread_self_data() -> *mut thread_data {
+    unsafe {
+        &mut (*thread_self()).data
+    }
+}
+
+pub fn tls_parking_lot_word_lock_data()
+    -> *const sys::parking_lot::core::word_lock::ThreadData
+{
+    unsafe {
+        &(*thread_self_data()).parking_lot_word_lock_data
+    }
+}
+
+pub fn tls_parking_lot_data()
+    -> *const sys::parking_lot::core::parking_lot::ThreadData
+{
+    unsafe {
+        &(*thread_self_data()).parking_lot_data
+    }
 }
 
 #[cfg(any(target_arch = "aarch64",
@@ -388,14 +435,6 @@ extern {
 
 /*
 #[inline(always)]
-#[cfg(target_arch = "x86_64")]
-unsafe fn thread_self() -> *mut thread {
-    let result;
-    asm!("mov %fs:0,$0":"=r"(result));
-    result
-}
-
-#[inline(always)]
 pub unsafe fn pthread_self() -> pthread_t {
     pthread_t {
         thread: thread_self(),
@@ -406,6 +445,22 @@ pub unsafe fn pthread_detach(thread: pthread_t) -> c_int {
     unimplemented!();
 }
 */
+#[cfg(not(any(target_arch = "aarch64",
+              target_arch = "arm",
+              target_arch = "powerpc",
+              target_arch = "x86",
+              target_arch = "x86_64")))]
+static mut SINGLE_THREADED_TLS: *mut thread = 0 as *mut thread;
+
+#[cfg(not(any(target_arch = "aarch64",
+              target_arch = "arm",
+              target_arch = "powerpc",
+              target_arch = "x86",
+              target_arch = "x86_64")))]
+#[inline(always)]
+pub unsafe fn thread_self() -> *mut thread {
+    SINGLE_THREADED_TLS
+}
 
 #[cfg(not(any(target_arch = "aarch64",
               target_arch = "arm",
@@ -417,9 +472,9 @@ pub unsafe fn pthread_join(pthread: pthread_t, retval: *mut *mut c_void)
 {
     if false {
         let thread = pthread.thread;
-        linux::futex(&mut (*thread).thread_id as *mut _ as *mut u32,
-                     linux::FUTEX_WAIT,
-                     (*thread).thread_id as u32,
+        linux::futex(&mut (*thread).data.thread_id as *mut _ as *mut u32,
+                     FUTEX_WAIT,
+                     (*thread).data.thread_id as u32,
                      ptr::null(),
                      ptr::null_mut(),
                      0);
@@ -438,16 +493,16 @@ pub unsafe fn pthread_join(pthread: pthread_t, retval: *mut *mut c_void)
     assert!(retval.is_null());
     let thread = pthread.thread;
 
-    let tmp = (*thread).thread_id;
+    let tmp = (*thread).data.thread_id;
     // 0 would mean that the thread has exited already (CLONE_CHILD_CLEARTID
     // flag on the clone syscall).
     if tmp == 0 {
         return 0;
     }
     // TODO(steed, #130): Why does FUTEX_WAIT_PRIVATE not work?
-    let res = linux::futex(&mut (*thread).thread_id as *mut _ as *mut u32,
-                           linux::FUTEX_WAIT,
-                           (*thread).thread_id as u32,
+    let res = linux::futex(&mut (*thread).data.thread_id as *mut _ as *mut u32,
+                           FUTEX_WAIT,
+                           (*thread).data.thread_id as u32,
                            ptr::null(),
                            ptr::null_mut(),
                            0);

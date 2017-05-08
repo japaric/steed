@@ -10,10 +10,16 @@ pub mod fd;
 // Rust 1.16.0 (own implementation of readdir and canonicalize)
 pub mod fs;
 pub mod memchr;
+pub mod mutex;
 // Rust 1.16.0 (without error support for `lookup_host`, minor changes)
 pub mod net;
 // Rust 1.16.0
 pub mod os_str;
+// parking_lot 0.4.1, parking_lot_core 0.2.1
+// https://github.com/Amanieu/parking_lot
+// 73542a955a00e1d785d263d01c61c37da5032474
+// (adapted)
+pub mod parking_lot;
 // Rust 1.16.0
 pub mod path;
 pub mod pipe;

@@ -8,16 +8,18 @@
 #[cfg(target_arch = "x86")]       #[path = "x86.rs"]       mod arch;
 #[cfg(target_arch = "x86_64")]    #[path = "x86_64.rs"]    mod arch;
 
+use ptr;
 use super::*;
-use self::arch::*;
+
+pub use self::arch::*;
 
 pub struct Buffer(thread);
 
 pub unsafe fn init_main_thread(buffer: *mut Buffer) {
     let buffer: *mut thread = &mut (*buffer).0;
-    *buffer = thread {
+    ptr::write(buffer, thread {
         this: buffer,
-        thread_id: -1,
-    };
+        data: thread_data::new(),
+    });
     set_thread_pointer(buffer as *mut _);
 }

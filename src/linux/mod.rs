@@ -152,6 +152,9 @@ pub const CLONE_VM: c_ulong = 0x00000100;
 
 // include/uapi/linux/futex.h
 pub const FUTEX_WAIT: c_int = 0;
+pub const FUTEX_WAKE: c_int = 1;
+pub const FUTEX_PRIVATE_FLAG: c_int = 128;
+pub const FUTEX_PRIVATE: c_int = FUTEX_PRIVATE_FLAG;
 
 // kernel/time/posix-timers.c
 #[inline(always)]

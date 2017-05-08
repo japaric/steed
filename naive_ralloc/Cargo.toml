@@ -4,4 +4,4 @@ version = "0.1.0"
 authors = ["author"]
 
 [dependencies]
-sc = "0.1.5"
+sc = "0.2.0"

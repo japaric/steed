@@ -90,3 +90,10 @@ pub unsafe fn set_thread_pointer(thread_data: *mut ()) {
         panic!("set_thread_pointer: arch_prctl: {}", result);
     }
 }
+
+#[inline(always)]
+pub unsafe fn thread_self() -> *mut thread {
+    let result;
+    asm!("mov %fs:0,$0":"=r"(result));
+    result
+}

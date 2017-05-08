@@ -64,3 +64,9 @@ pub struct stat64 {
 }
 
 pub type blksize_t = i32;
+
+// arch/arm/kernel/traps.c
+#[inline(always)]
+pub unsafe fn arm_set_tls(data: *mut ()) -> ssize_t {
+    syscall!(ARM_SET_TLS, data) as ssize_t
+}

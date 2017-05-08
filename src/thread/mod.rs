@@ -259,3 +259,7 @@ fn _assert_sync_and_send() {
     _assert_both::<JoinHandle<()>>();
     _assert_both::<Thread>();
 }
+
+pub fn panicking() -> bool {
+    false
+}

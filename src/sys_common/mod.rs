@@ -1,7 +1,11 @@
 // Rust 1.16.0 (no tests)
 pub mod io;
+// Rust 1.16.0
+pub mod mutex;
 // Rust 1.16.0 (no tests, missing support for `lookup_host`)
 pub mod net;
+// Rust 1.16.0
+pub mod poison;
 // Rust 1.15.0
 pub mod thread;
 

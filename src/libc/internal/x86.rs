@@ -1,3 +1,4 @@
+use libc::*;
 use linux;
 
 #[cfg(not(test))]
@@ -141,3 +142,9 @@ pub unsafe fn set_thread_pointer(thread_data: *mut ()) {
     asm!("mov $0,%gs"::"r"(((user_desc.entry_number << 3) | 3) as u16)::"volatile");
 }
 
+#[inline(always)]
+pub unsafe fn thread_self() -> *mut thread {
+    let result;
+    asm!("mov %gs:0,$0":"=r"(result));
+    result
+}
