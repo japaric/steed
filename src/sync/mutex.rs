@@ -450,6 +450,7 @@ pub fn guard_poison<'a, T: ?Sized>(guard: &MutexGuard<'a, T>) -> &'a poison::Fla
 */
 
 #[cfg(all(test, not(target_os = "emscripten")))]
+#[cfg(issue = "115")]
 mod tests {
     use sync::mpsc::channel;
     use sync::{Arc, Mutex, Condvar};
