@@ -11,10 +11,10 @@
 #![feature(custom_attribute)]
 #![feature(dropck_eyepatch)]
 #![feature(dropck_parametricity)]
-#![feature(generic_param_attrs)]
 #![feature(exact_size_is_empty)]
 #![feature(fnbox)]
 #![feature(fused)]
+#![feature(generic_param_attrs)]
 #![feature(global_asm)]
 #![feature(heap_api)]
 #![feature(int_error_internals)]
@@ -22,6 +22,7 @@
 #![feature(macro_reexport)]
 #![feature(naked_functions)]
 #![feature(oom)]
+#![feature(placement_new_protocol)]
 #![feature(prelude_import)]
 #![feature(rand)]
 #![feature(raw)]
@@ -34,7 +35,6 @@
 #![feature(try_from)]
 #![feature(unicode)]
 #![feature(unique)]
-#![feature(zero_one)]
 #![no_std]
 
 #![stable(feature = "rust1", since = "1.0.0")]
@@ -155,7 +155,7 @@ pub mod sync;
 
 // Rust 1.16.0
 pub mod ascii;
-// Rust 1.16.0 (incomplete)
+// Rust nightly 1.19.0 bedd7da3d2 (incomplete)
 pub mod collections;
 // Rust 1.16.0 (incomplete)
 pub mod env;
