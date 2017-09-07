@@ -1,3 +1,6 @@
+#![unstable(feature = "steed", issue = "0")]
+// NOTE(japaric) ^ unsure why this is needed ...
+
 // Rust 1.16.0
 pub mod ffi;
 // Rust 1.16.0

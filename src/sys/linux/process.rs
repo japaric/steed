@@ -353,12 +353,12 @@ impl Command {
     // have the drop glue anyway because this code never returns (the
     // child will either exec() or invoke libc::exit)
     unsafe fn do_exec(&mut self, stdio: ChildPipes) -> io::Error {
-        macro_rules! t {
-            ($e:expr) => (match $e {
-                Ok(e) => e,
-                Err(e) => return e,
-            })
-        }
+        // macro_rules! t {
+        //     ($e:expr) => (match $e {
+        //         Ok(e) => e,
+        //         Err(e) => return e,
+        //     })
+        // }
 
         /*
         if let Some(fd) = stdio.stdin.fd() {

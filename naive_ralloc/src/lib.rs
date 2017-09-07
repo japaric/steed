@@ -1,85 +1,42 @@
-#![feature(allocator)]
-#![feature(core_intrinsics)]
-#![feature(linkage)]
+#![feature(alloc)]
+#![feature(allocator_api)]
+#![feature(global_allocator)]
 #![no_std]
-#![allocator]
 
+extern crate alloc;
 #[macro_use]
 extern crate sc;
 
-use core::intrinsics;
+use alloc::allocator::{Alloc, AllocErr, Layout};
 
-// fs/mmap.c
-pub unsafe fn brk(brk: usize) -> usize {
-    syscall!(BRK, brk)
-}
+struct Allocator;
 
-fn allocate(size: usize) -> *mut u8 {
-    let align = 16;
-    let mask = align - 1;
-    unsafe {
+unsafe impl<'a> Alloc for &'a Allocator {
+    unsafe fn alloc(&mut self, layout: Layout) -> Result<*mut u8, AllocErr> {
+        let size = layout.size();
+        let align = layout.align();
+        let mask = align - 1;
+
         let cur = brk(0);
         let aligned = (cur + mask) & !mask;
         let new = aligned + size;
         let actual = brk(new);
         if actual < new {
-            intrinsics::abort();
+            Err(AllocErr::Exhausted { request: layout })
         } else {
-            aligned as *mut u8
+            Ok(aligned as *mut u8)
         }
     }
-}
 
-#[linkage = "external"]
-#[no_mangle]
-pub extern fn __rust_allocate(size: usize, _align: usize) -> *mut u8 {
-    allocate(size)
-}
-
-#[linkage = "external"]
-#[no_mangle]
-pub extern fn __rust_allocate_zeroed(size: usize, align: usize) -> *mut u8 {
-    unsafe {
-        let result = __rust_allocate(size, align);
-        intrinsics::write_bytes(result, 0, size);
-        result
+    unsafe fn dealloc(&mut self, _ptr: *mut u8, _layout: Layout) {
+        // no deallocation
     }
 }
 
-#[linkage = "external"]
-#[no_mangle]
-pub extern fn __rust_deallocate(_ptr: *mut u8, _old_size: usize, _align: usize) {
-}
+#[global_allocator]
+static GLOBAL: Allocator = Allocator;
 
-#[linkage = "external"]
-#[no_mangle]
-pub extern fn __rust_reallocate(ptr: *mut u8, old_size: usize, size: usize,
-                                _align: usize) -> *mut u8 {
-    if size <= old_size {
-        return ptr;
-    }
-    let new = allocate(size);
-    if new.is_null() {
-        return new;
-    }
-    unsafe {
-        for i in 0..old_size as isize {
-            *new.offset(i) = *ptr.offset(i);
-        }
-    }
-    __rust_deallocate(ptr, old_size, _align);
-    new
-}
-
-#[linkage = "external"]
-#[no_mangle]
-pub extern fn __rust_reallocate_inplace(_ptr: *mut u8, old_size: usize,
-                                        _size: usize, _align: usize) -> usize {
-    old_size // this api is not supported by naive_ralloc
-}
-
-#[linkage = "external"]
-#[no_mangle]
-pub extern fn __rust_usable_size(size: usize, _align: usize) -> usize {
-    size
+// fs/mmap.c
+pub unsafe fn brk(brk: usize) -> usize {
+    syscall!(BRK, brk)
 }

@@ -204,7 +204,7 @@ const DISPLACEMENT_THRESHOLD: usize = 128;
 // so we round that up to 128.
 //
 // At a load factor of α, the odds of finding the target bucket after exactly n
-// unsuccesful probes[1] are
+// unsuccessful probes[1] are
 //
 // Pr_α{displacement = n} =
 // (1 - α) / α * ∑_{k≥1} e^(-kα) * (kα)^(k+n) / (k + n)! * (1 - kα / (k + n + 1))
@@ -420,7 +420,7 @@ fn search_hashed<K, V, M, F>(table: M, hash: SafeHash, mut is_match: F) -> Inter
             Empty(bucket) => {
                 // Found a hole!
                 return InternalEntry::Vacant {
-                    hash: hash,
+                    hash,
                     elem: NoElem(bucket, displacement),
                 };
             }
@@ -434,7 +434,7 @@ fn search_hashed<K, V, M, F>(table: M, hash: SafeHash, mut is_match: F) -> Inter
             // We can finish the search early if we hit any bucket
             // with a lower distance to initial bucket than we've probed.
             return InternalEntry::Vacant {
-                hash: hash,
+                hash,
                 elem: NeqElem(full, probe_displacement),
             };
         }
@@ -647,7 +647,7 @@ impl<K, V, S> HashMap<K, V, S>
     #[stable(feature = "hashmap_build_hasher", since = "1.7.0")]
     pub fn with_hasher(hash_builder: S) -> HashMap<K, V, S> {
         HashMap {
-            hash_builder: hash_builder,
+            hash_builder,
             resize_policy: DefaultResizePolicy::new(),
             table: RawTable::new(0),
         }
@@ -680,8 +680,8 @@ impl<K, V, S> HashMap<K, V, S>
         let resize_policy = DefaultResizePolicy::new();
         let raw_cap = resize_policy.raw_capacity(capacity);
         HashMap {
-            hash_builder: hash_builder,
-            resize_policy: resize_policy,
+            hash_builder,
+            resize_policy,
             table: RawTable::new(raw_cap),
         }
     }
@@ -755,6 +755,8 @@ impl<K, V, S> HashMap<K, V, S>
     ///   1) Ensure `new_raw_cap` is enough for all the elements, accounting
     ///      for the load factor.
     ///   2) Ensure `new_raw_cap` is a power of two or zero.
+    #[inline(never)]
+    #[cold]
     fn resize(&mut self, new_raw_cap: usize) {
         assert!(self.table.size() <= new_raw_cap);
         assert!(new_raw_cap.is_power_of_two() || new_raw_cap == 0);
@@ -1232,14 +1234,13 @@ impl<K, V, S> HashMap<K, V, S>
     /// # Examples
     ///
     /// ```
-    /// #![feature(retain_hash_collection)]
     /// use std::collections::HashMap;
     ///
     /// let mut map: HashMap<isize, isize> = (0..8).map(|x|(x, x*10)).collect();
     /// map.retain(|&k, _| k % 2 == 0);
     /// assert_eq!(map.len(), 4);
     /// ```
-    #[unstable(feature = "retain_hash_collection", issue = "36648")]
+    #[stable(feature = "retain_hash_collection", since = "1.18.0")]
     pub fn retain<F>(&mut self, mut f: F)
         where F: FnMut(&K, &mut V) -> bool
     {
@@ -1409,7 +1410,7 @@ impl<'a, K, V> Clone for Keys<'a, K, V> {
 }
 
 #[stable(feature = "std_debug", since = "1.16.0")]
-impl<'a, K: Debug, V: Debug> fmt::Debug for Keys<'a, K, V> {
+impl<'a, K: Debug, V> fmt::Debug for Keys<'a, K, V> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         f.debug_list()
             .entries(self.clone())
@@ -1438,7 +1439,7 @@ impl<'a, K, V> Clone for Values<'a, K, V> {
 }
 
 #[stable(feature = "std_debug", since = "1.16.0")]
-impl<'a, K: Debug, V: Debug> fmt::Debug for Values<'a, K, V> {
+impl<'a, K, V: Debug> fmt::Debug for Values<'a, K, V> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         f.debug_list()
             .entries(self.clone())
@@ -1496,14 +1497,14 @@ impl<'a, K, V> InternalEntry<K, V, &'a mut RawTable<K, V>> {
             InternalEntry::Occupied { elem } => {
                 Some(Occupied(OccupiedEntry {
                     key: Some(key),
-                    elem: elem,
+                    elem,
                 }))
             }
             InternalEntry::Vacant { hash, elem } => {
                 Some(Vacant(VacantEntry {
-                    hash: hash,
-                    key: key,
-                    elem: elem,
+                    hash,
+                    key,
+                    elem,
                 }))
             }
             InternalEntry::TableIsEmpty => None,
@@ -1618,7 +1619,7 @@ impl<'a, K, V, S> IntoIterator for &'a mut HashMap<K, V, S>
     type Item = (&'a K, &'a mut V);
     type IntoIter = IterMut<'a, K, V>;
 
-    fn into_iter(mut self) -> IterMut<'a, K, V> {
+    fn into_iter(self) -> IterMut<'a, K, V> {
         self.iter_mut()
     }
 }
@@ -2395,7 +2396,7 @@ impl BuildHasher for RandomState {
 /// [`Hasher`]: ../../hash/trait.Hasher.html
 #[stable(feature = "hashmap_default_hasher", since = "1.13.0")]
 #[allow(deprecated)]
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct DefaultHasher(SipHasher13);
 
 impl DefaultHasher {
