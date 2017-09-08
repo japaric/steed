@@ -5,6 +5,7 @@ pub mod test {
 }
 
 pub struct TestDesc {
+    pub allow_fail: bool,
     pub ignore: bool,
     pub name: StaticTestName,
     pub should_panic: ShouldPanic,

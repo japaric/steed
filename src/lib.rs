@@ -1,3 +1,4 @@
+#![cfg_attr(test, feature(rustc_private))]
 #![feature(alloc)]
 #![feature(allocator_api)]
 #![feature(allow_internal_unstable)]
