@@ -1,8 +1,9 @@
 set -ex
 
 run() {
+    local tag=$(cross -V | head -n1 | cut -d' ' -f2)
     docker build \
-           -t japaric/${1}:v0.1.10 \
+           -t japaric/${1}:v$tag \
            -f docker/${1}/Dockerfile \
            docker
 }
