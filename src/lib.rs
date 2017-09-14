@@ -1,9 +1,10 @@
+#![cfg_attr(test, feature(rustc_private))]
 #![feature(alloc)]
+#![feature(allocator_api)]
 #![feature(allow_internal_unstable)]
 #![feature(asm)]
 #![feature(box_syntax)]
 #![feature(cfg_target_vendor)]
-#![feature(collections)]
 #![feature(collections_range)]
 #![feature(compiler_builtins_lib)]
 #![feature(const_fn)]
@@ -16,14 +17,13 @@
 #![feature(fused)]
 #![feature(generic_param_attrs)]
 #![feature(global_asm)]
-#![feature(heap_api)]
 #![feature(int_error_internals)]
 #![feature(integer_atomics)]
 #![feature(lang_items)]
 #![feature(macro_reexport)]
 #![feature(naked_functions)]
-#![feature(oom)]
 #![feature(optin_builtin_traits)]
+#![feature(needs_drop)]
 #![feature(placement_new_protocol)]
 #![feature(prelude_import)]
 #![feature(rand)]
@@ -58,13 +58,15 @@ extern crate core as __core;
 extern crate alloc;
 #[macro_use]
 #[macro_reexport(vec, format)]
-extern crate collections as core_collections;
+extern crate alloc as core_collections;
 extern crate compiler_builtins;
 #[cfg(not(test))]
 #[cfg(feature = "ralloc")]
 extern crate ralloc;
 #[cfg(not(test))]
 #[cfg(feature = "naive_ralloc")]
+// this contains the global allocator (static variable)
+#[allow(unused_extern_crates)]
 extern crate naive_ralloc;
 #[macro_use]
 extern crate sc;
@@ -157,7 +159,7 @@ pub mod sync;
 
 // Rust 1.16.0
 pub mod ascii;
-// Rust nightly 1.19.0 bedd7da3d2 (incomplete)
+// Rust nightly 1.21.0 c11f689d2 (incomplete)
 pub mod collections;
 // Rust 1.16.0 (incomplete)
 pub mod env;
@@ -169,8 +171,6 @@ pub mod ffi;
 pub mod fs;
 // Rust 1.16.0 (no tests, mostly, not the submodules `lazy`, `stdio`)
 pub mod io;
-// Rust 1.16.0
-pub mod memchr;
 // Rust 1.16.0 (no tests, missing `lookup_host` and friends)
 pub mod net;
 // Rust 1.16.0
@@ -192,6 +192,8 @@ pub mod rt;
 
 mod ctypes;
 mod linux;
+// Rust 1.16.0
+mod memchr;
 #[cfg(not(test))]
 mod panicking;
 mod rand;

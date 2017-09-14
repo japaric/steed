@@ -8,13 +8,12 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use alloc::heap::{allocate, deallocate};
+use alloc::heap::{Heap, Alloc, Layout};
 
 use cmp;
 use hash::{BuildHasher, Hash, Hasher};
-use intrinsics::needs_drop;
 use marker;
-use mem::{align_of, size_of};
+use mem::{align_of, size_of, needs_drop};
 use mem;
 use ops::{Deref, DerefMut};
 use ptr::{self, Unique, Shared};
@@ -45,7 +44,7 @@ impl TaggedHashUintPtr {
     #[inline]
     unsafe fn new(ptr: *mut HashUint) -> Self {
         debug_assert!(ptr as usize & 1 == 0 || ptr as usize == EMPTY as usize);
-        TaggedHashUintPtr(Unique::new(ptr))
+        TaggedHashUintPtr(Unique::new_unchecked(ptr))
     }
 
     #[inline]
@@ -57,7 +56,7 @@ impl TaggedHashUintPtr {
             } else {
                 usize_ptr &= !1;
             }
-            self.0 = Unique::new(usize_ptr as *mut HashUint)
+            self.0 = Unique::new_unchecked(usize_ptr as *mut HashUint)
         }
     }
 
@@ -354,14 +353,14 @@ impl<K, V, M: Deref<Target = RawTable<K, V>>> Bucket<K, V, M> {
         let ib_index = ib_index & table.capacity_mask;
         Bucket {
             raw: table.raw_bucket_at(ib_index),
-            table: table,
+            table,
         }
     }
 
     pub fn first(table: M) -> Bucket<K, V, M> {
         Bucket {
             raw: table.raw_bucket_at(0),
-            table: table,
+            table,
         }
     }
 
@@ -456,7 +455,7 @@ impl<K, V, M: Deref<Target = RawTable<K, V>>> EmptyBucket<K, V, M> {
         match self.next().peek() {
             Full(bucket) => {
                 Ok(GapThenFull {
-                    gap: gap,
+                    gap,
                     full: bucket,
                 })
             }
@@ -564,7 +563,7 @@ impl<'t, K, V> FullBucket<K, V, &'t mut RawTable<K, V>> {
     ///
     /// This works similarly to `put`, building an `EmptyBucket` out of the
     /// taken bucket.
-    pub fn take(mut self) -> (EmptyBucket<K, V, &'t mut RawTable<K, V>>, K, V) {
+    pub fn take(self) -> (EmptyBucket<K, V, &'t mut RawTable<K, V>>, K, V) {
         self.table.size -= 1;
 
         unsafe {
@@ -782,10 +781,8 @@ impl<K, V> RawTable<K, V> {
                     .expect("capacity overflow"),
                 "capacity overflow");
 
-        let buffer = allocate(size, alignment);
-        if buffer.is_null() {
-            ::alloc::oom()
-        }
+        let buffer = Heap.alloc(Layout::from_size_align(size, alignment).unwrap())
+            .unwrap_or_else(|e| Heap.oom(e));
 
         let hashes = buffer.offset(hash_offset as isize) as *mut HashUint;
 
@@ -863,8 +860,8 @@ impl<K, V> RawTable<K, V> {
         // Replace the marker regardless of lifetime bounds on parameters.
         IntoIter {
             iter: RawBuckets {
-                raw: raw,
-                elems_left: elems_left,
+                raw,
+                elems_left,
                 marker: marker::PhantomData,
             },
             table: self,
@@ -876,11 +873,11 @@ impl<K, V> RawTable<K, V> {
         // Replace the marker regardless of lifetime bounds on parameters.
         Drain {
             iter: RawBuckets {
-                raw: raw,
-                elems_left: elems_left,
+                raw,
+                elems_left,
                 marker: marker::PhantomData,
             },
-            table: unsafe { Shared::new(self) },
+            table: Shared::from(self),
             marker: marker::PhantomData,
         }
     }
@@ -1194,7 +1191,8 @@ unsafe impl<#[may_dangle] K, #[may_dangle] V> Drop for RawTable<K, V> {
         debug_assert!(!oflo, "should be impossible");
 
         unsafe {
-            deallocate(self.hashes.ptr() as *mut u8, size, align);
+            Heap.dealloc(self.hashes.ptr() as *mut u8,
+                         Layout::from_size_align(size, align).unwrap());
             // Remember how everything was allocated out of one buffer
             // during initialization? We only need one call to free here.
         }

@@ -3,28 +3,40 @@ language: rust
 services: docker
 sudo: required
 
-rust: nightly
-
-env: TARGET=x86_64-unknown-linux-steed
 matrix:
   include:
     # Tier 1
-    # - env: TARGET=x86_64-unknown-linux-steed  # this is the default job
+    - env: TARGET=x86_64-unknown-linux-steed
+      rust: nightly
     - env: TARGET=aarch64-unknown-linux-steed
+      rust: nightly
     - env: TARGET=arm-unknown-linux-steedeabi
+      rust: nightly
     - env: TARGET=arm-unknown-linux-steedeabihf
+      rust: nightly
     - env: TARGET=armv7-unknown-linux-steedeabihf
+      rust: nightly
     - env: TARGET=i686-unknown-linux-steed
+      rust: nightly
 
     # Tier 2
     - env: TARGET=mips-unknown-linux-steed
+      rust: nightly
     # - env: TARGET=mips64-unknown-linux-steedabi64
+      # rust: nightly
     # - env: TARGET=mips64el-unknown-linux-steedabi64
+      # rust: nightly
     - env: TARGET=mipsel-unknown-linux-steed
+      rust: nightly
     - env: TARGET=powerpc64-unknown-linux-steed
+      rust: nightly
     # - env: TARGET=powerpc64le-unknown-linux-steed
+      # rust: nightly
     # - env: TARGET=s390x-unknown-linux-steed
+      # rust: nightly
     # - env: TARGET=sparc64-unknown-linux-steed
+      # rust: nightly
+
   allow_failures:
     - env: TARGET=powerpc-unknown-linux-steed
 
