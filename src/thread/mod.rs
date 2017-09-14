@@ -260,6 +260,8 @@ fn _assert_sync_and_send() {
     _assert_both::<Thread>();
 }
 
+#[inline]
+#[stable(feature = "rust1", since = "1.0.0")]
 pub fn panicking() -> bool {
     false
 }
