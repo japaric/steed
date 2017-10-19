@@ -10,6 +10,7 @@
 #![feature(const_atomic_bool_new)]
 #![feature(const_atomic_u8_new)]
 #![feature(const_atomic_usize_new)]
+#![feature(const_fn)]
 #![feature(core_intrinsics)]
 #![feature(custom_attribute)]
 #![feature(dropck_eyepatch)]
