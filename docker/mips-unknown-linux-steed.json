@@ -19,6 +19,7 @@
         ]
     },
     "relocation-model": "static",
+    "target-c-int-width": 32,
     "target-endian": "big",
     "target-family": "unix",
     "target-pointer-width": "32",
