@@ -18,5 +18,6 @@ RUN bash /qemu.sh 2.10.1 aarch64
 
 COPY aarch64-unknown-linux-steed.json /json
 
-ENV RUST_TARGET_PATH=/json \
+ENV CARGO_TARGET_AARCH64_UNKNOWN_LINUX_STEED_RUNNER=qemu-aarch64 \
+    RUST_TARGET_PATH=/json \
     RUST_TEST_THREADS=1

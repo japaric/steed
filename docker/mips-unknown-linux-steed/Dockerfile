@@ -18,5 +18,6 @@ RUN bash /qemu.sh 2.10.1 mips
 
 COPY mips-unknown-linux-steed.json /json
 
-ENV RUST_TARGET_PATH=/json \
+ENV CARGO_TARGET_MIPS_UNKNOWN_LINUX_STEED_RUNNER=qemu-mips \
+    RUST_TARGET_PATH=/json \
     RUST_TEST_THREADS=1

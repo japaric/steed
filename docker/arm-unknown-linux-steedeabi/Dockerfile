@@ -18,5 +18,6 @@ RUN bash /qemu.sh 2.10.1 arm
 
 COPY arm-unknown-linux-steedeabi.json /json
 
-ENV RUST_TARGET_PATH=/json \
+ENV CARGO_TARGET_ARM_UNKNOWN_LINUX_STEEDABI_RUNNER=qemu-arm \
+    RUST_TARGET_PATH=/json \
     RUST_TEST_THREADS=1
