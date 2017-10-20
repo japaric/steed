@@ -16,14 +16,14 @@ main() {
     done
 
     cat <<EOF >>/etc/apt/sources.list
-deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-4.0 main
-deb-src http://apt.llvm.org/xenial/ llvm-toolchain-xenial-4.0 main
+deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-5.0 main
+deb-src http://apt.llvm.org/xenial/ llvm-toolchain-xenial-5.0 main
 EOF
 
     curl -L http://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
     apt-get update
-    apt-get install --no-install-recommends -y lld-4.0
-    ln -s ld.lld-4.0 /usr/bin/ld.lld
+    apt-get install --no-install-recommends -y lld-5.0
+    ln -s ld.lld-5.0 /usr/bin/ld.lld
 
     # Clean up
     apt-get purge --auto-remove -y ${purge_list[@]}
