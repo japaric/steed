@@ -13,10 +13,10 @@ RUN bash /xargo.sh
 COPY qemu.sh /
 RUN apt-get install -y --no-install-recommends \
     gcc-powerpc64le-linux-gnu && \
-    bash /qemu.sh 2.9.0 ppc64le
+    bash /qemu.sh 2.10.1 ppc64le
 
 COPY powerpc64le-unknown-linux-steed.json /json
 
-ENV CARGO_TARGET_POWERPC64LE_UNKNOWN_LINUX_STEED_LINKER=powerpc64le-linux-gnu-gcc \
+ENV CARGO_TARGET_POWERPC64LE_UNKNOWN_LINUX_STEED_RUNNER=qemu-ppc64le \
     RUST_TARGET_PATH=/json \
     RUST_TEST_THREADS=1

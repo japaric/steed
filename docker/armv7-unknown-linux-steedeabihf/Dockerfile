@@ -14,9 +14,10 @@ COPY lld.sh /
 RUN bash /lld.sh
 
 COPY qemu.sh /
-RUN bash /qemu.sh 2.9.0 arm
+RUN bash /qemu.sh 2.10.1 arm
 
 COPY armv7-unknown-linux-steedeabihf.json /json
 
-ENV RUST_TARGET_PATH=/json \
+ENV CARGO_TARGET_ARMV7_UNKNOWN_LINUX_STEEDEABIHF_RUNNER=qemu-arm \
+    RUST_TARGET_PATH=/json \
     RUST_TEST_THREADS=1
