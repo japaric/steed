@@ -17,6 +17,7 @@ RUN apt-get install -y --no-install-recommends \
 
 COPY powerpc64-unknown-linux-steed.json /json
 
-ENV CARGO_TARGET_POWERPC64_UNKNOWN_LINUX_STEED_RUNNER=qemu-ppc64 \
+ENV CARGO_TARGET_POWERPC64_UNKNOWN_LINUX_STEED_LINKER=powerpc64-linux-gnu-gcc \
+    CARGO_TARGET_POWERPC64_UNKNOWN_LINUX_STEED_RUNNER=qemu-ppc64 \
     RUST_TARGET_PATH=/json \
     RUST_TEST_THREADS=1
