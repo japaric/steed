@@ -1,6 +1,6 @@
 [dependencies]
-collections = {}
-rand = {}
+core = {}
+alloc = {}
 
 [dependencies.compiler_builtins]
 features = ["mem"]
