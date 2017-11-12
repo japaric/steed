@@ -18,6 +18,9 @@ optional = true
 optional = true
 path = "naive_ralloc"
 
+[dev-dependencies]
+rand = "0.3"
+
 [features]
 default = ["ralloc"]
 
