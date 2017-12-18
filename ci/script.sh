@@ -59,6 +59,9 @@ path = "/project/test"
 stage = 3
 EOF
 
+    # blow the old Xargo directory to avoid like "found possibly newer version of crate"
+    rm -rf $HOME/.xargo
+
     cross test \
           --target $TARGET \
           --no-default-features \
