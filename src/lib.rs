@@ -29,6 +29,7 @@
 #![feature(optin_builtin_traits)]
 #![feature(placement_new_protocol)]
 #![feature(prelude_import)]
+#![feature(ptr_internals)]
 #![feature(rand)]
 #![feature(raw)]
 #![feature(shared)]

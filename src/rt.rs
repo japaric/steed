@@ -232,17 +232,28 @@ pub extern "C" fn start(sp: &'static Stack) -> ! {
 // `main` function within the executable source code.
 #[cfg(not(test))]
 #[lang = "start"]
-extern "C" fn lang_start(main: *const u8,
-                         _argc: isize,
-                         _argv: *const *const u8)
-                         -> isize {
-    use core::mem;
-
-    unsafe {
-        (mem::transmute::<_, fn()>(main))();
-    }
+extern "C" fn lang_start<T>(
+    main: fn() -> T,
+    _argc: isize,
+    _argv: *const *const u8,
+) -> isize
+where
+    T: Termination,
+{
+    main();
 
     0
+}
+
+#[lang = "termination"]
+pub trait Termination {
+    fn report(self) -> i32;
+}
+
+impl Termination for () {
+    fn report(self) -> i32 {
+        0
+    }
 }
 
 #[cfg(issue = "14")]
