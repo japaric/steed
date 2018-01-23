@@ -59,8 +59,8 @@ path = "/project/test"
 stage = 3
 EOF
 
-    # blow the old Xargo directory to avoid like "found possibly newer version of crate"
-    rm -rf $HOME/.xargo
+    # blow the Cargo artifacts to avoid like "found possibly newer version of crate"
+    cargo clean
 
     cross test \
           --target $TARGET \
