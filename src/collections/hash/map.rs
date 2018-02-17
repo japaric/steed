@@ -21,8 +21,8 @@ use hash::{Hash, Hasher, BuildHasher, SipHasher13};
 use iter::{FromIterator, FusedIterator};
 use mem::{self, replace};
 use ops::{Deref, Index, InPlace, Place, Placer};
-use rand::{self, Rng};
 use ptr;
+use sys;
 
 use super::table::{self, Bucket, EmptyBucket, FullBucket, FullBucketMut, RawTable, SafeHash};
 use super::table::BucketState::{Empty, Full};
@@ -2343,8 +2343,8 @@ impl RandomState {
     // rand
     #[stable(feature = "hashmap_build_hasher", since = "1.7.0")]
     pub fn new() -> RandomState {
-        let mut r = rand::thread_rng();
-        RandomState { k0: r.gen(), k1: r.gen() }
+        let (k0, k1) = sys::hashmap_random_keys();
+        RandomState { k0: k0, k1: k1 }
     }
     #[cfg(issue = "87")]
     #[inline]
@@ -2364,9 +2364,7 @@ impl RandomState {
         // increment one of the seeds on every RandomState creation, giving
         // every corresponding HashMap a different iteration order.
         thread_local!(static KEYS: Cell<(u64, u64)> = {
-            let r = rand::OsRng::new();
-            let mut r = r.expect("failed to create an OS RNG");
-            Cell::new((r.gen(), r.gen()))
+            Cell::new(sys::hashmap_random_keys())
         });
 
         KEYS.with(|keys| {

@@ -16,7 +16,7 @@ use marker;
 use mem::{align_of, size_of, needs_drop};
 use mem;
 use ops::{Deref, DerefMut};
-use ptr::{self, Unique, Shared};
+use ptr::{self, Unique, NonNull};
 
 use self::BucketState::*;
 
@@ -122,9 +122,6 @@ pub struct RawTable<K, V> {
     // inform rustc that in fact instances of K and V are reachable from here.
     marker: marker::PhantomData<(K, V)>,
 }
-
-unsafe impl<K: Send, V: Send> Send for RawTable<K, V> {}
-unsafe impl<K: Sync, V: Sync> Sync for RawTable<K, V> {}
 
 // An unsafe view of a RawTable bucket
 // Valid indexes are within [0..table_capacity)
@@ -717,26 +714,25 @@ fn calculate_offsets(hashes_size: usize,
     (pairs_offset, end_of_pairs, oflo)
 }
 
-// Returns a tuple of (minimum required malloc alignment, hash_offset,
+// Returns a tuple of (minimum required malloc alignment,
 // array_size), from the start of a mallocated array.
 fn calculate_allocation(hash_size: usize,
                         hash_align: usize,
                         pairs_size: usize,
                         pairs_align: usize)
-                        -> (usize, usize, usize, bool) {
-    let hash_offset = 0;
+                        -> (usize, usize, bool) {
     let (_, end_of_pairs, oflo) = calculate_offsets(hash_size, pairs_size, pairs_align);
 
     let align = cmp::max(hash_align, pairs_align);
 
-    (align, hash_offset, end_of_pairs, oflo)
+    (align, end_of_pairs, oflo)
 }
 
 #[test]
 fn test_offset_calculation() {
-    assert_eq!(calculate_allocation(128, 8, 16, 8), (8, 0, 144, false));
-    assert_eq!(calculate_allocation(3, 1, 2, 1), (1, 0, 5, false));
-    assert_eq!(calculate_allocation(6, 2, 12, 4), (4, 0, 20, false));
+    assert_eq!(calculate_allocation(128, 8, 16, 8), (8, 144, false));
+    assert_eq!(calculate_allocation(3, 1, 2, 1), (1, 5, false));
+    assert_eq!(calculate_allocation(6, 2, 12, 4), (4, 20, false));
     assert_eq!(calculate_offsets(128, 15, 4), (128, 143, false));
     assert_eq!(calculate_offsets(3, 2, 4), (4, 6, false));
     assert_eq!(calculate_offsets(6, 12, 4), (8, 20, false));
@@ -768,10 +764,10 @@ impl<K, V> RawTable<K, V> {
         // This is great in theory, but in practice getting the alignment
         // right is a little subtle. Therefore, calculating offsets has been
         // factored out into a different function.
-        let (alignment, hash_offset, size, oflo) = calculate_allocation(hashes_size,
-                                                                        align_of::<HashUint>(),
-                                                                        pairs_size,
-                                                                        align_of::<(K, V)>());
+        let (alignment, size, oflo) = calculate_allocation(hashes_size,
+                                                           align_of::<HashUint>(),
+                                                           pairs_size,
+                                                           align_of::<(K, V)>());
         assert!(!oflo, "capacity overflow");
 
         // One check for overflow that covers calculation and rounding of size.
@@ -784,7 +780,7 @@ impl<K, V> RawTable<K, V> {
         let buffer = Heap.alloc(Layout::from_size_align(size, alignment).unwrap())
             .unwrap_or_else(|e| Heap.oom(e));
 
-        let hashes = buffer.offset(hash_offset as isize) as *mut HashUint;
+        let hashes = buffer as *mut HashUint;
 
         RawTable {
             capacity_mask: capacity.wrapping_sub(1),
@@ -877,7 +873,7 @@ impl<K, V> RawTable<K, V> {
                 elems_left,
                 marker: marker::PhantomData,
             },
-            table: Shared::from(self),
+            table: NonNull::from(self),
             marker: marker::PhantomData,
         }
     }
@@ -925,7 +921,7 @@ struct RawBuckets<'a, K, V> {
     marker: marker::PhantomData<&'a ()>,
 }
 
-// FIXME(#19839) Remove in favor of `#[derive(Clone)]`
+// FIXME(#26925) Remove in favor of `#[derive(Clone)]`
 impl<'a, K, V> Clone for RawBuckets<'a, K, V> {
     fn clone(&self) -> RawBuckets<'a, K, V> {
         RawBuckets {
@@ -976,7 +972,7 @@ pub struct Iter<'a, K: 'a, V: 'a> {
 unsafe impl<'a, K: Sync, V: Sync> Sync for Iter<'a, K, V> {}
 unsafe impl<'a, K: Sync, V: Sync> Send for Iter<'a, K, V> {}
 
-// FIXME(#19839) Remove in favor of `#[derive(Clone)]`
+// FIXME(#26925) Remove in favor of `#[derive(Clone)]`
 impl<'a, K, V> Clone for Iter<'a, K, V> {
     fn clone(&self) -> Iter<'a, K, V> {
         Iter {
@@ -1024,7 +1020,7 @@ impl<K, V> IntoIter<K, V> {
 
 /// Iterator over the entries in a table, clearing the table.
 pub struct Drain<'a, K: 'a, V: 'a> {
-    table: Shared<RawTable<K, V>>,
+    table: NonNull<RawTable<K, V>>,
     iter: RawBuckets<'static, K, V>,
     marker: marker::PhantomData<&'a RawTable<K, V>>,
 }
@@ -1157,6 +1153,7 @@ impl<K: Clone, V: Clone> Clone for RawTable<K, V> {
             }
 
             new_ht.size = self.size();
+            new_ht.set_tag(self.tag());
 
             new_ht
         }
@@ -1183,10 +1180,10 @@ unsafe impl<#[may_dangle] K, #[may_dangle] V> Drop for RawTable<K, V> {
 
         let hashes_size = self.capacity() * size_of::<HashUint>();
         let pairs_size = self.capacity() * size_of::<(K, V)>();
-        let (align, _, size, oflo) = calculate_allocation(hashes_size,
-                                                          align_of::<HashUint>(),
-                                                          pairs_size,
-                                                          align_of::<(K, V)>());
+        let (align, size, oflo) = calculate_allocation(hashes_size,
+                                                       align_of::<HashUint>(),
+                                                       pairs_size,
+                                                       align_of::<(K, V)>());
 
         debug_assert!(!oflo, "should be impossible");
 

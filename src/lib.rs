@@ -29,6 +29,7 @@
 #![feature(optin_builtin_traits)]
 #![feature(placement_new_protocol)]
 #![feature(prelude_import)]
+#![feature(ptr_internals)]
 #![feature(rand)]
 #![feature(raw)]
 #![feature(shared)]
@@ -74,7 +75,6 @@ extern crate naive_ralloc;
 #[macro_use]
 extern crate sc;
 extern crate std_unicode;
-extern crate rand as core_rand;
 #[cfg(test)]
 extern crate test;
 
@@ -199,7 +199,6 @@ mod linux;
 mod memchr;
 #[cfg(not(test))]
 mod panicking;
-mod rand;
 mod sys;
 mod sys_common;
 mod libc;

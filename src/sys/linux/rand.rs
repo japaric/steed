@@ -8,32 +8,24 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-pub use self::imp::OsRng;
-
 use mem;
+use slice;
 
-fn next_u32(fill_buf: &mut FnMut(&mut [u8])) -> u32 {
-    let mut buf: [u8; 4] = [0; 4];
-    fill_buf(&mut buf);
-    unsafe { mem::transmute::<[u8; 4], u32>(buf) }
-}
-
-fn next_u64(fill_buf: &mut FnMut(&mut [u8])) -> u64 {
-    let mut buf: [u8; 8] = [0; 8];
-    fill_buf(&mut buf);
-    unsafe { mem::transmute::<[u8; 8], u64>(buf) }
+pub fn hashmap_random_keys() -> (u64, u64) {
+    let mut v = (0, 0);
+    unsafe {
+        let view = slice::from_raw_parts_mut(&mut v as *mut _ as *mut u8,
+                                             mem::size_of_val(&v));
+        imp::fill_bytes(view);
+    }
+    return v
 }
 
 mod imp {
-    use self::OsRngInner::*;
-    use super::{next_u32, next_u64};
-
     use ctypes::{c_char, ssize_t};
     use fs::File;
-    use io::{self, ErrorKind};
+    use io::{ErrorKind, Read};
     use linux::{self, errno};
-    use rand::Rng;
-    use rand::reader::ReaderRng;
     use sys::cvtu;
 
     fn getrandom(buf: &mut [u8]) -> ssize_t {
@@ -44,7 +36,7 @@ mod imp {
         }
     }
 
-    fn getrandom_fill_bytes(v: &mut [u8]) {
+    fn getrandom_fill_bytes(v: &mut [u8]) -> bool {
         let mut read = 0;
         while read < v.len() {
             match cvtu(getrandom(&mut v[read..])) {
@@ -53,18 +45,7 @@ mod imp {
                     if kind == ErrorKind::Interrupted {
                         continue;
                     } else if kind == ErrorKind::WouldBlock {
-                        // if getrandom() returns EAGAIN it would have blocked
-                        // because the non-blocking pool (urandom) has not
-                        // initialized in the kernel yet due to a lack of entropy
-                        // the fallback we do here is to avoid blocking applications
-                        // which could depend on this call without ever knowing
-                        // they do and don't have a work around. The PRNG of
-                        // /dev/urandom will still be used but not over a completely
-                        // full entropy pool
-                        let reader = File::open("/dev/urandom").expect("Unable to open /dev/urandom");
-                        let mut reader_rng = ReaderRng::new(reader);
-                        reader_rng.fill_bytes(&mut v[read..]);
-                        read += v.len();
+                        return false
                     } else {
                         panic!("unexpected getrandom error: {}", e);
                     }
@@ -72,6 +53,8 @@ mod imp {
                 Ok(result) => read += result,
             }
         }
+
+        return true
     }
 
     fn is_getrandom_available() -> bool {
@@ -105,47 +88,13 @@ mod imp {
         available
     }
 
-    pub struct OsRng {
-        inner: OsRngInner,
-    }
-
-    enum OsRngInner {
-        OsGetrandomRng,
-        OsReaderRng(ReaderRng<File>),
-    }
-
-    impl OsRng {
-        /// Create a new `OsRng`.
-        pub fn new() -> io::Result<OsRng> {
-            if is_getrandom_available() {
-                return Ok(OsRng { inner: OsGetrandomRng });
-            }
-
-            let reader = File::open("/dev/urandom")?;
-            let reader_rng = ReaderRng::new(reader);
-
-            Ok(OsRng { inner: OsReaderRng(reader_rng) })
+    pub fn fill_bytes(v: &mut [u8]) {
+        if is_getrandom_available() && getrandom_fill_bytes(v) {
+            return
         }
-    }
 
-    impl Rng for OsRng {
-        fn next_u32(&mut self) -> u32 {
-            match self.inner {
-                OsGetrandomRng => next_u32(&mut getrandom_fill_bytes),
-                OsReaderRng(ref mut rng) => rng.next_u32(),
-            }
-        }
-        fn next_u64(&mut self) -> u64 {
-            match self.inner {
-                OsGetrandomRng => next_u64(&mut getrandom_fill_bytes),
-                OsReaderRng(ref mut rng) => rng.next_u64(),
-            }
-        }
-        fn fill_bytes(&mut self, v: &mut [u8]) {
-            match self.inner {
-                OsGetrandomRng => getrandom_fill_bytes(v),
-                OsReaderRng(ref mut rng) => rng.fill_bytes(v)
-            }
-        }
+        let mut file = File::open("/dev/urandom")
+            .expect("failed to open /dev/urandom");
+        file.read_exact(v).expect("failed to read /dev/urandom");
     }
 }

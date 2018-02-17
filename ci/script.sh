@@ -59,6 +59,9 @@ path = "/project/test"
 stage = 3
 EOF
 
+    # blow the Cargo artifacts to avoid like "found possibly newer version of crate"
+    cargo clean
+
     cross test \
           --target $TARGET \
           --no-default-features \

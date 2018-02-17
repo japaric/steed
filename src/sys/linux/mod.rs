@@ -35,6 +35,8 @@ pub mod thread;
 
 pub use os::linux as platform;
 
+pub use self::rand::hashmap_random_keys;
+
 use intrinsics;
 use io::Error;
 use io::ErrorKind;
