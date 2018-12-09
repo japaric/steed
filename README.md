@@ -1,3 +1,35 @@
+# Status
+
+"It's dead, Jim".png
+
+This project has been inactive since 2017-10-20.
+
+If you are interested in hassle-free cross compilation from any OS to Linux I
+would suggest looking into the Linux/MUSL targets:
+
+``` console
+$ cargo new --bin hello && cd hello
+
+$ rustup target add x86_64-unknown-linux-musl
+
+$ cargo rustc --target x86_64-unknown-linux-musl -- -C linker=rust-lld
+
+$ file target/x86_64-unknown-linux-musl/debug/hello
+hello: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, with debug_info, not stripped
+```
+
+If you are interested in a Rust standard library free of C dependencies for
+Linux then I would suggest registering your interested in [rust-lang/rfcs#2610]
+
+[rust-lang/rfcs#2610]: https://github.com/rust-lang/rfcs/issues/2610
+
+If you are interested in taking over the development of this project send me an
+e-mail (see my GH profile) and I'll transfer it and its dependencies to you.
+
+-- @japaric, 2018-12-09
+
+---
+
 # `steed`
 
 > [WIP] Rust's standard library, free of C dependencies, for Linux systems
